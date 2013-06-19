@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">移動繪板</string>
+    <string name="action_settings">設定</string>
+    
+    <string name="width">寬度</string>
+    <string name="height">高度</string>
+    <string name="iterations">迭代</string>
+    
+    <!-- Tool Names -->
+    <string name="tools">工具</string>
+    <string name="colortexture">顏色與材質</string>
+    <string name="colors">顏色</string>
+    <string name="textures">材質</string>
+    <string name="pencil">鉛筆</string>
+    <string name="eraser">橡皮擦</string>
+    <string name="pen">筆</string>
+    <string name="softearser">軟橡皮擦</string>
+    <string name="airbrush">噴槍</string>
+    <string name="dodge">加亮</string>
+    <string name="burn">變暗</string>
+    <string name="water">水彩</string>
+    <string name="blur">模糊</string>
+    <string name="smudge">手指</string>
+    <string name="blender">攪拌</string>
+    
+    <!-- Mode Names -->
+    <string name="draw">畫筆模式</string>
+    <string name="floodfill">填滿</string>
+    <string name="rectselection">選取範圍</string>
+    <string name="colorpicker">選取顏色</string>
+    <string name="move">移動選取範圍</string>
+    <string name="movecanvas">移動畫布</string>
+    <string name="brushsettings">畫筆設定</string>
+    
+    <!-- Drawer Items -->
+    <string name="layers">圖層</string>
+    <string name="layer">圖層 </string>
+    <string name="layername">圖層名稱</string>
+    <string name="sampleall">取樣全部圖層</string>
+    <string name="lockalpha">鎖定透明度</string>
+    <string name="add">增加</string>
+    <string name="remove">移除</string>
+    <string-array name="mixModeNames">
+		<item>正常</item>
+		<item>倍數色彩增值</item>
+		<item>加法色彩增值</item>
+		<item>濾色</item>
+		<item>變亮</item>
+		<item>變暗</item>
+		<item>減值</item>
+		<item>加亮</item>
+		<item>加深</item>
+		<item>覆蓋</item>
+		<item>實光</item>
+		<item>柔光</item>
+		<item>強光</item>
+		<item>線性光源</item>
+		<item>小光源</item>
+    </string-array>
+    
+    <!-- Brush Settings Dialog -->
+    <string-array name="tipNames">
+		<item>圓形點陣化</item>
+		<item>圓形硬邊</item>
+		<item>圓形平滑</item>
+		<item>方形點陣化</item>
+		<item>方形平滑</item>
+    </string-array>
+    <string name="strokesize">畫筆大小</string>
+    <string name="alpha">不透明度</string>
+    <string name="color">顏色</string>
+    <string name="mix">混合</string>
+    <string name="specing">間距</string>
+    <string name="scattering">散射</string>
+    <string name="smoothing">平滑</string>
+    
+    <!-- Texture Settings Dialog -->
+    <string name="texture">材質</string>
+    <string name="invert">色彩反轉</string>
+    <string name="mirror">鏡像</string>
+    <string name="brightness">亮度</string>
+    <string name="contrast">對比</string>
+    <string name="reset">重設</string>
+    
+    <!-- Menu items -->
+    <string name="edit">編輯</string>
+    <string name="generate">產生</string>
+    <string name="effects">效果</string>
+    <string name="noise1">噪聲 (灰階)</string>
+    <string name="colornoise">噪聲 (帶顏色)</string>
+    <string name="copymerged">合併複製</string>
+    <string name="hflip">水平翻轉</string>
+    <string name="vfilp">垂直翻轉</string>
+    <string name="deselall">取消選取</string>
+    <string name="boxblur">盒狀糢糊</string>
+    <string name="undo">復原</string>
+    <string name="redo">重復</string>
+    
+    <string name="file">檔案</string>
+    <string name="newfile">新增</string>
+    <string name="open">開啟</string>
+    <string name="save">儲存</string>
+    <string name="saveas">另存為</string>
+    <string name="share">分享</string>
+    
+    <string name="filenotexists">檔案 %S 不存在。</string>
+    <string name="fileioerror">讀寫檔案時發生錯誤！請稍候再試。</string>
+</resources>

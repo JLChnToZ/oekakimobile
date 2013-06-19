@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/dialpgpadding" >
+
+    <Button
+        android:id="@+id/btnsetcolor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/color" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/texture"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Spinner
+            android:id="@+id/sptextures"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            tools:listitem="@layout/imagespinneritemlayout" />
+
+        <ImageView
+            android:id="@+id/imvpreview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/texture"
+            android:src="@android:drawable/ic_menu_gallery" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <CheckBox
+            android:id="@+id/cbinvert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/invert" />
+
+        <CheckBox
+            android:id="@+id/cbmirror"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/mirror" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvbrightness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/brightness" />
+
+    <SeekBar
+        android:id="@+id/sbbrightness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvcontrast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contrast" />
+
+    <SeekBar
+        android:id="@+id/sbcontrast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnreset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/reset" />
+
+</LinearLayout>

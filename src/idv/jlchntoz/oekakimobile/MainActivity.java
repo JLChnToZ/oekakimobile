@@ -1,0 +1,428 @@
+package idv.jlchntoz.oekakimobile;
+
+
+import java.io.*;
+
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.*;
+import android.graphics.drawable.*;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.view.View;
+import android.widget.Toast;
+
+import com.actionbarsherlock.app.*;
+import com.actionbarsherlock.view.*;
+import com.actionbarsherlock.view.MenuItem.*;
+
+import com.chibipaint.*;
+import com.chibipaint.CPController.*;
+import com.chibipaint.engine.*;
+import com.chibipaint.util.*;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+
+public class MainActivity extends SherlockActivity implements OnMenuItemClickListener, 
+CPController.ICPToolListener, CPController.ICPModeListener, CPController.ICPColorListener, 
+CPController.ICPEventListener, CPController.ICPViewListener {
+	
+	final String extFilePath = Environment.getExternalStorageDirectory().getPath();
+	String fileName;
+	
+	PaintCanvas PC;
+	SlidingMenu drawer;
+	
+	brushSettingsDialog BSD;
+	
+	int penChecked;
+	MenuItem[] penMenuItems;
+
+	int modeChecked;
+	MenuItem[] modeMenuItems;
+	
+	MenuItem colorMainMenuItem, colorMenuItem, brushSettingsMenuItem, textureSettingsMenuItem;
+	LayerDrawerHandler drawerHandler1;
+	ColorTextureDrawerHandler drawerHandler2;
+	
+	CPBrushInfo Cinfo;
+	CPController controller;
+	CPArtwork artwork;
+	
+	BitmapDrawable colorIcon;
+	Bitmap colorIconBase;
+	Canvas ColorIconCanvas;
+	int colorPicked;
+	
+    @SuppressWarnings("static-access")
+	@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        setContentView(R.layout.activity_main);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        
+        PC = (PaintCanvas)findViewById(R.id.cbpaintcanvas);
+        controller = PC.controller;
+        Intent currentIntent = getIntent();
+        if(currentIntent.hasExtra("file")) {
+			try {
+		        fileName = currentIntent.getStringExtra("file");
+				File file = new File(fileName);
+				if(file.exists()) {
+					FileInputStream FIS = new FileInputStream(file);
+					setArtwork(CPChibiFile.read(MainActivity.this, FIS));
+					FIS.close();
+				}
+			} catch (Exception e) {
+				Toast.makeText(MainActivity.this, getString(R.string.fileioerror),
+						Toast.LENGTH_LONG).show();
+			}	
+        } else {
+        	int width = 800, height = 600;
+        	if(currentIntent.hasExtra("width"))
+        		width = currentIntent.getIntExtra("width", 800);
+        	if(currentIntent.hasExtra("height"))
+        		height = currentIntent.getIntExtra("height", 600);
+            setArtwork(new CPArtwork(this, width, height));
+            fileName = "";
+        }
+        
+        penMenuItems = new MenuItem[controller.T_MAX];
+        modeMenuItems = new MenuItem[controller.M_MAX];
+        
+        BSD = new brushSettingsDialog(this, controller);
+        
+        drawer = new SlidingMenu(this);
+        drawer.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+        drawer.setShadowWidthRes(R.dimen.shadow_width);
+        drawer.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        drawer.setFadeDegree(0.35f);
+        drawer.setBehindWidthRes(R.dimen.drawer_size);
+        
+        drawer.setShadowDrawable(R.drawable.shadow);
+        drawer.setMenu(R.layout.drawer_content);
+        
+        drawer.setSecondaryShadowDrawable(R.drawable.shadow_r);
+        drawer.setSecondaryMenu(R.layout.drawer_content2);
+        
+        drawer.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        
+        drawerHandler1 = new LayerDrawerHandler(this, controller, drawer.getMenu());
+        drawerHandler2 = new ColorTextureDrawerHandler(this, controller, drawer.getSecondaryMenu());
+        
+        controller.setCurColor(new CPColor(getResources().getColor(R.color.DefaultColor)));
+
+        controller.addToolListener(this);
+        controller.addColorListener(this);
+        controller.addCPEventListener(this);
+        controller.addModeListener(this);
+        controller.addViewListener(this);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	super.onCreateOptionsMenu(menu);
+    	
+    	getSupportMenuInflater().inflate(R.menu.main, menu);
+    	
+    	SubMenu pensMenu = menu.addSubMenu(getString(R.string.tools));
+    	    	
+    	modeMenuItems[CPController.M_MOVE_TOOL] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.move)).setChecked(modeChecked == CPController.M_MOVE_TOOL).setOnMenuItemClickListener(this);
+    	modeMenuItems[CPController.M_MOVE_CANVAS] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.movecanvas)).setChecked(modeChecked == CPController.M_MOVE_CANVAS).setOnMenuItemClickListener(this);
+    	modeMenuItems[CPController.M_RECT_SELECTION] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.rectselection)).setChecked(modeChecked == CPController.M_RECT_SELECTION).setOnMenuItemClickListener(this);
+    	modeMenuItems[CPController.M_COLOR_PICKER] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.colorpicker)).setChecked(modeChecked == CPController.M_RECT_SELECTION).setOnMenuItemClickListener(this);
+    	modeMenuItems[CPController.M_FLOODFILL] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.floodfill)).setChecked(modeChecked == CPController.M_FLOODFILL).setOnMenuItemClickListener(this);
+
+    	penMenuItems[CPController.T_PENCIL] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.pencil)).setChecked(penChecked == CPController.T_PENCIL).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_PEN] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.pen)).setChecked(penChecked == CPController.T_PEN).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_ERASER] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.eraser)).setChecked(penChecked == CPController.T_ERASER).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_SOFTERASER] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.softearser)).setChecked(penChecked == CPController.T_SOFTERASER).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_AIRBRUSH] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.airbrush)).setChecked(penChecked == CPController.T_AIRBRUSH).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_WATER] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.water)).setChecked(penChecked == CPController.T_WATER).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_DODGE] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.dodge)).setChecked(penChecked == CPController.T_DODGE).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_BURN] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.burn)).setChecked(penChecked == CPController.T_BURN).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_BLUR] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.blur)).setChecked(penChecked == CPController.T_BLUR).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_SMUDGE] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.smudge)).setChecked(penChecked == CPController.T_SMUDGE).setOnMenuItemClickListener(this);
+    	penMenuItems[CPController.T_BLENDER] = pensMenu.add(1, Menu.NONE, Menu.NONE, getString(R.string.blender)).setChecked(penChecked == CPController.T_BLENDER).setOnMenuItemClickListener(this);
+
+    	pensMenu.setGroupCheckable(1, true, false);
+    	pensMenu.setGroupCheckable(2, true, false);
+    	
+    	brushSettingsMenuItem = pensMenu.add(3, Menu.NONE, Menu.NONE, getString(R.string.brushsettings)).setOnMenuItemClickListener(this);
+    	
+    	pensMenu.getItem()
+    			.setIcon(R.drawable.ic_menu_tools)
+    			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        
+    	SubMenu colorMenu = menu.addSubMenu(getString(R.string.colortexture)).setIcon(colorIcon);
+
+    	colorMainMenuItem = colorMenu.getItem();
+    	colorMainMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    	colorMainMenuItem.setOnMenuItemClickListener(this);
+        newColor(controller.getCurColor());
+    	
+        return true;
+    }
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return onMenuItemClick(item) ? true : super.onOptionsItemSelected(item);
+	}
+    
+	@Override
+	public boolean onMenuItemClick(MenuItem item) {
+		if(colorMainMenuItem == item) {
+	        drawer.setMode(SlidingMenu.RIGHT);
+			drawerHandler1.drawerView.setVisibility(View.INVISIBLE);
+			drawerHandler2.drawerView.setVisibility(View.VISIBLE);
+			if(drawer.isMenuShowing())
+				drawer.showContent();
+			if(drawer.isSecondaryMenuShowing())
+				drawer.showContent();
+			else
+				drawer.showSecondaryMenu();
+		} else if(brushSettingsMenuItem == item) {
+			BSD.showDialog();
+		} else switch(item.getItemId()) {
+			case android.R.id.home:
+		        drawer.setMode(SlidingMenu.LEFT);
+				drawerHandler1.drawerView.setVisibility(View.VISIBLE);
+				drawerHandler2.drawerView.setVisibility(View.INVISIBLE);
+				if(drawer.isSecondaryMenuShowing())
+					drawer.showContent();
+				if(drawer.isMenuShowing())
+					drawer.showContent();
+				else
+					drawer.showMenu();
+				break;
+			case R.id.menu_new:
+				SizeDialog nfdlg = new SizeDialog(this, getString(R.string.newfile), artwork.width, artwork.height, new SizeDialog.SizeDialogCallBack() {
+					@Override
+					public void onCallBack(SizeDialog which, int width, int height) {
+						restartAndOpenWith(width, height);
+					}
+				});
+				nfdlg.showDialog();
+				break;
+			case R.id.menu_open:
+				FileDialog openDlg = new FileDialog(this, getString(R.string.open),
+					extFilePath + File.separator + "mypaint", ".chi", new String[] {"chi"}, true,
+					new FileDialog.FileDialogCallBack() {
+					@Override
+					public void onCallBack(FileDialog which, File file) {
+						restartAndOpenWith(file);
+					}
+				});
+				openDlg.showDialog();
+				break;
+			case R.id.menu_save:
+				if(fileName != null && fileName != "") {
+					saveFile(new File(fileName));
+					break;
+				}
+			case R.id.menu_saveas:
+				FileDialog saveDlg = new FileDialog(this, getString(R.string.save),
+						extFilePath + File.separator + "mypaint",
+						new File(fileName).getName(), new String[] {"chi"}, false,
+						new FileDialog.FileDialogCallBack() {
+						@Override
+						public void onCallBack(FileDialog which, File file) {
+							saveFile(file);
+						}
+					});
+				saveDlg.showDialog();
+				break;
+			case R.id.menu_share:
+				String _fileName = outputImage(fileName);
+				if(_fileName == "")
+					break;
+				Intent share = new Intent(Intent.ACTION_SEND);
+				share.setType("image/png");
+				share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+_fileName));
+				startActivity(Intent.createChooser(share, getString(R.string.share)));
+				break;
+			case R.id.menu_undo:
+				artwork.undo();
+				break;
+			case R.id.menu_redo:
+				artwork.redo();
+				break;
+			case R.id.menu_cut:
+				artwork.cutSelection(true);
+				break;
+			case R.id.menu_copy:
+				artwork.copySelection();
+				break;
+			case R.id.menu_copymerged:
+				artwork.copySelectionMerged();
+				break;
+			case R.id.menu_paste:
+				artwork.pasteClipboard(true);
+				break;
+			case R.id.menu_selall:
+				artwork.rectangleSelection(artwork.getSize());
+				break;
+			case R.id.menu_deselall:
+				artwork.rectangleSelection(new CPRect());
+				break;
+			case R.id.menu_hfilp:
+				artwork.hFlip();
+				break;
+			case R.id.menu_vflip:
+				artwork.vFlip();
+				break;
+			case R.id.menu_invert:
+				artwork.invert();
+				break;
+			case R.id.menu_cnoise:
+				artwork.colorNoise();
+				break;
+			case R.id.menu_noise:
+				artwork.monochromaticNoise();
+				break;
+			case R.id.menu_boxblur:
+				BlurDialog bbdlg = new BlurDialog(this, getString(R.string.boxblur), 3, 3, 3,
+				new BlurDialog.BlurDialogCallBack() {
+					@Override
+					public void onCallBack(BlurDialog which, int width, int height, int iterations) {
+						artwork.boxBlur(width, height, iterations);
+					}
+				});
+				bbdlg.showDialog();
+				break;
+			default:
+				for(int i = 0; i < penMenuItems.length; i++)
+					if(penMenuItems[i] == item) {
+						controller.setMode(0);
+						controller.setTool(i);
+						return true;
+					}
+				for(int i = 0; i < modeMenuItems.length; i++)
+					if(modeMenuItems[i] == item) {
+						controller.setMode(i);
+						return true;
+					}
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void modeChange(int mode) {
+		modeChecked = mode;
+		updateCheckedMenu();
+	}
+
+
+	@Override
+	public void newTool(int tool, CPBrushInfo toolInfo) {
+		penChecked = tool;
+		Cinfo = toolInfo;
+		updateCheckedMenu();
+	}
+	
+	private void updateCheckedMenu() {
+		for(int i = 0; i < modeMenuItems.length; i++)
+			if(modeMenuItems[i] != null)
+				modeMenuItems[i].setChecked(i == modeChecked);
+		for(int i = 0; i < penMenuItems.length; i++)
+			if(penMenuItems[i] != null)
+				penMenuItems[i].setChecked(modeChecked == CPController.M_DRAW && i == penChecked);
+	}
+
+	@Override
+	public void viewChange(CPViewInfo viewInfo) { }
+
+
+	@Override
+	public void cpEvent() { 
+		android.util.Log.d("CPEVENT", "CPEVENT CALLED");
+	}
+
+
+	@Override
+	public void newColor(CPColor color) {
+		colorPicked = color.rgb | 0xFF << 24;
+        colorIconBase = drawerHandler2.getBitmap();
+        colorIcon = new BitmapDrawable(getResources(), colorIconBase);
+        colorMainMenuItem.setIcon(colorIcon);
+	}
+	
+	private void setArtwork(CPArtwork newArtWork) {
+		PC.setArtWork(newArtWork);
+        artwork = controller.artwork;
+        PC.invalidate();
+        controller.setTool(CPController.T_PEN);
+        artwork.callListenersLayerChange();
+	}
+	
+	private void saveFile(File file) {
+		try {
+			if(!file.getName().endsWith(".chi"))
+				file = new File(file.getPath() + ".chi");
+			file.getParentFile().mkdirs();
+			if(!file.exists())
+				file.createNewFile();
+			FileOutputStream FOS = new FileOutputStream(file);
+			CPChibiFile.write(FOS, artwork);
+			FOS.close();
+			fileName = file.getPath();
+			outputImage(fileName);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			Toast.makeText(MainActivity.this, getString(R.string.fileioerror),
+					Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	private String outputImage(String fileName) {
+		Bitmap bm = Bitmap.createBitmap(artwork.width, artwork.height, Bitmap.Config.ARGB_8888);
+		bm.setPixels(artwork.getDisplayBM().data, 0, artwork.width, 0, 0, artwork.width, artwork.height);
+		ByteArrayOutputStream BAOS = new ByteArrayOutputStream();
+		bm.compress(Bitmap.CompressFormat.PNG, 100, BAOS);
+		if(fileName == null || fileName == "")
+			fileName = extFilePath + "/mypaint/share.png";
+		else if(!fileName.endsWith(".png"))
+			fileName += ".png";
+		try {
+			File file = new File(fileName);
+			file.getParentFile().mkdirs();
+			if(!file.exists())
+				file.createNewFile();
+			FileOutputStream FOS = new FileOutputStream(file);
+			FOS.write(BAOS.toByteArray());
+			FOS.close();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+			Toast.makeText(MainActivity.this, getString(R.string.fileioerror),
+					Toast.LENGTH_LONG).show();
+			return "";
+		}
+		return fileName;
+	}
+	
+	private void restartAndOpenWith(int width, int height) {
+		Intent i = getIntent();
+		if(i.hasExtra("file"))
+			i.removeExtra("file");
+		i.putExtra("width", width);
+		i.putExtra("height", height);
+		finish();
+		startActivity(i);
+	}
+	
+	private void restartAndOpenWith(File file) {
+		Intent i = getIntent();
+		if(i.hasExtra("width"))
+			i.removeExtra("width");
+		if(i.hasExtra("height"))
+			i.removeExtra("height");
+		i.putExtra("file", file.getPath());
+		finish();
+		startActivity(i);
+	}
+}

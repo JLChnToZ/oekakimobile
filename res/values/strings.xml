@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Oekaki Mobile</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="width">Width</string>
+    <string name="height">Height</string>
+    <string name="iterations">Iterations</string>
+
+    <!-- Tool Names -->
+    <string name="tools">Tools</string>
+    <string name="colortexture">Colors &amp; Texture</string>
+    <string name="colors">Colors</string>
+    <string name="textures">Textures</string>
+    <string name="pencil">Pencil</string>
+    <string name="eraser">Eraser</string>
+    <string name="pen">Pen</string>
+    <string name="softearser">Soft Earser</string>
+    <string name="airbrush">Air Brush</string>
+    <string name="dodge">Dodge</string>
+    <string name="burn">Burn</string>
+    <string name="water">Water Color</string>
+    <string name="blur">Blur</string>
+    <string name="smudge">Smudge</string>
+    <string name="blender">Blender</string>
+
+    <!-- Mode Names -->
+    <string name="draw">Free mode</string>
+    <string name="floodfill">Flood Fill</string>
+    <string name="rectselection">Selection</string>
+    <string name="colorpicker">Color Picker</string>
+    <string name="move">Move Selection</string>
+    <string name="movecanvas">Move Canvas</string>
+    <string name="brushsettings">Brush Settings</string>
+    
+    <!-- Layer Settings Drawer -->
+    <string name="layers">Layers</string>
+    <string name="layer">Layer </string>
+    <string name="layername">Layer Name</string>
+    <string name="sampleall">Sample All Layers</string>
+    <string name="lockalpha">Lock Alpha</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string-array name="mixModeNames">
+        <item>Normal</item>
+        <item>Multiply</item>
+        <item>Add</item>
+        <item>Screen</item>
+        <item>Lighten</item>
+       	<item>Darken</item>
+       	<item>Subtract</item>
+       	<item>Dodge</item>
+       	<item>Burn</item>
+       	<item>Overlay</item>
+       	<item>Hard Light</item>
+       	<item>Soft Light</item>
+       	<item>Vivid Light</item>
+       	<item>Linear Light</item>
+       	<item>Pin Light</item>
+    </string-array>
+    
+    <!-- Texture Settings Drawer -->
+    <string name="texture">Texture</string>
+    <string name="invert">Invert</string>
+    <string name="mirror">Mirror</string>
+    <string name="brightness">Brightness</string>
+    <string name="contrast">Contrast</string>
+    <string name="reset">Reset</string>
+    <string name="rename">Rename</string>
+    <string name="duplicatelayer">Duplicate Layer</string>
+    <string name="mergedownlayer">Merge Down Layer</string>
+
+    <!-- Brush Settings Dialog -->
+    <string-array name="tipNames">
+        <item>Round Pixel</item>
+        <item>Round Hard</item>
+        <item>Round Smooth</item>
+        <item>Square Pixel</item>
+        <item>Square Smooth</item>
+    </string-array>
+
+    <string name="strokesize">Stroke Width</string>
+    <string name="alpha">Alpha</string>
+    <string name="color">Color</string>
+    <string name="mix">Bleed</string>
+    <string name="specing">Specing</string>
+    <string name="scattering">Scattering</string>
+    <string name="smoothing">Smoothing</string>
+    
+    <!-- Menu items -->
+    <string name="edit">Edit</string>
+    <string name="generate">Generate</string>
+    <string name="noise1">Gray Noise</string>
+    <string name="copymerged">Copy Merged</string>
+    <string name="colornoise">Color Noise</string>
+    <string name="effects">Effects</string>
+    <string name="hflip">Filp Horizontally</string>
+    <string name="vfilp">Filp Vertically</string>
+    <string name="deselall">Deselect All</string>
+    <string name="boxblur">Box Blur</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    
+    <string name="file">File</string>
+    <string name="newfile">New</string>
+    <string name="open">Open</string>
+    <string name="save">Save</string>
+    <string name="saveas">Save As</string>
+    <string name="share">Share</string>
+    
+    <string name="filenotexists">%S is not exists!</string>
+    <string name="fileioerror">Error while reading/writing file. Please try again later.</string>
+
+</resources>

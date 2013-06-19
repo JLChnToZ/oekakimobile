@@ -1,0 +1,41 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item android:id="@+id/menu_file" android:showAsAction="always|withText" android:title="@string/file" android:icon="@android:drawable/ic_menu_save">
+        <menu>
+            <item android:id="@+id/menu_new" android:title="@string/newfile" />
+            <item android:id="@+id/menu_open" android:title="@string/open"/>
+            <item android:id="@+id/menu_save" android:title="@string/save"/>
+            <item android:id="@+id/menu_saveas" android:title="@string/saveas"/>
+            <item android:id="@+id/menu_share" android:title="@string/share"/>
+            
+        </menu>
+    </item>
+    
+    <item android:id="@+id/menu_edit" android:title="@string/edit">
+        <menu>
+            <item android:id="@+id/menu_undo" android:title="@string/undo" /><item android:id="@+id/menu_redo" android:title="@string/redo"/><item android:id="@+id/menu_cut" android:title="@android:string/cut"/>
+            <item android:id="@+id/menu_copy" android:title="@android:string/copy"/>
+            <item android:id="@+id/menu_copymerged" android:title="@string/copymerged" />
+            <item android:id="@+id/menu_paste" android:title="@android:string/paste"/>
+            <item android:id="@+id/menu_selall" android:title="@android:string/selectAll"/>
+            <item android:id="@+id/menu_deselall" android:title="@string/deselall"/>
+            
+            
+        </menu>
+    </item>
+    <item android:id="@+id/menu_generate" android:title="@string/generate">
+        <menu>
+            <item android:id="@+id/menu_noise" android:title="@string/noise1"/>
+            <item android:id="@+id/menu_cnoise" android:title="@string/colornoise"/>
+        </menu>
+    </item>
+    <item android:id="@+id/menu_effects" android:title="@string/effects">
+        <menu>
+            <item android:id="@+id/menu_invert" android:title="@string/invert"/>
+            <item android:id="@+id/menu_hfilp" android:title="@string/hflip"/>
+            <item android:id="@+id/menu_vflip" android:title="@string/vfilp"/>
+            <item android:id="@+id/menu_boxblur" android:title="@string/boxblur"/>
+        </menu>
+    </item>
+
+</menu>

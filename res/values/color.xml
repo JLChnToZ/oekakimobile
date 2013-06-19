@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="BackgroundColor">#666</color>
+    <color name="CheckerBoardColor1">#EEE</color>
+    <color name="CheckerBoardColor2">#DDD</color>
+    <color name="SelectionColor">#8888</color>
+    <color name="DefaultColor">#000</color>
+</resources>
