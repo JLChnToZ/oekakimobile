@@ -44,13 +44,14 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class MainActivity extends SherlockActivity implements OnMenuItemClickListener, 
 CPController.ICPToolListener, CPController.ICPModeListener, CPController.ICPColorListener, 
-CPController.ICPEventListener, CPController.ICPViewListener {
+CPController.ICPEventListener, CPController.ICPViewListener, SlidingMenu.OnCloseListener,
+SlidingMenu.OnOpenListener {
 	
 	final String extFilePath = Environment.getExternalStorageDirectory().getPath();
 	String fileName;
 	
 	PaintCanvas PC;
-	SlidingMenu drawer;
+	public SlidingMenu drawer;
 	
 	brushSettingsDialog BSD;
 	
@@ -63,6 +64,7 @@ CPController.ICPEventListener, CPController.ICPViewListener {
 	MenuItem colorMainMenuItem, colorMenuItem, brushSettingsMenuItem, textureSettingsMenuItem;
 	LayerDrawerHandler drawerHandler1;
 	ColorTextureDrawerHandler drawerHandler2;
+	ActionMode drawerActionMode;
 	
 	CPBrushInfo Cinfo;
 	CPController controller;
@@ -125,6 +127,9 @@ CPController.ICPEventListener, CPController.ICPViewListener {
         
         drawer.setSecondaryShadowDrawable(R.drawable.shadow_r);
         drawer.setSecondaryMenu(R.layout.drawer_content2);
+        
+        drawer.setOnOpenListener(this);
+        drawer.setOnCloseListener(this);
         
         drawer.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
         
@@ -217,6 +222,9 @@ CPController.ICPEventListener, CPController.ICPViewListener {
 				else
 					drawer.showMenu();
 				break;
+			case R.id.menu_edit:
+				startActionMode(new EditActionMode(this, controller));
+				break;
 			case R.id.menu_new:
 				SizeDialog nfdlg = new SizeDialog(this, getString(R.string.newfile), artwork.width, artwork.height, new SizeDialog.SizeDialogCallBack() {
 					@Override
@@ -262,30 +270,6 @@ CPController.ICPEventListener, CPController.ICPViewListener {
 				share.setType("image/png");
 				share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+_fileName));
 				startActivity(Intent.createChooser(share, getString(R.string.share)));
-				break;
-			case R.id.menu_undo:
-				artwork.undo();
-				break;
-			case R.id.menu_redo:
-				artwork.redo();
-				break;
-			case R.id.menu_cut:
-				artwork.cutSelection(true);
-				break;
-			case R.id.menu_copy:
-				artwork.copySelection();
-				break;
-			case R.id.menu_copymerged:
-				artwork.copySelectionMerged();
-				break;
-			case R.id.menu_paste:
-				artwork.pasteClipboard(true);
-				break;
-			case R.id.menu_selall:
-				artwork.rectangleSelection(artwork.getSize());
-				break;
-			case R.id.menu_deselall:
-				artwork.rectangleSelection(new CPRect());
 				break;
 			case R.id.menu_hfilp:
 				artwork.hFlip();
@@ -334,7 +318,18 @@ CPController.ICPEventListener, CPController.ICPViewListener {
 		modeChecked = mode;
 		updateCheckedMenu();
 	}
-
+	@Override
+	public void onOpen() {
+		if(drawer.getMode() == SlidingMenu.LEFT) {
+			onClose();
+			drawerActionMode = startActionMode(new LayersActionMode(this, controller));
+		}
+	}
+	@Override
+	public void onClose() {
+		if(drawerActionMode != null)
+			drawerActionMode.finish();
+	}
 
 	@Override
 	public void newTool(int tool, CPBrushInfo toolInfo) {

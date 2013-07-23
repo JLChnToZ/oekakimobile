@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+     <item android:id="@+id/menu_layer_add" android:title="@string/add" android:icon="@android:drawable/ic_menu_add" android:showAsAction="always"/>
+     <item android:id="@+id/menu_layer_remove" android:title="@string/remove" android:icon="@android:drawable/ic_menu_delete" android:showAsAction="always"/>
+     <item android:id="@+id/menu_layer_edit" android:title="@string/rename" android:icon="@android:drawable/ic_menu_edit" android:showAsAction="always"/>
+     <item android:id="@+id/menu_layer_duplicate" android:title="@string/duplicatelayer" android:icon="@drawable/ic_menu_duplicate" android:showAsAction="always"/>
+     <item android:id="@+id/menu_layer_mergedown" android:title="@string/mergedownlayer" android:icon="@drawable/ic_menu_mergedown" android:showAsAction="always"/>
+
+</menu>

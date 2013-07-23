@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+     <item android:id="@+id/menu_undo" android:title="@string/undo" android:icon="@drawable/ic_undo" android:showAsAction="always"/>
+     <item android:id="@+id/menu_redo" android:title="@string/redo" android:icon="@drawable/ic_redo" android:showAsAction="always"/>
+     <item android:id="@+id/menu_cut" android:title="@android:string/cut"/>
+     <item android:id="@+id/menu_copy" android:title="@android:string/copy"/>
+     <item android:id="@+id/menu_copymerged" android:title="@string/copymerged" />
+     <item android:id="@+id/menu_paste" android:title="@android:string/paste"/>
+     <item android:id="@+id/menu_selall" android:title="@android:string/selectAll"/>
+     <item android:id="@+id/menu_deselall" android:title="@string/deselall"/>
+
+</menu>

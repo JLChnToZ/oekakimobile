@@ -28,13 +28,12 @@ import com.mobeta.android.dslv.DragSortListView;
 
 import android.content.Context;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener, OnClickListener,
+public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 DragSortListView.DropListener, DragSortListView.RemoveListener {
 	
 	public final CPController controller;
@@ -44,7 +43,6 @@ DragSortListView.DropListener, DragSortListView.RemoveListener {
 	DragSortController lstLayerCtrl;
 	CheckBoxedArrayAdapter lstLayersAdapter;
 	DragSortListView lstLayers;
-	ImageButton btnAdd, btnRemove, btnRename, btnDuplicate, btnMergeDown;
 	CheckBox CBLockAlpha, CBSampleAll;
 	SeekBar SBAlpha;
 	Spinner SPMixType;
@@ -59,17 +57,6 @@ DragSortListView.DropListener, DragSortListView.RemoveListener {
         CBSampleAll = (CheckBox)drawerView.findViewById(R.id.cbsampleall);
         SBAlpha = (SeekBar)drawerView.findViewById(R.id.sblayeralpha);
         SPMixType = (Spinner)drawerView.findViewById(R.id.spmixtype);
-        btnAdd = (ImageButton)drawerView.findViewById(R.id.btnadd);
-        btnRemove = (ImageButton)drawerView.findViewById(R.id.btnremove);
-        btnRename = (ImageButton)drawerView.findViewById(R.id.btneditname);
-        btnDuplicate = (ImageButton)drawerView.findViewById(R.id.btnduplicate);
-        btnMergeDown = (ImageButton)drawerView.findViewById(R.id.btnmergedown);
-        
-        btnAdd.setOnClickListener(this);
-        btnRemove.setOnClickListener(this);
-        btnRename.setOnClickListener(this);
-        btnDuplicate.setOnClickListener(this);
-        btnMergeDown.setOnClickListener(this);
 
 		ArrayAdapter<CharSequence> aaMixType = ArrayAdapter.createFromResource(this.context,
 				R.array.mixModeNames, android.R.layout.simple_spinner_item);
@@ -184,33 +171,6 @@ DragSortListView.DropListener, DragSortListView.RemoveListener {
 			lstLayers.setItemChecked(lstLayersAdapter.getCount() - 1 - i, ((CPLayer)layers[i]).visible);
 		lstLayerCtrl.setRemoveEnabled(count > 1);
 		this.controller.artwork.callListenersUpdateRegion(this.controller.artwork.getSize());
-	}
-
-	@Override
-	public void onClick(View view) {
-		if(view == btnAdd)
-			this.controller.artwork.addLayer();
-		else if(view == btnRemove)
-			this.controller.artwork.removeLayer();
-		else if(view == btnMergeDown)
-			this.controller.artwork.mergeDown(true);
-		else if(view == btnDuplicate)
-			this.controller.artwork.duplicateLayer();
-		else if(view == btnRename) {
-			PromptDialog dialog = new PromptDialog(this.context,
-					this.context.getString(R.string.layername),
-					this.controller.artwork.getActiveLayer().name,
-					new PromptDialog.PromptDialogCallBack() {
-						@Override
-						public void onCallBack(PromptDialog which, String result) {
-					        LayerDrawerHandler.this.controller.artwork.setLayerName(
-					        		LayerDrawerHandler.this.controller.artwork.getActiveLayerNb(),
-					        		result);
-						}
-					});
-			dialog.showDialog();
-		}
-		
 	}
 	
 	private void loadLayerSettings() {
