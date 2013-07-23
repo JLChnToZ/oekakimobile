@@ -107,4 +107,5 @@
     
     <string name="filenotexists">檔案 %S 不存在。</string>
     <string name="fileioerror">讀寫檔案時發生錯誤！請稍候再試。</string>
+    <string name="backagaintoexit">請再按一下返回以確定離開。</string>
 </resources>

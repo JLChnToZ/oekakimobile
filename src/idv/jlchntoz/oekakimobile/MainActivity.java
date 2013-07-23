@@ -28,6 +28,7 @@ import android.graphics.drawable.*;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -74,6 +75,8 @@ SlidingMenu.OnOpenListener {
 	Bitmap colorIconBase;
 	Canvas ColorIconCanvas;
 	int colorPicked;
+	
+	boolean doubleBackToExitPressedOnce;
 	
     @SuppressWarnings("static-access")
 	@Override
@@ -438,4 +441,20 @@ SlidingMenu.OnOpenListener {
 		finish();
 		startActivity(i);
 	}
+	
+	@Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, R.string.backagaintoexit, Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            	doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    } 
 }

@@ -111,5 +111,6 @@
     
     <string name="filenotexists">%S is not exists!</string>
     <string name="fileioerror">Error while reading/writing file. Please try again later.</string>
+    <string name="backagaintoexit">Please click BACK again to exit.</string>
 
 </resources>
