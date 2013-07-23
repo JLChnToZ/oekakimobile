@@ -188,13 +188,7 @@ DragSortListView.DropListener, DragSortListView.RemoveListener {
 	public void drop(int from, int to) {
 		from = lstLayersAdapter.getCount() - 1 - from;
 		to = lstLayersAdapter.getCount() - 1 - to;
-		this.controller.artwork.setActiveLayer(to);
 		loadLayerSettings();
-		if(to > from) {
-			int t = to;
-			to = from;
-			from = t;
-		}
 		if(to != from)
 			this.controller.artwork.moveLayer(from, to);
 		loadLayerSettings();
