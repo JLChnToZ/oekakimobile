@@ -26,10 +26,10 @@ import android.content.pm.ActivityInfo;
 import android.graphics.*;
 import android.graphics.drawable.*;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
+import android.os.*;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.*;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.*;
@@ -46,7 +46,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 public class MainActivity extends SherlockActivity implements OnMenuItemClickListener, 
 CPController.ICPToolListener, CPController.ICPModeListener, CPController.ICPColorListener, 
 CPController.ICPEventListener, CPController.ICPViewListener, SlidingMenu.OnCloseListener,
-SlidingMenu.OnOpenListener {
+SlidingMenu.OnOpenListener,  OnTouchListener {
 	
 	final String extFilePath = Environment.getExternalStorageDirectory().getPath();
 	String fileName;
@@ -88,6 +88,7 @@ SlidingMenu.OnOpenListener {
         getSupportActionBar().setHomeButtonEnabled(true);
         
         PC = (PaintCanvas)findViewById(R.id.cbpaintcanvas);
+        PC.setOnTouchListener(this);
         controller = PC.controller;
         Intent currentIntent = getIntent();
         if(currentIntent.hasExtra("file")) {
@@ -226,7 +227,7 @@ SlidingMenu.OnOpenListener {
 					drawer.showMenu();
 				break;
 			case R.id.menu_edit:
-				startActionMode(new EditActionMode(this, controller));
+				drawerActionMode = startActionMode(new EditActionMode(this, controller));
 				break;
 			case R.id.menu_new:
 				SizeDialog nfdlg = new SizeDialog(this, getString(R.string.newfile), artwork.width, artwork.height, new SizeDialog.SizeDialogCallBack() {
@@ -321,6 +322,7 @@ SlidingMenu.OnOpenListener {
 		modeChecked = mode;
 		updateCheckedMenu();
 	}
+	
 	@Override
 	public void onOpen() {
 		if(drawer.getMode() == SlidingMenu.LEFT) {
@@ -328,11 +330,20 @@ SlidingMenu.OnOpenListener {
 			drawerActionMode = startActionMode(new LayersActionMode(this, controller));
 		}
 	}
+	
 	@Override
 	public void onClose() {
 		if(drawerActionMode != null)
 			drawerActionMode.finish();
 	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent e) {
+		if(v == PC)
+			onClose();
+		return false;
+	}
+
 
 	@Override
 	public void newTool(int tool, CPBrushInfo toolInfo) {
@@ -358,7 +369,6 @@ SlidingMenu.OnOpenListener {
 	public void cpEvent() { 
 		android.util.Log.d("CPEVENT", "CPEVENT CALLED");
 	}
-
 
 	@Override
 	public void newColor(CPColor color) {
@@ -456,5 +466,5 @@ SlidingMenu.OnOpenListener {
             	doubleBackToExitPressedOnce=false;
             }
         }, 2000);
-    } 
+    }
 }
