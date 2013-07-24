@@ -175,8 +175,10 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 			HSVColorPickerDialog dlg = new HSVColorPickerDialog(this.context, targetRGB, new OnColorSelectedListener() {
 				@Override
 				public void colorSelected(Integer color) {
-						controller.setCurColorRgb(color);
-						update();
+					if(color == null)
+						return;
+					controller.setCurColorRgb(color);
+					update();
 				}
 			});
 			dlg.show();
