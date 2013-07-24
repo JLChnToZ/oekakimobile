@@ -12,7 +12,7 @@
     <!-- Tool Names -->
     <string name="tools">工具</string>
     <string name="colortexture">颜色与材质</string>
-    <string name="colors">颜色</string>
+    <string name="colors">选择颜色</string>
     <string name="textures">材质</string>
     <string name="pencil">铅笔</string>
     <string name="eraser">橡皮擦</string>
@@ -110,7 +110,7 @@
     
     <string name="filenotexists">档案 %S 不存在。</string>
     <string name="fileioerror">读写档案时发生错误！请稍候再试。</string>
-    <string name="backagaintoexit">请再单击返回以确定离开。</string>
+    <string name="backagaintoexit">请再单击返回以离开。</string>
     
     
 </resources>

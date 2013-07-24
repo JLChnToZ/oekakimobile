@@ -11,7 +11,7 @@
     <!-- Tool Names -->
     <string name="tools">工具</string>
     <string name="colortexture">顏色與材質</string>
-    <string name="colors">顏色</string>
+    <string name="colors">選擇顏色</string>
     <string name="textures">材質</string>
     <string name="pencil">鉛筆</string>
     <string name="eraser">橡皮擦</string>
@@ -107,5 +107,5 @@
     
     <string name="filenotexists">檔案 %S 不存在。</string>
     <string name="fileioerror">讀寫檔案時發生錯誤！請稍候再試。</string>
-    <string name="backagaintoexit">請再按一下返回以確定離開。</string>
+    <string name="backagaintoexit">請再按一下返回以離開。</string>
 </resources>

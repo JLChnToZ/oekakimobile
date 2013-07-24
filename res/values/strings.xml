@@ -11,7 +11,7 @@
     <!-- Tool Names -->
     <string name="tools">Tools</string>
     <string name="colortexture">Colors &amp; Texture</string>
-    <string name="colors">Colors</string>
+    <string name="colors">Select Colors</string>
     <string name="textures">Textures</string>
     <string name="pencil">Pencil</string>
     <string name="eraser">Eraser</string>

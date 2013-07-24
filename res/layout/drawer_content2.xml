@@ -30,6 +30,12 @@
             tools:listitem="@layout/imagespinneritemlayout" />
 
         <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/texture"
+            android:src="@drawable/ic_arrow_r" />
+
+        <ImageView
             android:id="@+id/imvpreview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
