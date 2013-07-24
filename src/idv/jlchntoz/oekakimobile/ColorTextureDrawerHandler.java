@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import yuku.ambilwarna.AmbilWarnaDialog;
-import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener;
+import com.buzzingandroid.ui.HSVColorPickerDialog;
+import com.buzzingandroid.ui.HSVColorPickerDialog.OnColorSelectedListener;
 
 import com.chibipaint.CPController;
 import com.chibipaint.engine.*;
@@ -172,13 +172,11 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 			sbcontrast.setProgress(100);
 			update();
 		} else if(view == btncolor) {
-			AmbilWarnaDialog dlg = new AmbilWarnaDialog(this.context, targetRGB, new OnAmbilWarnaListener() {
+			HSVColorPickerDialog dlg = new HSVColorPickerDialog(this.context, targetRGB, new OnColorSelectedListener() {
 				@Override
-				public void onCancel(AmbilWarnaDialog dialog) { }
-				@Override
-				public void onOk(AmbilWarnaDialog dialog, int color) {
-					controller.setCurColorRgb(color);
-					update();
+				public void colorSelected(Integer color) {
+						controller.setCurColorRgb(color);
+						update();
 				}
 			});
 			dlg.show();
