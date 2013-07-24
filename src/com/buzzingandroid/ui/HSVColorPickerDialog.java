@@ -293,6 +293,7 @@ public class HSVColorPickerDialog extends AlertDialog {
       double centerDist = Math.sqrt( x*x + y*y );
       hsv[ 0 ] = (float) (Math.atan2( y, x ) / Math.PI * 180f) + 180;
       hsv[ 1 ] = Math.max( 0f, Math.min( 1f, (float) (centerDist / innerCircleRadius) ) );
+      hsv[ 2 ] = 1;
       return Color.HSVToColor( hsv );
     }
 
