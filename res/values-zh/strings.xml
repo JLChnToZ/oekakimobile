@@ -11,7 +11,7 @@
     <!-- Tool Names -->
     <string name="tools">工具</string>
     <string name="colortexture">顏色與材質</string>
-    <string name="colors">選擇顏色</string>
+    <string name="colors">顏色</string>
     <string name="textures">材質</string>
     <string name="pencil">鉛筆</string>
     <string name="eraser">橡皮擦</string>
@@ -70,7 +70,7 @@
     </string-array>
     <string name="strokesize">畫筆大小</string>
     <string name="alpha">不透明度</string>
-    <string name="color">顏色</string>
+    <string name="color">選擇顏色</string>
     <string name="mix">混合</string>
     <string name="specing">間距</string>
     <string name="scattering">散射</string>

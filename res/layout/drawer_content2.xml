@@ -12,26 +12,29 @@
         android:layout_height="wrap_content"
         android:text="@string/color" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/texture"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:text="@string/texture"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Spinner
             android:id="@+id/sptextures"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
             tools:listitem="@layout/imagespinneritemlayout" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:contentDescription="@string/texture"
             android:src="@drawable/ic_arrow_r" />
 
@@ -39,9 +42,9 @@
             android:id="@+id/imvpreview"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:contentDescription="@string/texture"
             android:src="@android:drawable/ic_menu_gallery" />
-
     </LinearLayout>
 
     <LinearLayout

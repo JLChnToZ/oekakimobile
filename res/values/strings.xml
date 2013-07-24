@@ -11,7 +11,7 @@
     <!-- Tool Names -->
     <string name="tools">Tools</string>
     <string name="colortexture">Colors &amp; Texture</string>
-    <string name="colors">Select Colors</string>
+    <string name="colors">Colors</string>
     <string name="textures">Textures</string>
     <string name="pencil">Pencil</string>
     <string name="eraser">Eraser</string>
@@ -82,7 +82,7 @@
 
     <string name="strokesize">Stroke Width</string>
     <string name="alpha">Alpha</string>
-    <string name="color">Color</string>
+    <string name="color">Select Color</string>
     <string name="mix">Bleed</string>
     <string name="specing">Specing</string>
     <string name="scattering">Scattering</string>
