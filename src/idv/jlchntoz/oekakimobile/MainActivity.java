@@ -44,8 +44,7 @@ import com.chibipaint.util.*;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class MainActivity extends SherlockActivity implements OnMenuItemClickListener, 
-CPController.ICPToolListener, CPController.ICPModeListener, CPController.ICPColorListener, 
-CPController.ICPEventListener, CPController.ICPViewListener, SlidingMenu.OnCloseListener,
+ICPToolListener, ICPModeListener, ICPColorListener, ICPEventListener, ICPViewListener, SlidingMenu.OnCloseListener,
 SlidingMenu.OnOpenListener,  OnTouchListener {
 	
 	final String extFilePath = Environment.getExternalStorageDirectory().getPath();
