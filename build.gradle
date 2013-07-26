@@ -12,7 +12,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':D::JakeWharton-ActionBarSherlock-071a61c:actionbarsherlock')
     compile project(':D::SlidingMenu-master:library')
-    compile project(':D::AmbilWarna:yuku-android-util:AmbilWarna')
     compile project(':D::drag-sort-listview:dsl-library')
 }
 
