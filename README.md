@@ -14,7 +14,6 @@ The entire code of this Android app is licensed with GPLv3.
 To-do list:
 ===========
 
-*  Color palettes.
 *  Can add custom pens.
 *  More user-friendly UI.
 *  Design all icons.
