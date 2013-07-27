@@ -39,7 +39,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class ColorTextureDrawerHandler implements OnSeekBarChangeListener, OnCheckedChangeListener,
-android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColorListener {
+android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColorListener, ColorPaletteSelector.OnSelectedListener {
 
 	public final CPController controller;
 	public final View drawerView;
@@ -50,6 +50,7 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 	private final SeekBar sbbrightness, sbcontrast;
 	private final TextView tvbrightness, tvcontrast;
 	private final Button btnreset, btncolor;
+	private final ColorPaletteSelector CPS;
 	private List<HashMap<String, ?>> sptexturContent;
 	private HashMapTextIconAdapter HMTIA;
 	private ArrayList<CPGreyBmp> textures;
@@ -72,6 +73,7 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 		tvcontrast = (TextView)this.drawerView.findViewById(R.id.tvcontrast);
 		btnreset = (Button)this.drawerView.findViewById(R.id.btnreset);
 		btncolor = (Button)this.drawerView.findViewById(R.id.btnsetcolor);
+		CPS = (ColorPaletteSelector)this.drawerView.findViewById(R.id.CPS);
 		
 		textures = new ArrayList<CPGreyBmp>();
 		createTextures();
@@ -102,6 +104,7 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 		btnreset.setOnClickListener(this);
 		btncolor.setOnClickListener(this);
 		sptextures.setOnItemSelectedListener(this);
+		CPS.setListener(this);
 		
 		this.controller.addColorListener(this);
 		
@@ -221,6 +224,17 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 		int r = Color.red(targetRGB), g = Color.green(targetRGB), b = Color.blue(targetRGB);
 		btncolor.setBackgroundColor(0xFF << 24 | targetRGB);
 		btncolor.setTextColor((r + g * 2 + b) / 3 > 128 ? Color.BLACK : Color.WHITE);
+	}
+
+	@Override
+	public void OnSelected(int index, int color) {
+		controller.setCurColorRgb(color);
+		update();
+	}
+
+	@Override
+	public int OnReplace(int index) {
+		return 0xFF << 24 | targetRGB;
 	}
 
 

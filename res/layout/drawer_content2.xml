@@ -12,6 +12,23 @@
         android:layout_height="wrap_content"
         android:text="@string/color" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1">
+        <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+		    <idv.jlchntoz.oekakimobile.ColorPaletteSelector
+		        android:id="@+id/CPS"
+		        android:layout_width="fill_parent"
+		        android:layout_height="fill_parent" />
+
+        </LinearLayout>
+    </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
