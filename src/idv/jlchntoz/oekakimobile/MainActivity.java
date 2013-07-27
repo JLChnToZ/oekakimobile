@@ -453,6 +453,10 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
 	
 	@Override
     public void onBackPressed() {
+		if(drawer.isSecondaryMenuShowing() || drawer.isMenuShowing()) {
+			drawer.showContent();
+			return;
+		}
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
