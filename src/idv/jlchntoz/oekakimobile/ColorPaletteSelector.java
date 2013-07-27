@@ -134,7 +134,6 @@ public class ColorPaletteSelector extends View {
 			int index = getIndexByPosition(posX, posY);
 			if(index >= 0 && Listener != null) {
 				setColor(index, Listener.OnReplace(index));
-				android.util.Log.d("color selector", "color change: "+getColor(index)+" @# "+index+", pos=("+posX+","+posY+")");
 				ColorPaletteSelector.this.invalidate();
 				return true;
 			}
