@@ -22,9 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.buzzingandroid.ui.HSVColorPickerDialog;
-import com.buzzingandroid.ui.HSVColorPickerDialog.OnColorSelectedListener;
-
 import com.chibipaint.CPController;
 import com.chibipaint.engine.*;
 import com.chibipaint.util.CPColor;
@@ -32,6 +29,7 @@ import com.chibipaint.util.CPColor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -175,16 +173,19 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 			sbcontrast.setProgress(100);
 			update();
 		} else if(view == btncolor) {
-			HSVColorPickerDialog dlg = new HSVColorPickerDialog(this.context, targetRGB, new OnColorSelectedListener() {
+			ColorPickerDialog dlg = new ColorPickerDialog(this.context, targetRGB, new ColorPickerDialog.ColorPickerCallback() {
 				@Override
-				public void colorSelected(Integer color) {
-					if(color == null)
-						return;
+				public void onCallback(ColorPickerDialog which, int color) {
 					controller.setCurColorRgb(color);
 					update();
 				}
 			});
-			dlg.show();
+			int paddingSize = (int)TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP,
+					context.getResources().getDimension(R.dimen.dialpgpadding),
+					context.getResources().getDisplayMetrics());
+			dlg.getView().setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
+			dlg.showDialog();
 		}
 	}
 
