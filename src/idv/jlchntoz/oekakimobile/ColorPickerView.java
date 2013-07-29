@@ -66,6 +66,7 @@ public class ColorPickerView extends View {
 	
 	public void setColor(int color) {
 		Color.colorToHSV(color, selHSV);
+		selHSV1[0] = selHSV[0];
 		updateShaders();
 	}
 
