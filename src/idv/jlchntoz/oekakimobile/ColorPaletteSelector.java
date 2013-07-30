@@ -24,6 +24,7 @@ import android.content.Context;
 import android.graphics.*;
 import android.graphics.Paint.Style;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.*;
 
 public class ColorPaletteSelector extends View {
@@ -32,7 +33,7 @@ public class ColorPaletteSelector extends View {
 	final EventHandler _evh;
 	int width, height;
 	float posX, posY;
-	final int blockSize = 50;
+	final int blockSize;
 	int _a, _b;
 	Paint p;
 	
@@ -44,6 +45,9 @@ public class ColorPaletteSelector extends View {
 	public ColorPaletteSelector(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		_evh = new EventHandler();
+		blockSize = (int)TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP, 30,
+				context.getResources().getDisplayMetrics());
 		Colors = new ArrayList<Integer>();
 		p = new Paint();
 		this.setClickable(true);
@@ -88,7 +92,7 @@ public class ColorPaletteSelector extends View {
 			if(!extraHeight && _a+blockSize > width)  {
 				extraHeight = true;
 				_a = 0;
-				_b += 50;
+				_b += blockSize;
 			}
 		}
 		if(_b+blockSize+1 > height)
