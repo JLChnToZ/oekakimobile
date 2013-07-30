@@ -31,7 +31,7 @@ public class ColorPaletteSelector extends View {
 	OnSelectedListener Listener;
 	ArrayList<Integer> Colors;
 	final EventHandler _evh;
-	int width, height;
+	int width, height, targetH;
 	float posX, posY;
 	final int blockSize;
 	int _a, _b;
@@ -55,7 +55,7 @@ public class ColorPaletteSelector extends View {
 		this.setOnClickListener(_evh);
 		this.setOnLongClickListener(_evh);
 		this.setOnTouchListener(_evh);
-		this.setMinimumHeight(blockSize*2);
+		targetH = blockSize*2+1;
 		invalidate();
 	}
 	
@@ -95,8 +95,28 @@ public class ColorPaletteSelector extends View {
 				_b += blockSize;
 			}
 		}
-		if(_b+blockSize+1 > height)
-			this.setMinimumHeight(_b+blockSize+1);
+		if(_b+blockSize+1 > height) {
+			targetH = _b+blockSize+1;
+			requestLayout();
+		}
+	}
+	
+	@Override
+	protected void onMeasure(int w, int h) {
+	    int widthSize = MeasureSpec.getSize(w);
+	    int heightSize = MeasureSpec.getSize(h);
+	    int mh;
+	    switch(MeasureSpec.getMode(h)) {
+	    case MeasureSpec.EXACTLY:
+	        mh = heightSize;
+	    case MeasureSpec.AT_MOST:
+	    	mh = Math.min(targetH, heightSize);
+	    	break;
+	    default:
+	    	mh = targetH;
+		   	break;
+	    }
+	    setMeasuredDimension(widthSize, mh);
 	}
 	
 	public void setListener(OnSelectedListener Listener) {
