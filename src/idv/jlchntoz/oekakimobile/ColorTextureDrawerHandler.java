@@ -18,18 +18,14 @@
 
 package idv.jlchntoz.oekakimobile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.chibipaint.CPController;
 import com.chibipaint.engine.*;
 import com.chibipaint.util.CPColor;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.util.TypedValue;
+import android.graphics.*;
 import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -180,12 +176,7 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 					update();
 				}
 			});
-			int paddingSize = (int)TypedValue.applyDimension(
-					TypedValue.COMPLEX_UNIT_DIP,
-					context.getResources().getDimension(R.dimen.dialpgpadding),
-					context.getResources().getDisplayMetrics());
-			dlg.getView().setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
-			dlg.showDialog();
+			dlg.getDialog().show();
 		}
 	}
 

@@ -24,6 +24,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Shader.TileMode;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.*;
 
 public class ColorPickerView extends View {
@@ -31,7 +32,7 @@ public class ColorPickerView extends View {
 	Paint _p, _ps;
 	int width, height, currentMode;
 	float radius, innerRadius, centerX, centerY, SVSize;
-	int SVX1, SVY1, SVX2, SVY2;
+	int SVX1, SVY1, SVX2, SVY2, paddingSize;
 	int[] _px;
 	float[] selHSV, selHSV1;
 	LinearGradient sh1, sh2;
@@ -58,6 +59,10 @@ public class ColorPickerView extends View {
 		_ps.setStyle(Style.FILL);
 		_p.setStyle(Style.STROKE);
 		_p.setStrokeWidth(3);
+		paddingSize = (int)TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP,
+				this.getContext().getResources().getDimension(R.dimen.dialpgpadding),
+				this.getContext().getResources().getDisplayMetrics());
 	}
 	
 	public int getColor() {
@@ -124,11 +129,30 @@ public class ColorPickerView extends View {
 			    return false;
 		}
     }
+
+	@Override
+	protected void onMeasure(int w, int h) {
+	    int widthSize = MeasureSpec.getSize(w);
+	    int heightSize = MeasureSpec.getSize(h);
+	    int height = Math.min(widthSize, heightSize);
+	    int mh;
+	    switch(MeasureSpec.getMode(h)) {
+	    case MeasureSpec.EXACTLY:
+	        mh = heightSize;
+	    case MeasureSpec.AT_MOST:
+	    	mh = Math.min(height, heightSize);
+	    	break;
+	    default:
+	    	mh = height;
+		   	break;
+	    }
+	    setMeasuredDimension(widthSize, mh);
+	}
     
     private void measuseValues(int w, int h) {
     	width = w;
     	height = h;
-    	radius = Math.min(w, h)/2;
+    	radius = Math.min(w, h)/2-paddingSize;
     	innerRadius = radius*0.8F;
     	centerX  = w/2;
     	centerY = h/2;

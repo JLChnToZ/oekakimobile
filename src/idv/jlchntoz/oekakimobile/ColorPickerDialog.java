@@ -64,12 +64,8 @@ public class ColorPickerDialog {
 		dialog = builder.create();
 	}
 	
-	public ColorPickerView getView() {
-		return picker;
-	}
-	
-	public void showDialog() {
-		dialog.show();
+	public AlertDialog getDialog() {
+		return dialog;
 	}
 
 }
