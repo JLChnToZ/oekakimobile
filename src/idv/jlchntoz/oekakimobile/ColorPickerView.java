@@ -18,8 +18,10 @@
 
 package idv.jlchntoz.oekakimobile;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.*;
+import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.graphics.Shader.TileMode;
 import android.os.Build;
@@ -30,13 +32,15 @@ import android.view.*;
 public class ColorPickerView extends View {
 	Bitmap _hsvColorWheel;
 	Paint _p, _ps;
-	int width, height, currentMode;
+	int width, height, downMode, selectMode, selColor;
 	float radius, innerRadius, centerX, centerY, SVSize;
 	int SVX1, SVY1, SVX2, SVY2, paddingSize;
 	int[] _px;
 	float[] selHSV, selHSV1;
 	LinearGradient sh1, sh2;
 	ComposeShader sh3;
+	colorslider c_r, c_g, c_b;
+	colorslider[] sliders;
 
 	public ColorPickerView(Context c) {
 		super(c);
@@ -53,12 +57,21 @@ public class ColorPickerView extends View {
 		    setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		selHSV = new float[]{0, 0, 1};
 		selHSV1 = new float[]{0, 1, 1};
-		currentMode = 0;
+		downMode = 0;
+		selectMode = 0;
 		_ps = new Paint();
 		_p = new Paint();
 		_ps.setStyle(Style.FILL);
 		_p.setStyle(Style.STROKE);
 		_p.setStrokeWidth(3);
+		_ps.setTypeface(Typeface.SANS_SERIF);
+		_ps.setTextAlign(Align.CENTER);
+		_ps.setTextSize(20);
+		selColor = Color.TRANSPARENT;
+		sliders = new colorslider[3];
+		sliders[0] = c_r = new colorslider();
+		sliders[1] = c_g = new colorslider();
+		sliders[2] = c_b = new colorslider();
 		paddingSize = (int)TypedValue.applyDimension(
 				TypedValue.COMPLEX_UNIT_DIP,
 				this.getContext().getResources().getDimension(R.dimen.dialpgpadding),
@@ -66,12 +79,18 @@ public class ColorPickerView extends View {
 	}
 	
 	public int getColor() {
-		return Color.HSVToColor(selHSV);
+		if(selectMode == 0)
+			selColor = Color.HSVToColor(selHSV);
+		return selColor;
 	}
 	
 	public void setColor(int color) {
+		selColor = color;
 		Color.colorToHSV(color, selHSV);
 		selHSV1[0] = selHSV[0];
+		c_r.setValue(Color.red(color)/255F);
+		c_g.setValue(Color.green(color)/255F);
+		c_b.setValue(Color.blue(color)/255F);
 		updateShaders();
 	}
 
@@ -83,50 +102,84 @@ public class ColorPickerView extends View {
 		invalidate();
     }
     
-    @Override
+    @SuppressLint("WrongCall")
+	@Override
     protected void onDraw(Canvas c) {
     	c.drawColor(Color.TRANSPARENT);
-    	
-    	if(_hsvColorWheel != null)
-    		c.drawBitmap(_hsvColorWheel, 0, 0, null);
-
-    	_ps.setShader(sh3);
-    	c.drawRect(SVX1, SVY1, SVX2, SVY2, _ps);
-
-    	_p.setColor(0xFF<<24|~Color.HSVToColor(selHSV1));
-    	float r = getRadian(selHSV[0]), cr = (float)Math.cos(r), sr = (float)Math.sin(r);
-    	c.drawLine(cr*radius+centerX, sr*radius+centerY, cr*innerRadius+centerX, sr*innerRadius+centerY, _p);
-
-    	_p.setColor(0xFF<<24|~getColor());
-    	c.drawCircle(SVX1+selHSV[1]*SVSize, SVY1+selHSV[2]*SVSize, 5, _p);
+		_ps.setShader(null);
+		_ps.setColor(selColor);
+		c.drawRect(width-paddingSize*3, paddingSize, width-paddingSize, paddingSize*3, _ps);
+    	if(selectMode == 1) {
+        	_ps.setColor(Color.WHITE);
+        	c.drawText("HSV", paddingSize*2, paddingSize*2, _ps);
+        	
+			for(colorslider s : sliders)
+				s.onDraw(c);
+    	} else {
+        	_ps.setColor(Color.WHITE);
+        	c.drawText("RGB", paddingSize*2, paddingSize*2, _ps);
+        	
+	    	if(_hsvColorWheel != null)
+	    		c.drawBitmap(_hsvColorWheel, 0, 0, null);
+	
+	    	_ps.setShader(sh3);
+	    	c.drawRect(SVX1, SVY1, SVX2, SVY2, _ps);
+	
+	    	_p.setColor(fastCompleColor(Color.HSVToColor(selHSV1)));
+	    	float r = getRadian(selHSV[0]), cr = (float)Math.cos(r), sr = (float)Math.sin(r);
+	    	c.drawLine(cr*radius+centerX, sr*radius+centerY, cr*innerRadius+centerX, sr*innerRadius+centerY, _p);
+	
+	    	_p.setColor(fastCompleColor(getColor()));
+	    	c.drawCircle(SVX1+selHSV[1]*SVSize, SVY1+selHSV[2]*SVSize, 5, _p);
+    	}
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
     	float ex = e.getX(), ey = e.getY(), d = (float)getDistance(ex, ey, centerX, centerY);
-    	switch(e.getAction()) {
-	    	case MotionEvent.ACTION_DOWN:
-	    		if(d < radius && d > innerRadius)
-	    			currentMode = 1;
-	    		else if(isIn(SVX1, SVY1, SVX2, SVY2, ex, ey))
-	    			currentMode = 2;
-	    		break;
-	    	case MotionEvent.ACTION_UP:
-	    		currentMode = 0;
-	    		break;
-    	}
-		switch(currentMode) {
-			case 1:
-				selHSV1[0] = selHSV[0] = getAngle(ex-centerX, ey-centerY);
-				updateShaders();
-				return true;
-			case 2:
-				selHSV[1] = Math.min(1, Math.max(0, (float)((ex-SVX1)/SVSize)));
-				selHSV[2] =  Math.min(1, Math.max(0, (float)((ey-SVY1)/SVSize)));
-				invalidate();
-				return true;
-			default:
-			    return false;
+    	if(e.getAction() == MotionEvent.ACTION_DOWN && ex < paddingSize*3 && ey < paddingSize*3) {
+    		selectMode = (selectMode+1)%2;
+    		invalidate();
+    		return true;
+    	} else if(selectMode == 1) {
+			boolean ret = false;
+			for(colorslider s : sliders)
+				if(s.onTouchEvent(e)) {
+					ret = true;
+					break;
+				}
+			updateShaders();
+			Color.colorToHSV(selColor, selHSV);
+			selHSV1[0] = selHSV[0]; // Sync the color to HSV mode.
+			return ret;
+		} else {
+	    	switch(e.getAction()) {
+		    	case MotionEvent.ACTION_DOWN:
+		    		if(d < radius && d > innerRadius)
+		    			downMode = 1;
+		    		else if(isIn(SVX1, SVY1, SVX2, SVY2, ex, ey))
+		    			downMode = 2;
+		    		break;
+		    	case MotionEvent.ACTION_UP:
+		    		downMode = 0;
+		    		break;
+	    	}
+			switch(downMode) {
+				case 1:
+					selHSV1[0] = selHSV[0] = getAngle(ex-centerX, ey-centerY);
+					updateShaders();
+					break;
+				case 2:
+					selHSV[1] = getPercentage(SVX1, SVX2, ex);
+					selHSV[2] =  getPercentage(SVY1, SVY2, ey);
+					invalidate();
+					break;
+			}
+			selColor = Color.HSVToColor(selHSV); // Sync the color to RGB mode.
+			c_r.setValue(Color.red(selColor)/255F);
+			c_g.setValue(Color.green(selColor)/255F);
+			c_b.setValue(Color.blue(selColor)/255F);
+			return downMode != 0;
 		}
     }
 
@@ -163,11 +216,22 @@ public class ColorPickerView extends View {
     	SVY2 = (int)Math.round(centerY+d);
     	SVSize = d*2;
     	sh1 = new LinearGradient(SVX1, SVY1, SVX1, SVY2, Color.BLACK, Color.WHITE, TileMode.CLAMP);
+    	for(int i = 0; i < sliders.length; i++) {
+    		sliders[i].setPosition(paddingSize, paddingSize*4*(i+1), w-paddingSize*2, paddingSize*4);
+    	}
     	updateShaders();
     	updateBitmap();
     }
     
     private void updateShaders() {
+		int _r = Math.round(c_r.getValue()*255);
+		int _g = Math.round(c_g.getValue()*255);
+		int _b = Math.round(c_b.getValue()*255);
+		c_r.setColor(Color.argb(255, 0, _g, _b), Color.argb(255, 255, _g, _b));
+		c_g.setColor(Color.argb(255, _r, 0, _b), Color.argb(255, _r, 255, _b));
+		c_b.setColor(Color.argb(255, _r, _g, 0), Color.argb(255, _r, _g, 255));
+    	if(selectMode == 1)
+			selColor = Color.argb(255, _r, _g, _b);
     	if(sh1 == null) return;
     	sh2 = new LinearGradient(SVX1, SVY1, SVX2, SVY1, Color.WHITE, Color.HSVToColor(selHSV1), TileMode.CLAMP);
     	sh3 = new ComposeShader(sh1, sh2, PorterDuff.Mode.MULTIPLY);
@@ -223,5 +287,97 @@ public class ColorPickerView extends View {
     		y1 = t;
     	}
     	return targetX > x1 && targetX < x2 && targetY > y1 && targetY < y2;
+    }
+	
+	private int mixValue(int v1, int v2, float p) {
+		return v1+Math.round((v2-v1)*p);
+	}
+	
+	private float mixValue(float v1, float v2, float p) {
+		return v1+(v2-v1)*p;
+	}
+	
+	private float getPercentage(float start, float end, float mid) {
+		return Math.max(0, Math.min(1, (mid-start)/(end-start)));
+	}
+	
+	private int fastCompleColor(int color) {
+		return 0xFF<<24|~color;
+	}
+    
+    private class colorslider {
+    	float x1, y1, x2, y2, value;
+    	boolean isDown;
+    	int color1, color2;
+    	Paint _p, _p2;
+    	LinearGradient _lg;
+    	
+    	public colorslider() {
+    		this.value = 0;
+    		this.isDown = false;
+    		this.color1 = Color.TRANSPARENT;
+    		this.color2 = Color.TRANSPARENT;
+    		this._p = new Paint();
+    		this._p2 = new Paint();
+    		this._p.setStyle(Style.STROKE);
+    		this._p.setStrokeWidth(3);
+    		this._p2.setStyle(Style.FILL);
+    		setPosition(0, 0, 0, 0);
+    	}
+    	
+    	public void setPosition(float x, float y, float w, float h) {
+    		this.x1 = x;
+    		this.x2 = x+w;
+    		this.y1 = y;
+    		this.y2 = y+h;
+    		if(this._lg != null)
+    			setColor(this.color1, this.color2);
+    	}
+    	
+    	public void setColor(int start, int end) {
+    		this.color1 = start;
+    		this.color2 = end;
+    		this._lg = new LinearGradient(this.x1, this.y1, this.x2, this.y1, start, end, TileMode.CLAMP);
+    		this._p2.setShader(_lg);
+    	}
+    	
+    	public int getSelectedColor() {
+    		int _a = mixValue(Color.alpha(this.color1), Color.alpha(this.color2), this.value);
+    		int _r = mixValue(Color.red(this.color1), Color.red(this.color2), this.value);
+    		int _g = mixValue(Color.green(this.color1), Color.green(this.color2), this.value);
+    		int _b = mixValue(Color.blue(this.color1), Color.blue(this.color2), this.value);
+    		return Color.argb(_a, _r, _g, _b);
+    	}
+    	
+    	public void setValue(float value) {
+    		this.value = value;
+    	}
+    	
+    	public float getValue() {
+    		return value;
+    	}
+    	
+    	public void onDraw(Canvas c) {
+    		c.drawRect(this.x1, this.y1, this.x2, this.y2, this._p2);
+    		float _x = mixValue(this.x1, this.x2, this.value);
+    		_p.setColor(fastCompleColor(getSelectedColor()));
+    		c.drawLine(_x, this.y1, _x, this.y2, this._p);
+    	}
+    	
+    	public boolean onTouchEvent(MotionEvent e) {
+    		float _x = e.getX(), _y =e.getY();
+    		switch(e.getAction()) {
+    		case MotionEvent.ACTION_DOWN:
+    			if(isIn(this.x1, this.y1, this.x2, this.y2, _x, _y))
+    				isDown = true;
+    			break;
+    		case MotionEvent.ACTION_UP:
+    			isDown = false;
+    			break;
+    		}
+    		if(isDown)
+    			this.value = getPercentage(this.x1, this.x2, _x);
+    		return isDown;
+    	}
     }
 }
