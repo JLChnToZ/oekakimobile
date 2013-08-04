@@ -75,6 +75,8 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
 	Canvas ColorIconCanvas;
 	int colorPicked;
 	
+	savedSettings settings;
+	
 	boolean doubleBackToExitPressedOnce;
 	
     @SuppressWarnings("static-access")
@@ -85,6 +87,8 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setHomeButtonEnabled(true);
+        
+        settings = new savedSettings(this);
         
         PC = (PaintCanvas)findViewById(R.id.cbpaintcanvas);
         PC.setOnTouchListener(this);
@@ -470,4 +474,8 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
             }
         }, 2000);
     }
+	
+	public savedSettings getSettings() {
+		return settings;
+	}
 }

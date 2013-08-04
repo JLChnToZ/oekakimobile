@@ -69,6 +69,12 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 		btncolor = (Button)this.drawerView.findViewById(R.id.btnsetcolor);
 		CPS = (ColorPaletteSelector)this.drawerView.findViewById(R.id.CPS);
 		
+		Integer[] paletteColors = ((MainActivity)context).getSettings().getColors();
+		if(paletteColors != null)
+			for(int i = 0; i < paletteColors.length; i++)
+				if(paletteColors[i] != null && paletteColors[i] != Color.TRANSPARENT)
+					CPS.setColor(i, paletteColors[i]);
+		
 		textures = new ArrayList<CPGreyBmp>();
 		createTextures();
 		
@@ -226,6 +232,7 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 
 	@Override
 	public int OnReplace(int index) {
+		((MainActivity)context).getSettings().saveColor(index, 0xFF << 24 |targetRGB);
 		return 0xFF << 24 | targetRGB;
 	}
 
