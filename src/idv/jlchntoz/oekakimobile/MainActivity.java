@@ -327,11 +327,15 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+		exitFullScreen();
+		return true;
+	}
+	
+	private void exitFullScreen() {
 		if(!getSupportActionBar().isShowing()) {
 			getSupportActionBar().show();
 			toggleStatusBar(getWindow(), true);
 		}
-		return true;
 	}
 	
 	private void toggleStatusBar(android.view.Window w, boolean show) {
@@ -483,6 +487,7 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
 	
 	@Override
     public void onBackPressed() {
+		exitFullScreen();
 		if(drawer.isSecondaryMenuShowing() || drawer.isMenuShowing()) {
 			drawer.showContent();
 			return;
