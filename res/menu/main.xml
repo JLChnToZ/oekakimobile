@@ -28,5 +28,7 @@
             <item android:id="@+id/menu_boxblur" android:title="@string/boxblur"/>
         </menu>
     </item>
+    
+    <item android:id="@+id/menu_fullscreen" android:title="@string/fullscreen" android:showAsAction="never" />
 
 </menu>

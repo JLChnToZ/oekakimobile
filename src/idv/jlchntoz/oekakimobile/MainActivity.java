@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.*;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.*;
 import android.widget.Toast;
 
@@ -303,6 +304,10 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
 				});
 				bbdlg.showDialog();
 				break;
+			case R.id.menu_fullscreen:
+				toggleStatusBar(getWindow(), false);
+				getSupportActionBar().hide();
+				break;
 			default:
 				for(int i = 0; i < penMenuItems.length; i++)
 					if(penMenuItems[i] == item) {
@@ -318,6 +323,27 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
 				return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if(!getSupportActionBar().isShowing()) {
+			getSupportActionBar().show();
+			toggleStatusBar(getWindow(), true);
+		}
+		return true;
+	}
+	
+	private void toggleStatusBar(android.view.Window w, boolean show) {
+		if(show) {
+			WindowManager.LayoutParams attrs = w.getAttributes();
+			attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+			w.setAttributes(attrs);
+		} else {
+			WindowManager.LayoutParams attrs = w.getAttributes();
+			attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+			w.setAttributes(attrs);
+		}
 	}
 
 	@Override

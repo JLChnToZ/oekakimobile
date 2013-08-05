@@ -101,6 +101,7 @@
     <string name="boxblur">Box Blur</string>
     <string name="undo">Undo</string>
     <string name="redo">Redo</string>
+    <string name="fullscreen">Fullscreen</string>
     
     <string name="file">File</string>
     <string name="newfile">New</string>

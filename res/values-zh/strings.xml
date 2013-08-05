@@ -83,6 +83,9 @@
     <string name="brightness">亮度</string>
     <string name="contrast">對比</string>
     <string name="reset">重設</string>
+    <string name="rename">重新命名</string>
+    <string name="duplicatelayer">重製圖層</string>
+    <string name="mergedownlayer">向下合併圖層</string>
     
     <!-- Menu items -->
     <string name="edit">編輯</string>
@@ -97,6 +100,7 @@
     <string name="boxblur">盒狀糢糊</string>
     <string name="undo">復原</string>
     <string name="redo">重復</string>
+    <string name="fullscreen">全螢幕</string>
     
     <string name="file">檔案</string>
     <string name="newfile">新增</string>

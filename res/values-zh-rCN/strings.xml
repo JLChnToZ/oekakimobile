@@ -86,6 +86,9 @@
     <string name="brightness">亮度</string>
     <string name="contrast">对比</string>
     <string name="reset">重设</string>
+    <string name="rename">重命名</string>
+    <string name="duplicatelayer">复制图层</string>
+    <string name="mergedownlayer">向下合并图层</string>
     
     <!-- Menu items -->
     <string name="edit">编辑</string>
@@ -100,6 +103,7 @@
     <string name="boxblur">盒状模糊</string>
     <string name="undo">复原</string>
     <string name="redo">重复</string>
+    <string name="fullscreen">全屏</string>
     
     <string name="file">档案</string>
     <string name="newfile">新增</string>
