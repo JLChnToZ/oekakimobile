@@ -71,6 +71,17 @@
 		<item>方形点阵化</item>
 		<item>方形平滑</item>
     </string-array>
+    <string-array name="toolTypes">
+        <item>画笔</item>
+        <item>橡皮擦</item>
+        <item>加亮</item>
+        <item>变暗</item>
+        <item>水彩</item>
+        <item>模糊</item>
+        <item>手指</item>
+        <item>油画</item>
+    </string-array>
+    
     <string name="strokesize">画笔大小</string>
     <string name="alpha">不透明度</string>
     <string name="color">选择颜色</string>
