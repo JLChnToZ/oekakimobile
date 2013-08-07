@@ -11,6 +11,32 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content" >
 	
+	        <EditText
+	            android:id="@+id/TBToolName"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_span="2"
+	            android:layout_weight="1"
+	            android:hint="@string/tools" />
+
+	    </TableRow>
+	
+	    <TableRow
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" >
+	
+	        <Spinner
+	            android:id="@+id/SPToolType"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_span="2"
+	            android:layout_weight="1" />
+	    </TableRow>
+	
+	    <TableRow
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" >
+	
 	        <Spinner
 	            android:id="@+id/SPToolInfo"
 	            android:layout_width="fill_parent"

@@ -79,6 +79,17 @@
         <item>Square Pixel</item>
         <item>Square Smooth</item>
     </string-array>
+    
+    <string-array name="toolTypes">
+        <item>Paint</item>
+        <item>Earse</item>
+        <item>Dodge</item>
+        <item>Burn</item>
+        <item>Water Color</item>
+        <item>Blur</item>
+        <item>Smudge</item>
+        <item>Oil Color</item>
+    </string-array>
 
     <string name="strokesize">Stroke Width</string>
     <string name="alpha">Alpha</string>

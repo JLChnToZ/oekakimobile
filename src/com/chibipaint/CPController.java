@@ -49,7 +49,7 @@ public abstract class CPController {
 	public PaintCanvas canvas;
 
 	CPBrushInfo[] tools;
-	int curBrush = T_PENCIL;
+	CPBrushInfo curBrush;
 	int curMode = M_DRAW;
 
 	private LinkedList<ICPColorListener> colorListeners = new LinkedList<ICPColorListener>();
@@ -146,6 +146,7 @@ public abstract class CPController {
 				CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_SMUDGE, 0f, 1f);
 		tools[T_BLENDER] = new CPBrushInfo(T_SMUDGE, 20, 60, false, true, .5f, .1f, false, true,
 				CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_OIL, 0f, .07f);
+		curBrush = tools[T_PENCIL];
 	}
 
 	public void setArtwork(CPArtwork artwork) {
@@ -181,32 +182,39 @@ public abstract class CPController {
 	}
 
 	public void setBrushSize(int size) {
-		tools[curBrush].size = Math.max(1, Math.min(200, size));
+		curBrush.size = Math.max(1, Math.min(200, size));
 		callToolListeners();
 	}
 
 	public int getBrushSize() {
-		return tools[curBrush].size;
+		return curBrush.size;
 	}
 
 	public void setAlpha(int alpha) {
-		tools[curBrush].alpha = alpha;
+		curBrush.alpha = alpha;
 		callToolListeners();
 	}
 
 	public int getAlpha() {
-		return tools[curBrush].alpha;
+		return curBrush.alpha;
 	}
 
 	public void setTool(int tool) {
 		setMode(M_DRAW);
+		curBrush = tools[tool];
+		artwork.setBrush(curBrush);
+		callToolListeners();
+	}
+	
+	public void setTool(CPBrushInfo tool) {
+		setMode(M_DRAW);
 		curBrush = tool;
-		artwork.setBrush(tools[tool]);
+		artwork.setBrush(tool);
 		callToolListeners();
 	}
 
 	public CPBrushInfo getBrushInfo() {
-		return tools[curBrush];
+		return curBrush;
 	}
 
 	public void setMode(int mode) {
@@ -224,7 +232,7 @@ public abstract class CPController {
 
 	public void callToolListeners() {
 		for (ICPToolListener l : toolListeners) {
-			l.newTool(curBrush, tools[curBrush]);
+			l.newTool(curBrush.toolNb, curBrush);
 		}
 	}
 

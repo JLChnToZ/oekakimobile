@@ -61,6 +61,16 @@
     </string-array>
     
     <!-- Brush Settings Dialog -->
+    <string-array name="toolTypes">
+        <item>畫筆</item>
+        <item>橡皮擦</item>
+        <item>加亮</item>
+        <item>變暗</item>
+        <item>水彩</item>
+        <item>模糊</item>
+        <item>手指</item>
+        <item>油畫</item>
+    </string-array>
     <string-array name="tipNames">
 		<item>圓形點陣化</item>
 		<item>圓形硬邊</item>

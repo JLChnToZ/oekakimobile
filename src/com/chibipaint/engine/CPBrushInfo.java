@@ -68,6 +68,8 @@ public class CPBrushInfo implements Cloneable {
 	// Current brush setting (once tablet pressure and stuff is applied)
 	public float curSize;
 	public int curAlpha;
+	
+	private String name = "";
 
 	public CPBrushInfo() {
 	}
@@ -78,8 +80,8 @@ public class CPBrushInfo implements Cloneable {
 		this.toolNb = toolNb;
 		this.size = size;
 		this.alpha = alpha;
-		this.isAA = isAA;
-		this.isAirbrush = isAirbrush;
+		this.isAA = isAA; // I don't know why it is needed to pass from constructor.
+		this.isAirbrush = isAirbrush; // This one too.
 		this.minSpacing = minSpacing;
 		this.spacing = spacing;
 
@@ -91,6 +93,38 @@ public class CPBrushInfo implements Cloneable {
 
 		this.resat = resat;
 		this.bleed = bleed;
+	}
+
+	public CPBrushInfo(int toolNb, int size, int alpha,  float minSpacing,
+			float spacing, boolean pressureSize, boolean pressureAlpha, int brushType, int paintMode, float resat,
+			float bleed) {
+		this.toolNb = toolNb;
+		this.size = size;
+		this.alpha = alpha;
+		
+		this.isAA = brushType == B_ROUND_AA ||brushType == B_SQUARE_AA;
+		this.isAirbrush = brushType == B_ROUND_AIRBRUSH;
+		
+		this.minSpacing = minSpacing;
+		this.spacing = spacing;
+
+		this.pressureSize = pressureSize;
+		this.pressureAlpha = pressureAlpha;
+
+		this.type = brushType;
+		this.paintMode = paintMode;
+
+		this.resat = resat;
+		this.bleed = bleed;
+	}
+	
+	public CPBrushInfo setName(String name) {
+		this.name = name;
+		return this;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 
 	public void applyPressure(float pressure) {
@@ -116,6 +150,16 @@ public class CPBrushInfo implements Cloneable {
 		// curSqueeze = squeeze * pressure;
 		// curAngle = angle * pressure;
 
+	}
+
+	public CPBrushInfo clone(int newNB) {
+		try {
+			CPBrushInfo clonedObj =  (CPBrushInfo)super.clone();
+			clonedObj.toolNb = newNB;
+			return clonedObj;
+		} catch (Exception ignored) {
+			return null;
+		}
 	}
 
 	public Object clone() {
