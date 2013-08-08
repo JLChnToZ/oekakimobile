@@ -177,7 +177,6 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		final boolean fastMode = false;
 		if(ME == null)
 			ME = new ArrayList<MotionEvent>();
 		ME.add(MotionEvent.obtain(ev)); // Push current state to array pending for process
@@ -193,7 +192,6 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 								ActiveMode.mousePressed(e);
 								break;
 							case MotionEvent.ACTION_MOVE:
-								if(!fastMode && ActiveMode == curDrawMode)
 									ActiveMode.mouseDragged(e);
 								break;
 							case MotionEvent.ACTION_UP:
