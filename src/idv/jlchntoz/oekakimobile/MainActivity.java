@@ -189,33 +189,40 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
     }
     
     private void refreshPensMenu() {
-    	pensMenu.clear();
-    	customPenMenuItems.clear();
-    	
-    	modeMenuItems[CPController.M_MOVE_TOOL] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.move)).setOnMenuItemClickListener(this);
-    	modeMenuItems[CPController.M_MOVE_CANVAS] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.movecanvas)).setOnMenuItemClickListener(this);
-    	modeMenuItems[CPController.M_RECT_SELECTION] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.rectselection)).setOnMenuItemClickListener(this);
-    	modeMenuItems[CPController.M_COLOR_PICKER] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.colorpicker)).setOnMenuItemClickListener(this);
-    	modeMenuItems[CPController.M_FLOODFILL] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.floodfill)).setOnMenuItemClickListener(this);
-    	
-		for(int i = 0; i < modeMenuItems.length; i++)
-			if(modeMenuItems[i] != null)
-				modeMenuItems[i].setChecked(i == modeChecked);
-
-    	for(int i = 0; i < customPens.size(); i++) {
-    		while(customPenMenuItems.size() <= i)
-    			customPenMenuItems.add(null);
-    		if(customPens.get(i) != null)
-    			customPenMenuItems.set(i, pensMenu.add(2, Menu.NONE, Menu.NONE, customPens.get(i).getName()).
-    					setChecked(penChecked == i && modeChecked == CPController.M_DRAW).
-    					setOnMenuItemClickListener(this));
-    	}
-
-    	pensMenu.setGroupCheckable(1, true, false);
-    	pensMenu.setGroupCheckable(2, true, false);
-    	
-    	brushSettingsMenuItem = pensMenu.add(3, Menu.NONE, Menu.NONE, getString(R.string.brushsettings)).setOnMenuItemClickListener(this);
+    	runOnUiThread(r_RefreshPensMenu);
     }
+    
+    private Runnable r_RefreshPensMenu = new Runnable() {
+		@Override
+		public void run() {
+	    	pensMenu.clear();
+	    	customPenMenuItems.clear();
+	    	
+	    	modeMenuItems[CPController.M_MOVE_TOOL] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.move)).setOnMenuItemClickListener(MainActivity.this);
+	    	modeMenuItems[CPController.M_MOVE_CANVAS] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.movecanvas)).setOnMenuItemClickListener(MainActivity.this);
+	    	modeMenuItems[CPController.M_RECT_SELECTION] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.rectselection)).setOnMenuItemClickListener(MainActivity.this);
+	    	modeMenuItems[CPController.M_COLOR_PICKER] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.colorpicker)).setOnMenuItemClickListener(MainActivity.this);
+	    	modeMenuItems[CPController.M_FLOODFILL] = pensMenu.add(2, Menu.NONE, Menu.NONE, getString(R.string.floodfill)).setOnMenuItemClickListener(MainActivity.this);
+	    	
+			for(int i = 0; i < modeMenuItems.length; i++)
+				if(modeMenuItems[i] != null)
+					modeMenuItems[i].setChecked(i == modeChecked);
+
+	    	for(int i = 0; i < customPens.size(); i++) {
+	    		while(customPenMenuItems.size() <= i)
+	    			customPenMenuItems.add(null);
+	    		if(customPens.get(i) != null)
+	    			customPenMenuItems.set(i, pensMenu.add(2, Menu.NONE, Menu.NONE, customPens.get(i).getName()).
+	    					setChecked(penChecked == i && modeChecked == CPController.M_DRAW).
+	    					setOnMenuItemClickListener(MainActivity.this));
+	    	}
+
+	    	pensMenu.setGroupCheckable(1, true, false);
+	    	pensMenu.setGroupCheckable(2, true, false);
+	    	
+	    	brushSettingsMenuItem = pensMenu.add(3, Menu.NONE, Menu.NONE, getString(R.string.brushsettings)).setOnMenuItemClickListener(MainActivity.this);
+		}
+    };
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

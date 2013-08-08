@@ -18,9 +18,13 @@
 
 package idv.jlchntoz.oekakimobile;
 
+import java.util.ArrayList;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
+import android.os.*;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +37,8 @@ import com.chibipaint.util.CPRect;
 
 public class PaintCanvas extends View implements CPController.ICPToolListener,
 CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
+	private static final int MSG_REDRAW = 1;
+	
 	private int width, height;
 	private CPArtwork artwork;
 	private Paint paintShader, paintHint;
@@ -45,6 +51,8 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	private float rotation, zoom;
 	private int screenWidth, screenHeight;
 	public CPController controller;
+	private ArrayList<MotionEvent> ME;
+	private Thread TE;
 	
 	//
 	// Modes system: modes control the way the GUI is reacting to the user input
@@ -125,6 +133,18 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		paintShader.setShader(CheckerBoardShader);
 	}
 	
+	@SuppressLint("HandlerLeak")
+	private final Handler _h = new Handler() {
+		@Override
+		public void handleMessage(Message m) {
+			switch(m.what) {
+				case MSG_REDRAW:
+					invalidate();
+					break;
+			}
+		}
+	};
+	
 	@Override
 	protected void onSizeChanged(int w, int h, int ow, int oh) {
 		screenWidth = w;
@@ -154,25 +174,42 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	}
 	
 	@Override
-	public boolean onTouchEvent(MotionEvent e) {
-		switch(e.getAction() & MotionEvent.ACTION_MASK) {
-			case MotionEvent.ACTION_DOWN:
-				ActiveMode.mousePressed(e);
-				break;
-			case MotionEvent.ACTION_MOVE:
-				ActiveMode.mouseDragged(e);
-				break;
-			case MotionEvent.ACTION_UP:
-				ActiveMode.mouseReleased(e);
-				break;
-			case MotionEvent.ACTION_POINTER_DOWN:
-				ActiveMode.secondMousePressed(e);
-				break;
-			case MotionEvent.ACTION_POINTER_UP:
-				ActiveMode.secondMouseReleased(e);
-				break;
+	public boolean onTouchEvent(MotionEvent ev) {
+		if(ME == null)
+			ME = new ArrayList<MotionEvent>();
+		ME.add(MotionEvent.obtain(ev)); // Push current state to array pending for process
+		if(TE == null || !TE.isAlive()) { // If the thread is died or not yet created, make the new one.
+			TE = new Thread() {
+				@Override
+				public void run() {
+					for(int i = 0; i < ME.size(); i++) {
+						if(ActiveMode != curDrawMode)
+							i = ME.size() - 1;
+						MotionEvent e = ME.get(i);
+						switch(e.getAction() & MotionEvent.ACTION_MASK) {
+							case MotionEvent.ACTION_DOWN:
+								ActiveMode.mousePressed(e);
+								break;
+							case MotionEvent.ACTION_MOVE:
+								ActiveMode.mouseDragged(e);
+								break;
+							case MotionEvent.ACTION_UP:
+								ActiveMode.mouseReleased(e);
+								break;
+							case MotionEvent.ACTION_POINTER_DOWN:
+								ActiveMode.secondMousePressed(e);
+								break;
+							case MotionEvent.ACTION_POINTER_UP:
+								ActiveMode.secondMouseReleased(e);
+								break;
+						}
+						e.recycle();
+					}
+					ME.clear();
+				}
+			};
+			TE.start();
 		}
-		
 		return true;
 	}
 	
@@ -188,7 +225,7 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		BM.setPixels(artwork.getDisplayBM().data,
 				_top * width + _left, width,
 				_left, _top, _width, _height);
-		invalidate();
+		repaint();
 	}
 
 	@Override
@@ -287,11 +324,13 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	}
 	
 	public void repaint() {
-		this.invalidate();
+		repaint(0, 0, width, height);
 	}
 	
 	public void repaint(float x, float y, float w, float h) {
-		this.invalidate();
+		Message m = new Message();
+		m.what = MSG_REDRAW;
+		_h.sendMessage(m);
 	}
 	
 	public float getRotation2() {
