@@ -104,9 +104,12 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
         PC.setOnTouchListener(this);
         controller = PC.controller;
         Intent currentIntent = getIntent();
-        if(currentIntent.hasExtra("file")) {
+        if(currentIntent.getData() != null)
+	        fileName = currentIntent.getData().getEncodedPath();
+        if(currentIntent.hasExtra("file"))
+	        fileName = currentIntent.getStringExtra("file");
+        if(fileName != null) {
 			try {
-		        fileName = currentIntent.getStringExtra("file");
 				File file = new File(fileName);
 				if(file.exists()) {
 					FileInputStream FIS = new FileInputStream(file);
