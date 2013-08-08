@@ -53,6 +53,8 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	public CPController controller;
 	private ArrayList<MotionEvent> ME;
 	private Thread TE;
+	private Rect totalUpdateRegion;
+	private boolean updateBM;
 	
 	//
 	// Modes system: modes control the way the GUI is reacting to the user input
@@ -175,6 +177,7 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
+		final boolean fastMode = false;
 		if(ME == null)
 			ME = new ArrayList<MotionEvent>();
 		ME.add(MotionEvent.obtain(ev)); // Push current state to array pending for process
@@ -182,18 +185,19 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 			TE = new Thread() {
 				@Override
 				public void run() {
+					updateBM = false;
 					for(int i = 0; i < ME.size(); i++) {
-						if(ActiveMode != curDrawMode)
-							i = ME.size() - 1;
 						MotionEvent e = ME.get(i);
 						switch(e.getAction() & MotionEvent.ACTION_MASK) {
 							case MotionEvent.ACTION_DOWN:
 								ActiveMode.mousePressed(e);
 								break;
 							case MotionEvent.ACTION_MOVE:
-								ActiveMode.mouseDragged(e);
+								if(!fastMode && ActiveMode == curDrawMode)
+									ActiveMode.mouseDragged(e);
 								break;
 							case MotionEvent.ACTION_UP:
+								ActiveMode.mouseDragged(e);
 								ActiveMode.mouseReleased(e);
 								break;
 							case MotionEvent.ACTION_POINTER_DOWN:
@@ -206,6 +210,8 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 						e.recycle();
 					}
 					ME.clear();
+					updateBM = true;
+					repaint();
 				}
 			};
 			TE.start();
@@ -222,9 +228,10 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		int _width = region.getWidth(), _height = region.getHeight();
 		if(_width - _left > width) _width = width + _left;
 		if(_height - _top > height) _height = height + _top;
-		BM.setPixels(artwork.getDisplayBM().data,
-				_top * width + _left, width,
-				_left, _top, _width, _height);
+		if(totalUpdateRegion == null)
+			totalUpdateRegion = new Rect(_left, _top, _left+_width, _top+_height);
+		else
+			totalUpdateRegion.union(_left, _top, _left+_width, _top+_height);
 		repaint();
 	}
 
@@ -324,6 +331,13 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	}
 	
 	public void repaint() {
+		if(updateBM && totalUpdateRegion != null) {
+			BM.setPixels(artwork.getDisplayBM().data,
+					totalUpdateRegion.left + totalUpdateRegion.top * width, width,
+					totalUpdateRegion.left, totalUpdateRegion.top, totalUpdateRegion.width(), totalUpdateRegion.height());
+			totalUpdateRegion = null;
+			updateBM = false;
+		}
 		repaint(0, 0, width, height);
 	}
 	
