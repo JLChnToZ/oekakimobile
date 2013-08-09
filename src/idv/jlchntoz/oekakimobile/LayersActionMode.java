@@ -35,7 +35,7 @@ public class LayersActionMode implements Callback {
 	public LayersActionMode(Context context, CPController controller) {
 		this.context = context;
 		this.controller = controller;
-		this.artwork = controller.getArtwork();
+		artwork = controller.getArtwork();
 	}
 
 	@Override
@@ -55,26 +55,25 @@ public class LayersActionMode implements Callback {
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_layer_add:
-			this.artwork.addLayer();
+			artwork.addLayer();
 			break;
 		case R.id.menu_layer_remove:
-			this.controller.artwork.removeLayer();
+			controller.artwork.removeLayer();
 			break;
 		case R.id.menu_layer_mergedown:
-			this.controller.artwork.mergeDown(true);
+			controller.artwork.mergeDown(true);
 			break;
 		case R.id.menu_layer_duplicate:
-			this.controller.artwork.duplicateLayer();
+			controller.artwork.duplicateLayer();
 			break;
 		case R.id.menu_layer_edit:
-			PromptDialog dialog = new PromptDialog(this.context,
-					this.context.getString(R.string.layername),
-					this.controller.artwork.getActiveLayer().name,
+			PromptDialog dialog = new PromptDialog(context,
+					context.getString(R.string.layername),
+					controller.artwork.getActiveLayer().name,
 					new PromptDialog.PromptDialogCallBack() {
 						@Override
 						public void onCallBack(PromptDialog which, String result) {
-							artwork.setLayerName(artwork.getActiveLayerNb(),
-									result);
+							artwork.setLayerName(artwork.getActiveLayerNb(), result);
 						}
 					});
 			dialog.showDialog();

@@ -72,10 +72,9 @@ public class ColorPickerView extends View {
 		sliders[0] = c_r = new colorslider();
 		sliders[1] = c_g = new colorslider();
 		sliders[2] = c_b = new colorslider();
-		paddingSize = (int) TypedValue.applyDimension(
-				TypedValue.COMPLEX_UNIT_DIP, this.getContext().getResources()
-						.getDimension(R.dimen.dialpgpadding), this.getContext()
-						.getResources().getDisplayMetrics());
+		paddingSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+				getContext().getResources().getDimension(R.dimen.dialpgpadding),
+				getContext().getResources().getDisplayMetrics());
 	}
 
 	public int getColor() {
@@ -129,19 +128,18 @@ public class ColorPickerView extends View {
 			_p.setColor(fastCompleColor(Color.HSVToColor(selHSV1)));
 			float r = getRadian(selHSV[0]), cr = (float) Math.cos(r), sr = (float) Math
 					.sin(r);
-			c.drawLine(cr * radius + centerX, sr * radius + centerY, cr
-					* innerRadius + centerX, sr * innerRadius + centerY, _p);
+			c.drawLine(cr * radius + centerX, sr * radius + centerY, cr * innerRadius
+					+ centerX, sr * innerRadius + centerY, _p);
 
 			_p.setColor(fastCompleColor(getColor()));
-			c.drawCircle(SVX1 + selHSV[1] * SVSize, SVY1 + selHSV[2] * SVSize,
-					5, _p);
+			c.drawCircle(SVX1 + selHSV[1] * SVSize, SVY1 + selHSV[2] * SVSize, 5, _p);
 		}
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		float ex = e.getX(), ey = e.getY(), d = (float) getDistance(ex, ey,
-				centerX, centerY);
+		float ex = e.getX(), ey = e.getY(), d = getDistance(ex, ey, centerX,
+				centerY);
 		if (e.getAction() == MotionEvent.ACTION_DOWN && ex < paddingSize * 3
 				&& ey < paddingSize * 3) {
 			selectMode = (selectMode + 1) % 2;
@@ -216,17 +214,16 @@ public class ColorPickerView extends View {
 		centerX = w / 2;
 		centerY = h / 2;
 		float d = innerRadius * (float) Math.sqrt(2) / 2;
-		SVX1 = (int) Math.round(centerX - d);
-		SVY1 = (int) Math.round(centerY - d);
-		SVX2 = (int) Math.round(centerX + d);
-		SVY2 = (int) Math.round(centerY + d);
+		SVX1 = Math.round(centerX - d);
+		SVY1 = Math.round(centerY - d);
+		SVX2 = Math.round(centerX + d);
+		SVY2 = Math.round(centerY + d);
 		SVSize = d * 2;
-		sh1 = new LinearGradient(SVX1, SVY1, SVX1, SVY2, Color.BLACK,
-				Color.WHITE, TileMode.CLAMP);
-		for (int i = 0; i < sliders.length; i++) {
+		sh1 = new LinearGradient(SVX1, SVY1, SVX1, SVY2, Color.BLACK, Color.WHITE,
+				TileMode.CLAMP);
+		for (int i = 0; i < sliders.length; i++)
 			sliders[i].setPosition(paddingSize, paddingSize * 4 * (i + 1), w
 					- paddingSize * 2, paddingSize * 4);
-		}
 		updateShaders();
 		updateBitmap();
 	}
@@ -264,7 +261,7 @@ public class ColorPickerView extends View {
 			int x1 = (int) (centerX - radius), x2 = (int) (centerX + radius);
 			int y1 = (int) (centerY - radius), y2 = (int) (centerY + radius);
 			float d = 0;
-			for (int y = y1; y < y2; y++) {
+			for (int y = y1; y < y2; y++)
 				for (int x = x1; x < x2; x++) {
 					d = getDistance(x, y, centerX, centerY);
 					if (d < radius && d > innerRadius) {
@@ -272,7 +269,6 @@ public class ColorPickerView extends View {
 						_px[x + width * y] = Color.HSVToColor(hsv);
 					}
 				}
-			}
 		}
 		_hsvColorWheel.setPixels(_px, 0, width, 0, 0, width, height);
 		return _hsvColorWheel;
@@ -329,44 +325,39 @@ public class ColorPickerView extends View {
 		LinearGradient _lg;
 
 		public colorslider() {
-			this.value = 0;
-			this.isDown = false;
-			this.color1 = Color.TRANSPARENT;
-			this.color2 = Color.TRANSPARENT;
-			this._p = new Paint();
-			this._p2 = new Paint();
-			this._p.setStyle(Style.STROKE);
-			this._p.setStrokeWidth(3);
-			this._p2.setStyle(Style.FILL);
+			value = 0;
+			isDown = false;
+			color1 = Color.TRANSPARENT;
+			color2 = Color.TRANSPARENT;
+			_p = new Paint();
+			_p2 = new Paint();
+			_p.setStyle(Style.STROKE);
+			_p.setStrokeWidth(3);
+			_p2.setStyle(Style.FILL);
 			setPosition(0, 0, 0, 0);
 		}
 
 		public void setPosition(float x, float y, float w, float h) {
-			this.x1 = x;
-			this.x2 = x + w;
-			this.y1 = y;
-			this.y2 = y + h;
-			if (this._lg != null)
-				setColor(this.color1, this.color2);
+			x1 = x;
+			x2 = x + w;
+			y1 = y;
+			y2 = y + h;
+			if (_lg != null)
+				setColor(color1, color2);
 		}
 
 		public void setColor(int start, int end) {
-			this.color1 = start;
-			this.color2 = end;
-			this._lg = new LinearGradient(this.x1, this.y1, this.x2, this.y1,
-					start, end, TileMode.CLAMP);
-			this._p2.setShader(_lg);
+			color1 = start;
+			color2 = end;
+			_lg = new LinearGradient(x1, y1, x2, y1, start, end, TileMode.CLAMP);
+			_p2.setShader(_lg);
 		}
 
 		public int getSelectedColor() {
-			int _a = mixValue(Color.alpha(this.color1),
-					Color.alpha(this.color2), this.value);
-			int _r = mixValue(Color.red(this.color1), Color.red(this.color2),
-					this.value);
-			int _g = mixValue(Color.green(this.color1),
-					Color.green(this.color2), this.value);
-			int _b = mixValue(Color.blue(this.color1), Color.blue(this.color2),
-					this.value);
+			int _a = mixValue(Color.alpha(color1), Color.alpha(color2), value);
+			int _r = mixValue(Color.red(color1), Color.red(color2), value);
+			int _g = mixValue(Color.green(color1), Color.green(color2), value);
+			int _b = mixValue(Color.blue(color1), Color.blue(color2), value);
 			return Color.argb(_a, _r, _g, _b);
 		}
 
@@ -379,17 +370,17 @@ public class ColorPickerView extends View {
 		}
 
 		public void onDraw(Canvas c) {
-			c.drawRect(this.x1, this.y1, this.x2, this.y2, this._p2);
-			float _x = mixValue(this.x1, this.x2, this.value);
+			c.drawRect(x1, y1, x2, y2, _p2);
+			float _x = mixValue(x1, x2, value);
 			_p.setColor(fastCompleColor(getSelectedColor()));
-			c.drawLine(_x, this.y1, _x, this.y2, this._p);
+			c.drawLine(_x, y1, _x, y2, _p);
 		}
 
 		public boolean onTouchEvent(MotionEvent e) {
 			float _x = e.getX(), _y = e.getY();
 			switch (e.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				if (isIn(this.x1, this.y1, this.x2, this.y2, _x, _y))
+				if (isIn(x1, y1, x2, y2, _x, _y))
 					isDown = true;
 				break;
 			case MotionEvent.ACTION_UP:
@@ -397,7 +388,7 @@ public class ColorPickerView extends View {
 				break;
 			}
 			if (isDown)
-				this.value = getPercentage(this.x1, this.x2, _x);
+				value = getPercentage(x1, x2, _x);
 			return isDown;
 		}
 	}

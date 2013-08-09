@@ -52,23 +52,22 @@ public class FileDialog implements OnItemClickListener {
 	public FileDialog(Context context, String prompt, String basepath,
 			String filename, String[] extensionFilter, boolean isOpenDialog,
 			FileDialogCallBack Callback) {
-		this.callBack = Callback;
+		callBack = Callback;
 		this.context = context;
 		this.prompt = prompt;
-		this.path = basepath;
-		this.name = filename;
+		path = basepath;
+		name = filename;
 		this.isOpenDialog = isOpenDialog;
 		this.extensionFilter = extensionFilter;
 
-		this.DialogView = LayoutInflater.from(context).inflate(
-				R.layout.filedlg, null);
-		this.tvfiles = (EditText) this.DialogView.findViewById(R.id.etfilename);
-		this.lvwfiles = (ListView) this.DialogView.findViewById(R.id.lvwfiles);
+		DialogView = LayoutInflater.from(context).inflate(R.layout.filedlg, null);
+		tvfiles = (EditText) DialogView.findViewById(R.id.etfilename);
+		lvwfiles = (ListView) DialogView.findViewById(R.id.lvwfiles);
 
 		if (this.isOpenDialog)
-			this.tvfiles.setVisibility(View.GONE);
+			tvfiles.setVisibility(View.GONE);
 		else
-			this.tvfiles.setText(filename);
+			tvfiles.setText(filename);
 
 		buildAdapter();
 		buildDialog();
@@ -103,8 +102,8 @@ public class FileDialog implements OnItemClickListener {
 		fileNameList = new ArrayList<String>();
 		fileList = new ArrayList<File>();
 		if (files != null)
-			for (File file : files) {
-				if (file.isFile()) {
+			for (File file : files)
+				if (file.isFile())
 					if (extensionFilter != null && extensionFilter.length > 0) {
 						for (String ext : extensionFilter)
 							if (file.getName().endsWith("." + ext)) {
@@ -115,8 +114,6 @@ public class FileDialog implements OnItemClickListener {
 						fileList.add(file);
 						fileNameList.add(file.getName());
 					}
-				}
-			}
 		aafileList = new ArrayAdapter<String>(context,
 				android.R.layout.simple_list_item_1, fileNameList);
 		lvwfiles.setAdapter(aafileList);

@@ -125,38 +125,30 @@ public abstract class CPController {
 	public CPController() {
 		tools = new CPBrushInfo[T_MAX];
 		tools[T_PENCIL] = new CPBrushInfo(T_PENCIL, 16, 255, true, false, .5f,
-				.05f, false, true, CPBrushInfo.B_ROUND_AA, CPBrushInfo.M_PAINT,
-				1f, 0f);
+				.05f, false, true, CPBrushInfo.B_ROUND_AA, CPBrushInfo.M_PAINT, 1f, 0f);
 		tools[T_ERASER] = new CPBrushInfo(T_ERASER, 16, 255, true, false, .5f,
-				.05f, false, false, CPBrushInfo.B_ROUND_AA,
-				CPBrushInfo.M_ERASE, 1f, 0f);
-		tools[T_PEN] = new CPBrushInfo(T_PEN, 2, 128, true, false, .5f, .05f,
-				true, false, CPBrushInfo.B_ROUND_AA, CPBrushInfo.M_PAINT, 1f,
-				0f);
-		tools[T_SOFTERASER] = new CPBrushInfo(T_SOFTERASER, 16, 64, false,
-				true, .5f, .05f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
-				CPBrushInfo.M_ERASE, 1f, 0f);
-		tools[T_AIRBRUSH] = new CPBrushInfo(T_AIRBRUSH, 50, 32, false, true,
+				.05f, false, false, CPBrushInfo.B_ROUND_AA, CPBrushInfo.M_ERASE, 1f, 0f);
+		tools[T_PEN] = new CPBrushInfo(T_PEN, 2, 128, true, false, .5f, .05f, true,
+				false, CPBrushInfo.B_ROUND_AA, CPBrushInfo.M_PAINT, 1f, 0f);
+		tools[T_SOFTERASER] = new CPBrushInfo(T_SOFTERASER, 16, 64, false, true,
 				.5f, .05f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
-				CPBrushInfo.M_PAINT, 1f, 0f);
-		tools[T_DODGE] = new CPBrushInfo(T_DODGE, 30, 32, false, true, .5f,
-				.05f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
-				CPBrushInfo.M_DODGE, 1f, 0f);
-		tools[T_BURN] = new CPBrushInfo(T_BURN, 30, 32, false, true, .5f, .05f,
-				false, true, CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_BURN,
+				CPBrushInfo.M_ERASE, 1f, 0f);
+		tools[T_AIRBRUSH] = new CPBrushInfo(T_AIRBRUSH, 50, 32, false, true, .5f,
+				.05f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_PAINT,
 				1f, 0f);
-		tools[T_WATER] = new CPBrushInfo(T_WATER, 30, 70, false, true, .5f,
-				.02f, false, true, CPBrushInfo.B_ROUND_AA, CPBrushInfo.M_WATER,
-				.3f, .6f);
-		tools[T_BLUR] = new CPBrushInfo(T_BLUR, 20, 255, false, true, .5f,
-				.05f, false, true, CPBrushInfo.B_ROUND_PIXEL,
-				CPBrushInfo.M_BLUR, 1f, 0f);
+		tools[T_DODGE] = new CPBrushInfo(T_DODGE, 30, 32, false, true, .5f, .05f,
+				false, true, CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_DODGE, 1f, 0f);
+		tools[T_BURN] = new CPBrushInfo(T_BURN, 30, 32, false, true, .5f, .05f,
+				false, true, CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_BURN, 1f, 0f);
+		tools[T_WATER] = new CPBrushInfo(T_WATER, 30, 70, false, true, .5f, .02f,
+				false, true, CPBrushInfo.B_ROUND_AA, CPBrushInfo.M_WATER, .3f, .6f);
+		tools[T_BLUR] = new CPBrushInfo(T_BLUR, 20, 255, false, true, .5f, .05f,
+				false, true, CPBrushInfo.B_ROUND_PIXEL, CPBrushInfo.M_BLUR, 1f, 0f);
 		tools[T_SMUDGE] = new CPBrushInfo(T_SMUDGE, 20, 128, false, true, .5f,
-				.01f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
-				CPBrushInfo.M_SMUDGE, 0f, 1f);
-		tools[T_BLENDER] = new CPBrushInfo(T_SMUDGE, 20, 60, false, true, .5f,
-				.1f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
-				CPBrushInfo.M_OIL, 0f, .07f);
+				.01f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_SMUDGE,
+				0f, 1f);
+		tools[T_BLENDER] = new CPBrushInfo(T_SMUDGE, 20, 60, false, true, .5f, .1f,
+				false, true, CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_OIL, 0f, .07f);
 		curBrush = tools[T_PENCIL];
 	}
 
@@ -173,9 +165,8 @@ public abstract class CPController {
 			artwork.setForegroundColor(color.getRgb());
 
 			curColor.copyFrom(color);
-			for (Object l : colorListeners) {
+			for (Object l : colorListeners)
 				((ICPColorListener) l).newColor(color);
-			}
 		}
 	}
 
@@ -242,9 +233,8 @@ public abstract class CPController {
 	}
 
 	public void callToolListeners() {
-		for (ICPToolListener l : toolListeners) {
+		for (ICPToolListener l : toolListeners)
 			l.newTool(curBrush.toolNb, curBrush);
-		}
 	}
 
 	public void addModeListener(ICPModeListener listener) {
@@ -252,9 +242,8 @@ public abstract class CPController {
 	}
 
 	public void callModeListeners() {
-		for (ICPModeListener l : modeListeners) {
+		for (ICPModeListener l : modeListeners)
 			l.modeChange(curMode);
-		}
 	}
 
 	public void addViewListener(ICPViewListener listener) {
@@ -262,9 +251,8 @@ public abstract class CPController {
 	}
 
 	public void callViewListeners(CPViewInfo info) {
-		for (ICPViewListener l : viewListeners) {
+		for (ICPViewListener l : viewListeners)
 			l.viewChange(info);
-		}
 	}
 
 	public void addCPEventListener(ICPEventListener listener) {
@@ -272,16 +260,14 @@ public abstract class CPController {
 	}
 
 	public void callCPEventListeners() {
-		for (ICPEventListener l : cpEventListeners) {
+		for (ICPEventListener l : cpEventListeners)
 			l.cpEvent();
-		}
 	}
 
 	byte[] getPngData(Bitmap img) {
 		Bitmap.Config imageType = Bitmap.Config.ARGB_8888;
 
-		Bitmap bi = Bitmap.createBitmap(img.getWidth(), img.getHeight(),
-				imageType);
+		Bitmap bi = Bitmap.createBitmap(img.getWidth(), img.getHeight(), imageType);
 
 		ByteArrayOutputStream pngFileStream = new ByteArrayOutputStream(1024);
 

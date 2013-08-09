@@ -27,9 +27,11 @@ public class CPBezier {
 	//
 	// 1 - set the 4 points coordinates (x0-3, y0-3)
 	// two options:
-	// 2a - call init() with desired dt then read the current coordinate (Bx, By) and use nextPoint() to compute the
+	// 2a - call init() with desired dt then read the current coordinate (Bx, By)
+	// and use nextPoint() to compute the
 	// next point
-	// 2b - use one of the "compute" methods to compute the values for the whole curve in one step
+	// 2b - use one of the "compute" methods to compute the values for the whole
+	// curve in one step
 
 	// The 4 points coordinates
 	public float x0, y0;
@@ -42,7 +44,8 @@ public class CPBezier {
 	private double By, dBy, ddBy, dddBy;
 
 	public void init(double dt) {
-		// Implements a fast degree-3 Bezier curve using the forward differences method
+		// Implements a fast degree-3 Bezier curve using the forward differences
+		// method
 		//
 		// Reference for this algorithm:
 		// "Curves and Surfaces for Computer Graphics" by David Salomon, page 189

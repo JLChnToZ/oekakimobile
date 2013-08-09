@@ -48,8 +48,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 public class MainActivity extends SherlockActivity implements
 		OnMenuItemClickListener, ICPToolListener, ICPModeListener,
 		ICPColorListener, ICPEventListener, ICPViewListener,
-		SlidingMenu.OnCloseListener, SlidingMenu.OnOpenListener,
-		OnTouchListener {
+		SlidingMenu.OnCloseListener, SlidingMenu.OnOpenListener, OnTouchListener {
 
 	public static final int MSG_UPDATECOLOR = 2;
 
@@ -114,7 +113,7 @@ public class MainActivity extends SherlockActivity implements
 			fileName = currentIntent.getData().getEncodedPath();
 		if (currentIntent.hasExtra("file"))
 			fileName = currentIntent.getStringExtra("file");
-		if (fileName != null) {
+		if (fileName != null)
 			try {
 				File file = new File(fileName);
 				if (file.exists()) {
@@ -123,11 +122,10 @@ public class MainActivity extends SherlockActivity implements
 					FIS.close();
 				}
 			} catch (Exception e) {
-				Toast.makeText(MainActivity.this,
-						getString(R.string.fileioerror), Toast.LENGTH_LONG)
-						.show();
+				Toast.makeText(MainActivity.this, getString(R.string.fileioerror),
+						Toast.LENGTH_LONG).show();
 			}
-		} else {
+		else {
 			int width = 800, height = 600;
 			if (currentIntent.hasExtra("width"))
 				width = currentIntent.getIntExtra("width", 800);
@@ -159,8 +157,7 @@ public class MainActivity extends SherlockActivity implements
 
 		drawer.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 
-		drawerHandler1 = new LayerDrawerHandler(this, controller,
-				drawer.getMenu());
+		drawerHandler1 = new LayerDrawerHandler(this, controller, drawer.getMenu());
 		drawerHandler2 = new ColorTextureDrawerHandler(this, controller,
 				drawer.getSecondaryMenu());
 
@@ -200,11 +197,11 @@ public class MainActivity extends SherlockActivity implements
 
 		refreshPensMenu();
 
-		pensMenu.getItem()
+		pensMenu
+				.getItem()
 				.setIcon(R.drawable.ic_menu_tools)
 				.setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_ALWAYS
-								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+						MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 		SubMenu colorMenu = menu.addSubMenu(getString(R.string.colortexture))
 				.setIcon(colorIcon);
@@ -228,21 +225,21 @@ public class MainActivity extends SherlockActivity implements
 			pensMenu.clear();
 			customPenMenuItems.clear();
 
-			modeMenuItems[CPController.M_MOVE_TOOL] = pensMenu.add(2,
-					Menu.NONE, Menu.NONE, getString(R.string.move))
+			modeMenuItems[CPController.M_MOVE_TOOL] = pensMenu.add(2, Menu.NONE,
+					Menu.NONE, getString(R.string.move)).setOnMenuItemClickListener(
+					MainActivity.this);
+			modeMenuItems[CPController.M_MOVE_CANVAS] = pensMenu.add(2, Menu.NONE,
+					Menu.NONE, getString(R.string.movecanvas))
 					.setOnMenuItemClickListener(MainActivity.this);
-			modeMenuItems[CPController.M_MOVE_CANVAS] = pensMenu.add(2,
-					Menu.NONE, Menu.NONE, getString(R.string.movecanvas))
+			modeMenuItems[CPController.M_RECT_SELECTION] = pensMenu.add(2, Menu.NONE,
+					Menu.NONE, getString(R.string.rectselection))
 					.setOnMenuItemClickListener(MainActivity.this);
-			modeMenuItems[CPController.M_RECT_SELECTION] = pensMenu.add(2,
-					Menu.NONE, Menu.NONE, getString(R.string.rectselection))
+			modeMenuItems[CPController.M_COLOR_PICKER] = pensMenu.add(2, Menu.NONE,
+					Menu.NONE, getString(R.string.colorpicker))
 					.setOnMenuItemClickListener(MainActivity.this);
-			modeMenuItems[CPController.M_COLOR_PICKER] = pensMenu.add(2,
-					Menu.NONE, Menu.NONE, getString(R.string.colorpicker))
-					.setOnMenuItemClickListener(MainActivity.this);
-			modeMenuItems[CPController.M_FLOODFILL] = pensMenu.add(2,
-					Menu.NONE, Menu.NONE, getString(R.string.floodfill))
-					.setOnMenuItemClickListener(MainActivity.this);
+			modeMenuItems[CPController.M_FLOODFILL] = pensMenu.add(2, Menu.NONE,
+					Menu.NONE, getString(R.string.floodfill)).setOnMenuItemClickListener(
+					MainActivity.this);
 
 			for (int i = 0; i < modeMenuItems.length; i++)
 				if (modeMenuItems[i] != null)
@@ -252,23 +249,21 @@ public class MainActivity extends SherlockActivity implements
 				while (customPenMenuItems.size() <= i)
 					customPenMenuItems.add(null);
 				if (customPens.get(i) != null)
-					customPenMenuItems
-							.set(i,
-									pensMenu.add(2, Menu.NONE, Menu.NONE,
-											customPens.get(i).getName())
-											.setChecked(
-													penChecked == i
-															&& modeChecked == CPController.M_DRAW)
-											.setOnMenuItemClickListener(
-													MainActivity.this));
+					customPenMenuItems.set(
+							i,
+							pensMenu
+									.add(2, Menu.NONE, Menu.NONE, customPens.get(i).getName())
+									.setChecked(
+											penChecked == i && modeChecked == CPController.M_DRAW)
+									.setOnMenuItemClickListener(MainActivity.this));
 			}
 
 			pensMenu.setGroupCheckable(1, true, false);
 			pensMenu.setGroupCheckable(2, true, false);
 
 			brushSettingsMenuItem = pensMenu.add(3, Menu.NONE, Menu.NONE,
-					getString(R.string.brushsettings))
-					.setOnMenuItemClickListener(MainActivity.this);
+					getString(R.string.brushsettings)).setOnMenuItemClickListener(
+					MainActivity.this);
 		}
 	};
 
@@ -289,9 +284,9 @@ public class MainActivity extends SherlockActivity implements
 				drawer.showContent();
 			else
 				drawer.showSecondaryMenu();
-		} else if (brushSettingsMenuItem == item) {
+		} else if (brushSettingsMenuItem == item)
 			BSD.showDialog();
-		} else
+		else
 			switch (item.getItemId()) {
 			case android.R.id.home:
 				drawer.setMode(SlidingMenu.LEFT);
@@ -305,26 +300,22 @@ public class MainActivity extends SherlockActivity implements
 					drawer.showMenu();
 				break;
 			case R.id.menu_edit:
-				drawerActionMode = startActionMode(new EditActionMode(this,
-						controller));
+				drawerActionMode = startActionMode(new EditActionMode(this, controller));
 				break;
 			case R.id.menu_new:
-				SizeDialog nfdlg = new SizeDialog(this,
-						getString(R.string.newfile), artwork.width,
-						artwork.height, new SizeDialog.SizeDialogCallBack() {
+				SizeDialog nfdlg = new SizeDialog(this, getString(R.string.newfile),
+						artwork.width, artwork.height, new SizeDialog.SizeDialogCallBack() {
 							@Override
-							public void onCallBack(SizeDialog which, int width,
-									int height) {
+							public void onCallBack(SizeDialog which, int width, int height) {
 								restartAndOpenWith(width, height);
 							}
 						});
 				nfdlg.showDialog();
 				break;
 			case R.id.menu_open:
-				FileDialog openDlg = new FileDialog(this,
-						getString(R.string.open), extFilePath + File.separator
-								+ "mypaint", ".chi", new String[] { "chi" },
-						true, new FileDialog.FileDialogCallBack() {
+				FileDialog openDlg = new FileDialog(this, getString(R.string.open),
+						extFilePath + File.separator + "mypaint", ".chi",
+						new String[] { "chi" }, true, new FileDialog.FileDialogCallBack() {
 							@Override
 							public void onCallBack(FileDialog which, File file) {
 								restartAndOpenWith(file);
@@ -338,10 +329,9 @@ public class MainActivity extends SherlockActivity implements
 					break;
 				}
 			case R.id.menu_saveas:
-				FileDialog saveDlg = new FileDialog(this,
-						getString(R.string.save), extFilePath + File.separator
-								+ "mypaint", new File(fileName).getName(),
-						new String[] { "chi" }, false,
+				FileDialog saveDlg = new FileDialog(this, getString(R.string.save),
+						extFilePath + File.separator + "mypaint",
+						new File(fileName).getName(), new String[] { "chi" }, false,
 						new FileDialog.FileDialogCallBack() {
 							@Override
 							public void onCallBack(FileDialog which, File file) {
@@ -356,10 +346,8 @@ public class MainActivity extends SherlockActivity implements
 					break;
 				Intent share = new Intent(Intent.ACTION_SEND);
 				share.setType("image/png");
-				share.putExtra(Intent.EXTRA_STREAM,
-						Uri.parse("file://" + _fileName));
-				startActivity(Intent.createChooser(share,
-						getString(R.string.share)));
+				share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + _fileName));
+				startActivity(Intent.createChooser(share, getString(R.string.share)));
 				break;
 			case R.id.menu_hfilp:
 				artwork.hFlip();
@@ -377,12 +365,11 @@ public class MainActivity extends SherlockActivity implements
 				artwork.monochromaticNoise();
 				break;
 			case R.id.menu_boxblur:
-				BlurDialog bbdlg = new BlurDialog(this,
-						getString(R.string.boxblur), 3, 3, 3,
-						new BlurDialog.BlurDialogCallBack() {
+				BlurDialog bbdlg = new BlurDialog(this, getString(R.string.boxblur), 3,
+						3, 3, new BlurDialog.BlurDialogCallBack() {
 							@Override
-							public void onCallBack(BlurDialog which, int width,
-									int height, int iterations) {
+							public void onCallBack(BlurDialog which, int width, int height,
+									int iterations) {
 								artwork.boxBlur(width, height, iterations);
 							}
 						});
@@ -443,8 +430,7 @@ public class MainActivity extends SherlockActivity implements
 	public void onOpen() {
 		if (drawer.getMode() == SlidingMenu.LEFT) {
 			onClose();
-			drawerActionMode = startActionMode(new LayersActionMode(this,
-					controller));
+			drawerActionMode = startActionMode(new LayersActionMode(this, controller));
 		}
 	}
 
@@ -579,9 +565,8 @@ public class MainActivity extends SherlockActivity implements
 			super.onBackPressed();
 			return;
 		}
-		this.doubleBackToExitPressedOnce = true;
-		Toast.makeText(this, R.string.backagaintoexit, Toast.LENGTH_SHORT)
-				.show();
+		doubleBackToExitPressedOnce = true;
+		Toast.makeText(this, R.string.backagaintoexit, Toast.LENGTH_SHORT).show();
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {

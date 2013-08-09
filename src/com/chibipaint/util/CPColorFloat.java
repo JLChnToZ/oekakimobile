@@ -42,7 +42,8 @@ public class CPColorFloat implements Cloneable {
 	}
 
 	public int toInt() {
-		return Math.max(0, Math.min(255, (int) (r * 255f))) << 16 | Math.max(0, Math.min(255, (int) (g * 255f))) << 8
+		return Math.max(0, Math.min(255, (int) (r * 255f))) << 16
+				| Math.max(0, Math.min(255, (int) (g * 255f))) << 8
 				| Math.max(0, Math.min(255, (int) (b * 255f)));
 	}
 
@@ -52,6 +53,7 @@ public class CPColorFloat implements Cloneable {
 		b = b * (1f - alpha) + color.b * alpha;
 	}
 
+	@Override
 	public Object clone() {
 		try {
 			return super.clone();

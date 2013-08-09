@@ -68,15 +68,16 @@ public class CPBrushInfo implements Cloneable {
 	// Current brush setting (once tablet pressure and stuff is applied)
 	public float curSize;
 	public int curAlpha;
-	
+
 	private String name = "";
 
 	public CPBrushInfo() {
 	}
 
-	public CPBrushInfo(int toolNb, int size, int alpha, boolean isAA, boolean isAirbrush, float minSpacing,
-			float spacing, boolean pressureSize, boolean pressureAlpha, int brushType, int paintMode, float resat,
-			float bleed) {
+	public CPBrushInfo(int toolNb, int size, int alpha, boolean isAA,
+			boolean isAirbrush, float minSpacing, float spacing,
+			boolean pressureSize, boolean pressureAlpha, int brushType,
+			int paintMode, float resat, float bleed) {
 		this.toolNb = toolNb;
 		this.size = size;
 		this.alpha = alpha;
@@ -88,62 +89,61 @@ public class CPBrushInfo implements Cloneable {
 		this.pressureSize = pressureSize;
 		this.pressureAlpha = pressureAlpha;
 
-		this.type = brushType;
+		type = brushType;
 		this.paintMode = paintMode;
 
 		this.resat = resat;
 		this.bleed = bleed;
 	}
 
-	public CPBrushInfo(int toolNb, int size, int alpha,  float minSpacing,
-			float spacing, boolean pressureSize, boolean pressureAlpha, int brushType, int paintMode, float resat,
-			float bleed) {
+	public CPBrushInfo(int toolNb, int size, int alpha, float minSpacing,
+			float spacing, boolean pressureSize, boolean pressureAlpha,
+			int brushType, int paintMode, float resat, float bleed) {
 		this.toolNb = toolNb;
 		this.size = size;
 		this.alpha = alpha;
-		
-		this.isAA = brushType == B_ROUND_AA ||brushType == B_SQUARE_AA;
-		this.isAirbrush = brushType == B_ROUND_AIRBRUSH;
-		
+
+		isAA = brushType == B_ROUND_AA || brushType == B_SQUARE_AA;
+		isAirbrush = brushType == B_ROUND_AIRBRUSH;
+
 		this.minSpacing = minSpacing;
 		this.spacing = spacing;
 
 		this.pressureSize = pressureSize;
 		this.pressureAlpha = pressureAlpha;
 
-		this.type = brushType;
+		type = brushType;
 		this.paintMode = paintMode;
 
 		this.resat = resat;
 		this.bleed = bleed;
 	}
-	
+
 	public CPBrushInfo setName(String name) {
 		this.name = name;
 		return this;
 	}
-	
+
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void applyPressure(float pressure) {
 		// FIXME: no variable size for smudge and oil :(
-		if (pressureSize && paintMode != M_SMUDGE && paintMode != M_OIL) {
+		if (pressureSize && paintMode != M_SMUDGE && paintMode != M_OIL)
 			curSize = Math.max(.1f, size * pressure);
-		} else {
+		else
 			curSize = Math.max(.1f, size);
-		}
 
 		// FIXME: what is the point of doing that?
-		if (curSize > 16) {
+		if (curSize > 16)
 			curSize = (int) curSize;
-		}
 
 		curAlpha = pressureAlpha ? (int) (alpha * pressure) : alpha;
 		curSqueeze = squeeze;
 		curAngle = angle;
-		curScattering = scattering * curSize * (pressureScattering ? pressure : 1.f);
+		curScattering = scattering * curSize
+				* (pressureScattering ? pressure : 1.f);
 
 		// tests
 		// curScattering = scattering * pressure;
@@ -154,7 +154,7 @@ public class CPBrushInfo implements Cloneable {
 
 	public CPBrushInfo clone(int newNB) {
 		try {
-			CPBrushInfo clonedObj =  (CPBrushInfo)super.clone();
+			CPBrushInfo clonedObj = (CPBrushInfo) super.clone();
 			clonedObj.toolNb = newNB;
 			return clonedObj;
 		} catch (Exception ignored) {
@@ -162,6 +162,7 @@ public class CPBrushInfo implements Cloneable {
 		}
 	}
 
+	@Override
 	public Object clone() {
 		try {
 			return super.clone();

@@ -41,21 +41,18 @@ public class BlurDialog {
 
 	public BlurDialog(Context context, String prompt, int width, int height,
 			int iterations, BlurDialogCallBack Callback) {
-		this.callBack = Callback;
+		callBack = Callback;
 		this.context = context;
 		this.prompt = prompt;
-		this.w = width;
-		this.h = height;
-		this.i = iterations;
+		w = width;
+		h = height;
+		i = iterations;
 
-		this.DialogView = LayoutInflater.from(context).inflate(
-				R.layout.blurdialog, null);
-		this.tvwidth = (EditText) this.DialogView
-				.findViewById(R.id.blurdlgwidth);
-		this.tvheight = (EditText) this.DialogView
-				.findViewById(R.id.blurdlgheight);
-		this.tviterations = (EditText) this.DialogView
-				.findViewById(R.id.blurdlgitr);
+		DialogView = LayoutInflater.from(context)
+				.inflate(R.layout.blurdialog, null);
+		tvwidth = (EditText) DialogView.findViewById(R.id.blurdlgwidth);
+		tvheight = (EditText) DialogView.findViewById(R.id.blurdlgheight);
+		tviterations = (EditText) DialogView.findViewById(R.id.blurdlgitr);
 
 		buildDialog();
 	}

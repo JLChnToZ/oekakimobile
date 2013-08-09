@@ -72,8 +72,7 @@ public class CheckBoxedArrayAdapter extends
 			convertView = VI.inflate(resource, null);
 			VH = new ViewHolder();
 			VH.TVName = (TextView) convertView.findViewById(textViewResourceId);
-			VH.Checker = (CheckBox) convertView
-					.findViewById(checkBoxResourceId);
+			VH.Checker = (CheckBox) convertView.findViewById(checkBoxResourceId);
 			convertView.setTag(VH);
 		} else
 			VH = (ViewHolder) convertView.getTag();
@@ -82,15 +81,13 @@ public class CheckBoxedArrayAdapter extends
 			VH.TVName.setText(CH.name);
 			VH.Checker.setChecked(CH.Checked);
 			if (CheckListener != null)
-				VH.Checker
-						.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-							@Override
-							public void onCheckedChanged(
-									CompoundButton buttonView, boolean isChecked) {
-								CheckListener.OnCheckedChange(buttonView,
-										position, isChecked);
-							}
-						});
+				VH.Checker.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						CheckListener.OnCheckedChange(buttonView, position, isChecked);
+					}
+				});
 			if (CH.Selected)
 				convertView.setBackgroundColor(res
 						.getColor(android.R.color.darker_gray));

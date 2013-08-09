@@ -37,13 +37,13 @@ public class EditActionMode implements Callback {
 	public EditActionMode(Context context, CPController controller) {
 		this.context = context;
 		this.controller = controller;
-		this.artwork = controller.getArtwork();
+		artwork = controller.getArtwork();
 	}
 
 	@Override
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-		((SherlockActivity) context).getSupportMenuInflater().inflate(
-				R.menu.edit, menu);
+		((SherlockActivity) context).getSupportMenuInflater().inflate(R.menu.edit,
+				menu);
 		mode.setTitle(R.string.edit);
 		return true;
 	}

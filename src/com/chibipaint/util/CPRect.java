@@ -36,10 +36,10 @@ public class CPRect implements Cloneable {
 	}
 
 	public CPRect(int width, int height) {
-		this.left = 0;
-		this.top = 0;
-		this.right = width;
-		this.bottom = height;
+		left = 0;
+		top = 0;
+		right = width;
+		bottom = height;
 	}
 
 	public CPRect() {
@@ -58,9 +58,9 @@ public class CPRect implements Cloneable {
 	}
 
 	public void union(CPRect rect) {
-		if (isEmpty()) {
+		if (isEmpty())
 			set(rect);
-		} else {
+		else {
 			left = Math.min(left, rect.left);
 			top = Math.min(top, rect.top);
 			right = Math.max(right, rect.right);
@@ -69,13 +69,12 @@ public class CPRect implements Cloneable {
 	}
 
 	public void clip(CPRect rect) {
-		if (isEmpty()) {
+		if (isEmpty())
 			return;
-		}
 
-		if (rect.isEmpty()) {
+		if (rect.isEmpty())
 			makeEmpty();
-		} else {
+		else {
 			left = Math.max(left, rect.left);
 			top = Math.max(top, rect.top);
 			right = Math.min(right, rect.right);
@@ -84,7 +83,8 @@ public class CPRect implements Cloneable {
 	}
 
 	public boolean isInside(CPRect rect) {
-		return left >= rect.left && top >= rect.top && right <= rect.right && bottom <= rect.bottom;
+		return left >= rect.left && top >= rect.top && right <= rect.right
+				&& bottom <= rect.bottom;
 	}
 
 	// First makes dstRect the same width and height (not modifying its top/left)
@@ -95,8 +95,8 @@ public class CPRect implements Cloneable {
 		dstRect.right = dstRect.left + srcRect.getWidth();
 		dstRect.bottom = dstRect.top + srcRect.getHeight();
 
-		if (isEmpty() || dstRect.left >= right || dstRect.top >= bottom || dstRect.right <= left
-				|| dstRect.bottom <= top) {
+		if (isEmpty() || dstRect.left >= right || dstRect.top >= bottom
+				|| dstRect.right <= left || dstRect.bottom <= top) {
 			srcRect.makeEmpty();
 			dstRect.makeEmpty();
 			return;
@@ -160,6 +160,7 @@ public class CPRect implements Cloneable {
 		bottom = r.bottom;
 	}
 
+	@Override
 	public Object clone() {
 		try {
 			return super.clone();
@@ -179,10 +180,12 @@ public class CPRect implements Cloneable {
 		translate(x - left, y - top);
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof CPRect) {
 			CPRect r = (CPRect) o;
-			return left == r.left && right == r.right && top == r.top && bottom == r.bottom;
+			return left == r.left && right == r.right && top == r.top
+					&& bottom == r.bottom;
 		}
 		return false;
 	}

@@ -40,18 +40,16 @@ public class SizeDialog {
 
 	public SizeDialog(Context context, String prompt, int width, int height,
 			SizeDialogCallBack Callback) {
-		this.callBack = Callback;
+		callBack = Callback;
 		this.context = context;
 		this.prompt = prompt;
-		this.w = width;
-		this.h = height;
+		w = width;
+		h = height;
 
-		this.DialogView = LayoutInflater.from(context).inflate(
-				R.layout.sizedialog, null);
-		this.tvwidth = (EditText) this.DialogView
-				.findViewById(R.id.sizedlgwidth);
-		this.tvheight = (EditText) this.DialogView
-				.findViewById(R.id.sizedlgheight);
+		DialogView = LayoutInflater.from(context)
+				.inflate(R.layout.sizedialog, null);
+		tvwidth = (EditText) DialogView.findViewById(R.id.sizedlgwidth);
+		tvheight = (EditText) DialogView.findViewById(R.id.sizedlgheight);
 
 		buildDialog();
 	}

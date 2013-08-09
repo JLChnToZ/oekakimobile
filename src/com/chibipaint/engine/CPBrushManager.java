@@ -49,8 +49,9 @@ public class CPBrushManager {
 
 		// test texture
 		/*
-		 * texture = new byte[9]; texture[0] = 0; texture[1] = (byte) 255; texture[2] = (byte) 255; texture[3] = 0;
-		 * textureWidth = 2; textureHeight = 2;
+		 * texture = new byte[9]; texture[0] = 0; texture[1] = (byte) 255;
+		 * texture[2] = (byte) 255; texture[3] = 0; textureWidth = 2; textureHeight
+		 * = 2;
 		 */
 	}
 
@@ -60,7 +61,8 @@ public class CPBrushManager {
 
 		// FIXME: I don't like this special case for ROUND_PIXEL
 		// it would be better to have brush presets for working with pixels
-		boolean useAA = brushInfo.isAA && brushInfo.type != CPBrushInfo.B_ROUND_PIXEL;
+		boolean useAA = brushInfo.isAA
+				&& brushInfo.type != CPBrushInfo.B_ROUND_PIXEL;
 
 		dab.width = (int) (brushInfo.curSize + .99f);
 		dab.height = (int) (brushInfo.curSize + .99f);
@@ -73,28 +75,27 @@ public class CPBrushManager {
 		float nx = x - dab.width / 2.f + .5f;
 		float ny = y - dab.height / 2.f + .5f;
 
-		// this is necessary as Java uses convert towards zero float to int conversion
-		if (nx < 0) {
+		// this is necessary as Java uses convert towards zero float to int
+		// conversion
+		if (nx < 0)
 			nx -= 1;
-		}
-		if (ny < 0) {
+		if (ny < 0)
 			ny -= 1;
-		}
 
 		if (useAA) {
-			float dx = Math.abs(nx - ((int) nx));
-			float dy = Math.abs(ny - ((int) ny));
+			float dx = Math.abs(nx - (int) nx);
+			float dy = Math.abs(ny - (int) ny);
 			dab.brush = getBrushWithAA(brushInfo, dx, dy);
-		} else {
+		} else
 			dab.brush = getBrush(brushInfo);
-		}
 
 		dab.x = (int) nx;
 		dab.y = (int) ny;
 
 		if (brushInfo.texture > 0.f && texture != null) {
 			// we need a brush bitmap that can be modified everytime
-			// the one in "brush" can be kept in cache so if we are using it, make a copy
+			// the one in "brush" can be kept in cache so if we are using it, make a
+			// copy
 			if (dab.brush == brush) {
 				System.arraycopy(brush, 0, brushAA, 0, dab.width * dab.height);
 				dab.brush = brushAA;
@@ -105,22 +106,21 @@ public class CPBrushManager {
 	}
 
 	byte[] getBrush(CPBrushInfo brushInfo) {
-		if (cacheBrush != null && brushInfo.curSize == cacheSize && brushInfo.curSqueeze == cacheSqueeze
-				&& brushInfo.curAngle == cacheAngle && brushInfo.type == cacheType) {
+		if (cacheBrush != null && brushInfo.curSize == cacheSize
+				&& brushInfo.curSqueeze == cacheSqueeze
+				&& brushInfo.curAngle == cacheAngle && brushInfo.type == cacheType)
 			return cacheBrush;
-		}
 
-		if (brushInfo.type == CPBrushInfo.B_ROUND_AIRBRUSH) {
+		if (brushInfo.type == CPBrushInfo.B_ROUND_AIRBRUSH)
 			brush = buildBrushSoft(brush, brushInfo);
-		} else if (brushInfo.type == CPBrushInfo.B_ROUND_AA) {
+		else if (brushInfo.type == CPBrushInfo.B_ROUND_AA)
 			brush = buildBrushAA(brush, brushInfo);
-		} else if (brushInfo.type == CPBrushInfo.B_ROUND_PIXEL) {
+		else if (brushInfo.type == CPBrushInfo.B_ROUND_PIXEL)
 			brush = buildBrush(brush, brushInfo);
-		} else if (brushInfo.type == CPBrushInfo.B_SQUARE_AA) {
+		else if (brushInfo.type == CPBrushInfo.B_SQUARE_AA)
 			brush = buildBrushSquareAA(brush, brushInfo);
-		} else if (brushInfo.type == CPBrushInfo.B_SQUARE_PIXEL) {
+		else if (brushInfo.type == CPBrushInfo.B_SQUARE_PIXEL)
 			brush = buildBrushSquare(brush, brushInfo);
-		}
 
 		cacheBrush = brush;
 		cacheSize = brushInfo.curSize;
@@ -137,22 +137,19 @@ public class CPBrushManager {
 		int intSize = (int) (brushInfo.curSize + .99f);
 		int intSizeAA = (int) (brushInfo.curSize + .99f) + 1;
 
-		for (int y = 0; y < intSizeAA; y++) {
-			for (int x = 0; x < intSizeAA; x++) {
+		for (int y = 0; y < intSizeAA; y++)
+			for (int x = 0; x < intSizeAA; x++)
 				brushAA[y * intSizeAA + x] = 0;
-			}
-		}
 
-		for (int y = 0; y < intSize; y++) {
+		for (int y = 0; y < intSize; y++)
 			for (int x = 0; x < intSize; x++) {
 				int brushAlpha = nonAABrush[y * intSize + x] & 0xff;
 
 				brushAA[y * intSizeAA + x] += (int) (brushAlpha * (1 - dx) * (1 - dy));
-				brushAA[y * intSizeAA + (x + 1)] += (int) (brushAlpha * dx * (1 - dy));
+				brushAA[y * intSizeAA + x + 1] += (int) (brushAlpha * dx * (1 - dy));
 				brushAA[(y + 1) * intSizeAA + x + 1] += (int) (brushAlpha * dx * dy);
 				brushAA[(y + 1) * intSizeAA + x] += (int) (brushAlpha * (1 - dx) * dy);
 			}
-		}
 
 		return brushAA;
 	}
@@ -160,7 +157,7 @@ public class CPBrushManager {
 	byte[] buildBrush(byte[] brush, CPBrushInfo brushInfo) {
 		int intSize = (int) (brushInfo.curSize + .99f);
 		float center = intSize / 2.f;
-		float sqrRadius = (brushInfo.curSize / 2) * (brushInfo.curSize / 2);
+		float sqrRadius = brushInfo.curSize / 2 * (brushInfo.curSize / 2);
 
 		float xFactor = 1f + brushInfo.curSqueeze * MAX_SQUEEZE;
 
@@ -168,22 +165,20 @@ public class CPBrushManager {
 		float sinA = (float) Math.sin(brushInfo.curAngle);
 
 		int offset = 0;
-		for (int j = 0; j < intSize; j++) {
+		for (int j = 0; j < intSize; j++)
 			for (int i = 0; i < intSize; i++) {
-				float x = (i + .5f - center);
-				float y = (j + .5f - center);
+				float x = i + .5f - center;
+				float y = j + .5f - center;
 				float dx = (x * cosA - y * sinA) * xFactor;
-				float dy = (y * cosA + x * sinA);
+				float dy = y * cosA + x * sinA;
 
 				float sqrDist = dx * dx + dy * dy;
 
-				if (sqrDist <= sqrRadius) {
+				if (sqrDist <= sqrRadius)
 					brush[offset++] = (byte) 0xff;
-				} else {
+				else
 					brush[offset++] = 0;
-				}
 			}
-		}
 
 		return brush;
 	}
@@ -191,47 +186,46 @@ public class CPBrushManager {
 	byte[] buildBrushAA(byte[] brush, CPBrushInfo brushInfo) {
 		int intSize = (int) (brushInfo.curSize + .99f);
 		float center = intSize / 2.f;
-		float sqrRadius = (brushInfo.curSize / 2) * (brushInfo.curSize / 2);
-		float sqrRadiusInner = ((brushInfo.curSize - 2) / 2) * ((brushInfo.curSize - 2) / 2);
-		float sqrRadiusOuter = ((brushInfo.curSize + 2) / 2) * ((brushInfo.curSize + 2) / 2);
+		float sqrRadius = brushInfo.curSize / 2 * (brushInfo.curSize / 2);
+		float sqrRadiusInner = (brushInfo.curSize - 2) / 2
+				* ((brushInfo.curSize - 2) / 2);
+		float sqrRadiusOuter = (brushInfo.curSize + 2) / 2
+				* ((brushInfo.curSize + 2) / 2);
 
 		float xFactor = 1f + brushInfo.curSqueeze * MAX_SQUEEZE;
 		float cosA = (float) Math.cos(brushInfo.curAngle);
 		float sinA = (float) Math.sin(brushInfo.curAngle);
 
 		int offset = 0;
-		for (int j = 0; j < intSize; j++) {
+		for (int j = 0; j < intSize; j++)
 			for (int i = 0; i < intSize; i++) {
-				float x = (i + .5f - center);
-				float y = (j + .5f - center);
+				float x = i + .5f - center;
+				float y = j + .5f - center;
 				float dx = (x * cosA - y * sinA) * xFactor;
-				float dy = (y * cosA + x * sinA);
+				float dy = y * cosA + x * sinA;
 
 				float sqrDist = dx * dx + dy * dy;
 
-				if (sqrDist <= sqrRadiusInner) {
+				if (sqrDist <= sqrRadiusInner)
 					brush[offset++] = (byte) 0xff;
-				} else if (sqrDist > sqrRadiusOuter) {
+				else if (sqrDist > sqrRadiusOuter)
 					brush[offset++] = 0;
-				} else {
+				else {
 					int count = 0;
-					for (int oj = 0; oj < 4; oj++) {
+					for (int oj = 0; oj < 4; oj++)
 						for (int oi = 0; oi < 4; oi++) {
 							x = i + oi * (1.f / 4.f) - center;
 							y = j + oj * (1.f / 4.f) - center;
 							dx = (x * cosA - y * sinA) * xFactor;
-							dy = (y * cosA + x * sinA);
+							dy = y * cosA + x * sinA;
 
 							sqrDist = dx * dx + dy * dy;
-							if (sqrDist <= sqrRadius) {
+							if (sqrDist <= sqrRadius)
 								count += 1;
-							}
 						}
-					}
 					brush[offset++] = (byte) Math.min(count * 16, 255);
 				}
 			}
-		}
 
 		return brush;
 	}
@@ -241,27 +235,25 @@ public class CPBrushManager {
 		float center = intSize / 2.f;
 
 		float size = brushInfo.curSize * (float) Math.sin(Math.PI / 4);
-		float sizeX = (size / 2) / (1f + brushInfo.curSqueeze * MAX_SQUEEZE);
-		float sizeY = (size / 2);
+		float sizeX = size / 2 / (1f + brushInfo.curSqueeze * MAX_SQUEEZE);
+		float sizeY = size / 2;
 
 		float cosA = (float) Math.cos(brushInfo.curAngle);
 		float sinA = (float) Math.sin(brushInfo.curAngle);
 
 		int offset = 0;
-		for (int j = 0; j < intSize; j++) {
+		for (int j = 0; j < intSize; j++)
 			for (int i = 0; i < intSize; i++) {
-				float x = (i + .5f - center);
-				float y = (j + .5f - center);
+				float x = i + .5f - center;
+				float y = j + .5f - center;
 				float dx = Math.abs(x * cosA - y * sinA);
 				float dy = Math.abs(y * cosA + x * sinA);
 
-				if (dx <= sizeX && dy <= sizeY) {
+				if (dx <= sizeX && dy <= sizeY)
 					brush[offset++] = (byte) 0xff;
-				} else {
+				else
 					brush[offset++] = 0;
-				}
 			}
-		}
 
 		return brush;
 	}
@@ -271,8 +263,8 @@ public class CPBrushManager {
 		float center = intSize / 2.f;
 
 		float size = brushInfo.curSize * (float) Math.sin(Math.PI / 4);
-		float sizeX = (size / 2) / (1f + brushInfo.curSqueeze * MAX_SQUEEZE);
-		float sizeY = (size / 2);
+		float sizeX = size / 2 / (1f + brushInfo.curSqueeze * MAX_SQUEEZE);
+		float sizeY = size / 2;
 
 		float sizeXInner = sizeX - 1;
 		float sizeYInner = sizeY - 1;
@@ -284,35 +276,32 @@ public class CPBrushManager {
 		float sinA = (float) Math.sin(brushInfo.curAngle);
 
 		int offset = 0;
-		for (int j = 0; j < intSize; j++) {
+		for (int j = 0; j < intSize; j++)
 			for (int i = 0; i < intSize; i++) {
-				float x = (i + .5f - center);
-				float y = (j + .5f - center);
+				float x = i + .5f - center;
+				float y = j + .5f - center;
 				float dx = Math.abs(x * cosA - y * sinA);
 				float dy = Math.abs(y * cosA + x * sinA);
 
-				if (dx <= sizeXInner && dy <= sizeYInner) {
+				if (dx <= sizeXInner && dy <= sizeYInner)
 					brush[offset++] = (byte) 0xff;
-				} else if (dx > sizeXOuter || dy > sizeYOuter) {
+				else if (dx > sizeXOuter || dy > sizeYOuter)
 					brush[offset++] = 0;
-				} else {
+				else {
 					int count = 0;
-					for (int oj = 0; oj < 4; oj++) {
+					for (int oj = 0; oj < 4; oj++)
 						for (int oi = 0; oi < 4; oi++) {
 							x = i + oi * (1.f / 4.f) - center;
 							y = j + oj * (1.f / 4.f) - center;
 							dx = Math.abs(x * cosA - y * sinA);
 							dy = Math.abs(y * cosA + x * sinA);
 
-							if (dx <= sizeX && dy <= sizeY) {
+							if (dx <= sizeX && dy <= sizeY)
 								count += 1;
-							}
 						}
-					}
 					brush[offset++] = (byte) Math.min(count * 16, 255);
 				}
 			}
-		}
 
 		return brush;
 	}
@@ -320,7 +309,7 @@ public class CPBrushManager {
 	byte[] buildBrushSoft(byte[] brush, CPBrushInfo brushInfo) {
 		int intSize = (int) (brushInfo.curSize + .99f);
 		float center = intSize / 2.f;
-		float sqrRadius = (brushInfo.curSize / 2) * (brushInfo.curSize / 2);
+		float sqrRadius = brushInfo.curSize / 2 * (brushInfo.curSize / 2);
 
 		float xFactor = 1f + brushInfo.curSqueeze * MAX_SQUEEZE;
 		float cosA = (float) Math.cos(brushInfo.curAngle);
@@ -328,22 +317,20 @@ public class CPBrushManager {
 
 		// byte[] brush = new int[size * size];
 		int offset = 0;
-		for (int j = 0; j < intSize; j++) {
+		for (int j = 0; j < intSize; j++)
 			for (int i = 0; i < intSize; i++) {
-				float x = (i + .5f - center);
-				float y = (j + .5f - center);
+				float x = i + .5f - center;
+				float y = j + .5f - center;
 				float dx = (x * cosA - y * sinA) * xFactor;
-				float dy = (y * cosA + x * sinA);
+				float dy = y * cosA + x * sinA;
 
 				float sqrDist = dx * dx + dy * dy;
 
-				if (sqrDist <= sqrRadius) {
-					brush[offset++] = (byte) (255 * (1 - (sqrDist / sqrRadius)));
-				} else {
+				if (sqrDist <= sqrRadius)
+					brush[offset++] = (byte) (255 * (1 - sqrDist / sqrRadius));
+				else
 					brush[offset++] = 0;
-				}
 			}
-		}
 
 		return brush;
 	}
@@ -351,25 +338,22 @@ public class CPBrushManager {
 	void applyTexture(CPBrushDab dab, float textureAmount) {
 		int amount = (int) (textureAmount * 255f);
 		int offset = 0;
-		for (int j = 0; j < dab.height; j++) {
-
+		for (int j = 0; j < dab.height; j++)
 			for (int i = 0; i < dab.width; i++) {
-				int brushValue = (dab.brush[offset]) & 0xff;
+				int brushValue = dab.brush[offset] & 0xff;
 				int textureX = (i + dab.x) % texture.width;
-				if (textureX < 0) {
+				if (textureX < 0)
 					textureX += texture.width;
-				}
 
 				int textureY = (j + dab.y) % texture.height;
-				if (textureY < 0) {
+				if (textureY < 0)
 					textureY += texture.height;
-				}
 
-				int textureValue = (texture.data[textureX + textureY * texture.width]) & 0xff;
-				dab.brush[offset] = (byte) (brushValue * ((textureValue * amount / 255) ^ 0xff) / 255);
+				int textureValue = texture.data[textureX + textureY * texture.width] & 0xff;
+				dab.brush[offset] = (byte) (brushValue
+						* (textureValue * amount / 255 ^ 0xff) / 255);
 				offset++;
 			}
-		}
 	}
 
 	public void setTexture(CPGreyBmp texture) {

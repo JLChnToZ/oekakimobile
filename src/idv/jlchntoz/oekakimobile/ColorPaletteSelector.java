@@ -46,16 +46,15 @@ public class ColorPaletteSelector extends View {
 	public ColorPaletteSelector(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		_evh = new EventHandler();
-		blockSize = (int) TypedValue.applyDimension(
-				TypedValue.COMPLEX_UNIT_DIP, 30, context.getResources()
-						.getDisplayMetrics());
+		blockSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+				30, context.getResources().getDisplayMetrics());
 		Colors = new ArrayList<Integer>();
 		p = new Paint();
-		this.setClickable(true);
-		this.setLongClickable(true);
-		this.setOnClickListener(_evh);
-		this.setOnLongClickListener(_evh);
-		this.setOnTouchListener(_evh);
+		setClickable(true);
+		setLongClickable(true);
+		setOnClickListener(_evh);
+		setOnLongClickListener(_evh);
+		setOnTouchListener(_evh);
 		targetH = blockSize * 2 + 1;
 		invalidate();
 	}

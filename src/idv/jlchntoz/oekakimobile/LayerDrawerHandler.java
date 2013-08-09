@@ -67,11 +67,11 @@ public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 		SPMixType.setAdapter(aaMixType);
 		SPMixType.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int position, long id) {
+			public void onItemSelected(AdapterView<?> parent, View v, int position,
+					long id) {
 				LayerDrawerHandler.this.controller.artwork.setBlendMode(
-						LayerDrawerHandler.this.controller.artwork
-								.getActiveLayerNb(), position);
+						LayerDrawerHandler.this.controller.artwork.getActiveLayerNb(),
+						position);
 			}
 
 			@Override
@@ -84,8 +84,7 @@ public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 			@Override
 			public void onProgressChanged(SeekBar sb, int p, boolean u) {
 				LayerDrawerHandler.this.controller.artwork.setLayerAlpha(
-						LayerDrawerHandler.this.controller.artwork
-								.getActiveLayerNb(), p);
+						LayerDrawerHandler.this.controller.artwork.getActiveLayerNb(), p);
 			}
 
 			@Override
@@ -99,17 +98,14 @@ public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 
 		CBLockAlpha.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				LayerDrawerHandler.this.controller.artwork
-						.setLockAlpha(isChecked);
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				LayerDrawerHandler.this.controller.artwork.setLockAlpha(isChecked);
 			}
 		});
 
 		CBSampleAll.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				LayerDrawerHandler.this.controller.artwork
 						.setSampleAllLayers(isChecked);
 
@@ -121,7 +117,7 @@ public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 		lstLayerCtrl = new DragSortController(lstLayers);
 		lstLayers.setFloatViewManager(lstLayerCtrl);
 		lstLayers.setOnTouchListener(lstLayerCtrl);
-		lstLayers.setChoiceMode(DragSortListView.CHOICE_MODE_MULTIPLE);
+		lstLayers.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		lstLayers.setDropListener(this);
 		lstLayers.setRemoveListener(this);
 
@@ -143,30 +139,25 @@ public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 		Object layers[] = artwork.getLayers();
 		int index = 0, count = layers.length;
 		if (lstLayersAdapter == null) {
-			lstLayersAdapter = new CheckBoxedArrayAdapter(this.context,
-					R.layout.checkablelayout, R.id.cbchecked,
-					R.id.tvlsicontent, new CheckBoxedArrayAdapter.list());
-			lstLayersAdapter
-					.setOnCheckedChangeListener(new OnCheckChangedListener() {
-						@Override
-						public void OnCheckedChange(CompoundButton buttonView,
-								int position, boolean isChecked) {
-							LayerDrawerHandler.this.controller.artwork
-									.setLayerVisibility(
-											lstLayersAdapter.getCount() - 1
-													- position, isChecked);
-						}
-					});
+			lstLayersAdapter = new CheckBoxedArrayAdapter(context,
+					R.layout.checkablelayout, R.id.cbchecked, R.id.tvlsicontent,
+					new CheckBoxedArrayAdapter.list());
+			lstLayersAdapter.setOnCheckedChangeListener(new OnCheckChangedListener() {
+				@Override
+				public void OnCheckedChange(CompoundButton buttonView, int position,
+						boolean isChecked) {
+					controller.artwork.setLayerVisibility(lstLayersAdapter.getCount() - 1
+							- position, isChecked);
+				}
+			});
 			lstLayersAdapter
 					.setOnClickListener(new CheckBoxedArrayAdapter.OnItemClickListener() {
 						@Override
 						public void OnItemClick(View view, int pos) {
 							int p = lstLayersAdapter.getCount() - 1 - pos;
-							LayerDrawerHandler.this.controller.artwork
-									.setActiveLayer(p);
+							controller.artwork.setActiveLayer(p);
 							loadLayerSettings();
-							LayerDrawerHandler.this.controller.artwork
-									.callListenersLayerChange();
+							controller.artwork.callListenersLayerChange();
 						}
 					});
 			lstNull = true;
@@ -177,11 +168,10 @@ public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 			if (index < lstLayersAdapter.getCount()) {
 				lstLayersAdapter.remove(lstLayersAdapter.getItem(_index));
 				lstLayersAdapter.insert(_l.name, _l.visible,
-						this.controller.artwork.getActiveLayerNb() == index,
-						_index);
+						controller.artwork.getActiveLayerNb() == index, _index);
 			} else
 				lstLayersAdapter.add(_l.name, _l.visible,
-						this.controller.artwork.getActiveLayerNb() == index);
+						controller.artwork.getActiveLayerNb() == index);
 			index++;
 		}
 		while (index < lstLayersAdapter.getCount())
@@ -194,21 +184,18 @@ public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 			lstLayers.setItemChecked(lstLayersAdapter.getCount() - 1 - i,
 					((CPLayer) layers[i]).visible);
 		lstLayerCtrl.setRemoveEnabled(count > 1);
-		this.controller.artwork
-				.callListenersUpdateRegion(this.controller.artwork.getSize());
+		controller.artwork.callListenersUpdateRegion(controller.artwork.getSize());
 	}
 
 	private void loadLayerSettings() {
-		SBAlpha.setProgress(this.controller.artwork.getActiveLayer().alpha);
-		SPMixType
-				.setSelection(this.controller.artwork.getActiveLayer().blendMode);
+		SBAlpha.setProgress(controller.artwork.getActiveLayer().alpha);
+		SPMixType.setSelection(controller.artwork.getActiveLayer().blendMode);
 	}
 
 	@Override
 	public void remove(int which) {
-		this.controller.artwork.setActiveLayer(lstLayersAdapter.getCount() - 1
-				- which);
-		this.controller.artwork.removeLayer();
+		controller.artwork.setActiveLayer(lstLayersAdapter.getCount() - 1 - which);
+		controller.artwork.removeLayer();
 	}
 
 	@Override
@@ -217,7 +204,7 @@ public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 		to = lstLayersAdapter.getCount() - 1 - to;
 		loadLayerSettings();
 		if (to != from)
-			this.controller.artwork.moveLayer(from, to);
+			controller.artwork.moveLayer(from, to);
 		loadLayerSettings();
 	}
 

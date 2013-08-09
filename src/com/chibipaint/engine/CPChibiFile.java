@@ -46,9 +46,8 @@ public class CPChibiFile {
 
 			writeHeader(dos, a);
 
-			for (Object l : a.layers) {
+			for (Object l : a.layers)
 				writeLayer(dos, (CPLayer) l);
-			}
 
 			writeEnd(dos);
 
@@ -61,17 +60,19 @@ public class CPChibiFile {
 	}
 
 	static public void writeInt(OutputStream os, int i) throws IOException {
-		byte[] temp = { (byte) (i >>> 24), (byte) ((i >>> 16) & 0xff), (byte) ((i >>> 8) & 0xff), (byte) (i & 0xff) };
+		byte[] temp = { (byte) (i >>> 24), (byte) (i >>> 16 & 0xff),
+				(byte) (i >>> 8 & 0xff), (byte) (i & 0xff) };
 		os.write(temp);
 	}
 
-	static public void writeIntArray(OutputStream os, int arr[]) throws IOException {
+	static public void writeIntArray(OutputStream os, int arr[])
+			throws IOException {
 		byte[] temp = new byte[arr.length * 4];
 		int idx = 0;
 		for (int i : arr) {
 			temp[idx++] = (byte) (i >>> 24);
-			temp[idx++] = (byte) ((i >>> 16) & 0xff);
-			temp[idx++] = (byte) ((i >>> 8) & 0xff);
+			temp[idx++] = (byte) (i >>> 16 & 0xff);
+			temp[idx++] = (byte) (i >>> 8 & 0xff);
 			temp[idx++] = (byte) (i & 0xff);
 		}
 
@@ -88,7 +89,8 @@ public class CPChibiFile {
 		writeInt(os, 0);
 	}
 
-	static public void writeHeader(OutputStream os, CPArtwork a) throws IOException {
+	static public void writeHeader(OutputStream os, CPArtwork a)
+			throws IOException {
 		os.write(HEAD); // Chunk ID
 		writeInt(os, 16); // ChunkSize
 
@@ -117,34 +119,32 @@ public class CPChibiFile {
 
 	static public CPArtwork read(Context context, InputStream is) {
 		try {
-			if (!readMagic(is)) {
+			if (!readMagic(is))
 				return null; // not a ChibiPaint file
-			}
 
 			InflaterInputStream iis = new InflaterInputStream(is);
 			CPChibiChunk chunk = new CPChibiChunk(iis);
-			if (!chunk.is(HEAD)) {
+			if (!chunk.is(HEAD))
 				return null; // not a valid file
-			}
 
 			CPChibiHeader header = new CPChibiHeader(iis, chunk);
-			if ((header.version >>> 16) > 0) {
-				return null; // the file version is higher than what we can deal with, bail out
-			}
+			if (header.version >>> 16 > 0)
+				return null; // the file version is higher than what we can deal with,
+											// bail out
 
 			CPArtwork a = new CPArtwork(context, header.width, header.height);
-			a.layers.remove(0); // FIXME: it would be better not to have created it in the first place
+			a.layers.remove(0); // FIXME: it would be better not to have created it in
+													// the first place
 
 			while (true) {
 				chunk = new CPChibiChunk(iis);
 
-				if (chunk.is(ZEND)) {
+				if (chunk.is(ZEND))
 					break;
-				} else if (chunk.is(LAYR)) {
+				else if (chunk.is(LAYR))
 					readLayer(iis, chunk, a);
-				} else {
+				else
 					realSkip(iis, chunk.chunkSize);
-				}
 			}
 
 			a.setActiveLayer(0);
@@ -157,7 +157,8 @@ public class CPChibiFile {
 		}
 	}
 
-	static private void readLayer(InputStream is, CPChibiChunk chunk, CPArtwork a) throws IOException {
+	static private void readLayer(InputStream is, CPChibiChunk chunk, CPArtwork a)
+			throws IOException {
 		CPLayer l = new CPLayer(a.width, a.height);
 
 		int offset = readInt(is);
@@ -178,16 +179,16 @@ public class CPChibiFile {
 		realSkip(is, chunk.chunkSize - offset - l.width * l.height * 4);
 	}
 
-	static private void readIntArray(InputStream is, int[] intArray, int size) throws IOException {
+	static private void readIntArray(InputStream is, int[] intArray, int size)
+			throws IOException {
 		byte[] buffer = new byte[size * 4];
 
 		realRead(is, buffer, size * 4);
 
 		int off = 0;
-		for (int i = 0; i < size; i++) {
-			intArray[i] = ((buffer[off++] & 0xff) << 24) | ((buffer[off++] & 0xff) << 16)
-					| ((buffer[off++] & 0xff) << 8) | (buffer[off++] & 0xff);
-		}
+		for (int i = 0; i < size; i++)
+			intArray[i] = (buffer[off++] & 0xff) << 24 | (buffer[off++] & 0xff) << 16
+					| (buffer[off++] & 0xff) << 8 | buffer[off++] & 0xff;
 	}
 
 	static public int readInt(InputStream is) throws IOException {
@@ -198,22 +199,21 @@ public class CPChibiFile {
 		long skipped = 0, value;
 		while (skipped < bytesToSkip) {
 			value = is.read();
-			if (value < 0) {
+			if (value < 0)
 				throw new RuntimeException("EOF!");
-			}
 
 			skipped++;
 			skipped += is.skip(bytesToSkip - skipped);
 		}
 	}
 
-	static void realRead(InputStream is, byte[] buffer, int bytesToRead) throws IOException {
+	static void realRead(InputStream is, byte[] buffer, int bytesToRead)
+			throws IOException {
 		int read = 0, value;
 		while (read < bytesToRead) {
 			value = is.read();
-			if (value < 0) {
+			if (value < 0)
 				throw new RuntimeException("EOF!");
-			}
 
 			buffer[read++] = (byte) value;
 			read += is.read(buffer, read, bytesToRead - read);
@@ -224,14 +224,12 @@ public class CPChibiFile {
 		byte[] buffer = new byte[4];
 
 		realRead(is, buffer, 4);
-		if (!Arrays.equals(buffer, CHIB)) {
+		if (!Arrays.equals(buffer, CHIB))
 			return false;
-		}
 
 		realRead(is, buffer, 4);
-		if (!Arrays.equals(buffer, IOEK)) {
+		if (!Arrays.equals(buffer, IOEK))
 			return false;
-		}
 
 		return true;
 	}

@@ -37,10 +37,10 @@ public class PromptDialog {
 
 	public PromptDialog(Context context, String prompt, String defaultValue,
 			PromptDialogCallBack Callback) {
-		this.callBack = Callback;
+		callBack = Callback;
 		this.context = context;
 		this.prompt = prompt;
-		this.value = defaultValue;
+		value = defaultValue;
 
 		buildDialog();
 	}
@@ -61,8 +61,7 @@ public class PromptDialog {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						callBack.onCallBack(PromptDialog.this, input.getText()
-								.toString());
+						callBack.onCallBack(PromptDialog.this, input.getText().toString());
 					}
 				});
 

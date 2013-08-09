@@ -52,8 +52,7 @@ public class ColorPickerDialog {
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						callback.onCallback(ColorPickerDialog.this,
-								picker.getColor());
+						callback.onCallback(ColorPickerDialog.this, picker.getColor());
 					}
 				});
 

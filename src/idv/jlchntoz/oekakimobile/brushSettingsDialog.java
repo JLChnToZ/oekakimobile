@@ -36,8 +36,8 @@ public class brushSettingsDialog implements OnSeekBarChangeListener,
 	final AlertDialog dlg;
 	final View AlertDialogView;
 	final Spinner sptoolinfo, sptooltype;
-	final SeekBar sbstrokeSize, sbalpha, sbcolor, sbmix, sbspecing,
-			sbscattering, sbsmoothing;
+	final SeekBar sbstrokeSize, sbalpha, sbcolor, sbmix, sbspecing, sbscattering,
+			sbsmoothing;
 	final TextView lbstrokeSize, lbalpha, lbcolor, lbmix, lbspecing,
 			lbscattering, lbsmoothing;
 	final EditText TBName;
@@ -48,8 +48,8 @@ public class brushSettingsDialog implements OnSeekBarChangeListener,
 	public brushSettingsDialog(Context context, CPController ctrl) {
 		this.context = context;
 		this.ctrl = ctrl;
-		this.cinfo = ctrl.getBrushInfo();
-		this.updateLock = false;
+		cinfo = ctrl.getBrushInfo();
+		updateLock = false;
 
 		AlertDialogView = LayoutInflater.from(context).inflate(
 				R.layout.brushsettings, null);
@@ -59,26 +59,21 @@ public class brushSettingsDialog implements OnSeekBarChangeListener,
 		sptoolinfo = (Spinner) AlertDialogView.findViewById(R.id.SPToolInfo);
 		sptooltype = (Spinner) AlertDialogView.findViewById(R.id.SPToolType);
 
-		sbstrokeSize = (SeekBar) AlertDialogView
-				.findViewById(R.id.SBStrokeWidth);
+		sbstrokeSize = (SeekBar) AlertDialogView.findViewById(R.id.SBStrokeWidth);
 		sbalpha = (SeekBar) AlertDialogView.findViewById(R.id.SBAlpha);
 		sbcolor = (SeekBar) AlertDialogView.findViewById(R.id.SBColor);
 		sbmix = (SeekBar) AlertDialogView.findViewById(R.id.SBMix);
 		sbspecing = (SeekBar) AlertDialogView.findViewById(R.id.SBSpecing);
-		sbscattering = (SeekBar) AlertDialogView
-				.findViewById(R.id.SBScattering);
+		sbscattering = (SeekBar) AlertDialogView.findViewById(R.id.SBScattering);
 		sbsmoothing = (SeekBar) AlertDialogView.findViewById(R.id.SBSmoothing);
 
-		lbstrokeSize = (TextView) AlertDialogView
-				.findViewById(R.id.LblStrokeWidth);
+		lbstrokeSize = (TextView) AlertDialogView.findViewById(R.id.LblStrokeWidth);
 		lbalpha = (TextView) AlertDialogView.findViewById(R.id.LblAlpha);
 		lbcolor = (TextView) AlertDialogView.findViewById(R.id.LblColor);
 		lbmix = (TextView) AlertDialogView.findViewById(R.id.LblMix);
 		lbspecing = (TextView) AlertDialogView.findViewById(R.id.LblSpecing);
-		lbscattering = (TextView) AlertDialogView
-				.findViewById(R.id.LblScattering);
-		lbsmoothing = (TextView) AlertDialogView
-				.findViewById(R.id.LblSmoothing);
+		lbscattering = (TextView) AlertDialogView.findViewById(R.id.LblScattering);
+		lbsmoothing = (TextView) AlertDialogView.findViewById(R.id.LblSmoothing);
 
 		cbstrokeSize = (CheckBox) AlertDialogView
 				.findViewById(R.id.CBPressureStroke);
@@ -86,17 +81,15 @@ public class brushSettingsDialog implements OnSeekBarChangeListener,
 		cbscattering = (CheckBox) AlertDialogView
 				.findViewById(R.id.CBPressureScattering);
 
-		ArrayAdapter<CharSequence> aatoolinfo = ArrayAdapter
-				.createFromResource(context, R.array.tipNames,
-						android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> aatoolinfo = ArrayAdapter.createFromResource(
+				context, R.array.tipNames, android.R.layout.simple_spinner_item);
 		aatoolinfo
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sptoolinfo.setAdapter(aatoolinfo);
 		sptoolinfo.setSelection(cinfo.type);
 
-		ArrayAdapter<CharSequence> aatooltype = ArrayAdapter
-				.createFromResource(context, R.array.toolTypes,
-						android.R.layout.simple_spinner_item);
+		ArrayAdapter<CharSequence> aatooltype = ArrayAdapter.createFromResource(
+				context, R.array.toolTypes, android.R.layout.simple_spinner_item);
 		aatooltype
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sptooltype.setAdapter(aatooltype);

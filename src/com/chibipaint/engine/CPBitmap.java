@@ -31,7 +31,7 @@ public class CPBitmap {
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	public int getWidth() {
 		return width;
 	}
@@ -51,6 +51,5 @@ public class CPBitmap {
 	public boolean isInside(int x, int y) {
 		return x >= 0 && y >= 0 && x < width && y < height;
 	}
-
 
 }

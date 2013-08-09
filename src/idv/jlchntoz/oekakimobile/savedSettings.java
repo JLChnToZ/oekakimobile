@@ -38,7 +38,7 @@ public class savedSettings {
 	DBHelper helper;
 
 	public savedSettings(Context c) {
-		this.context = c;
+		context = c;
 		helper = new DBHelper(c, DBFileName);
 
 		SQLiteDatabase db = helper.getWritableDatabase();
@@ -52,71 +52,50 @@ public class savedSettings {
 				+ "specing REAL NOT NULL, btype INTEGER NOT NULL, pmode INTEGER NOT NULL, resat REAL NOT NULL, bleed REAL NOT NULL)");
 
 		if (DatabaseUtils.queryNumEntries(db, pensDBName) <= 0) {
-			saveCustomPen2(
-					db,
-					new CPBrushInfo(CPController.T_PENCIL, 16, 255, true,
-							false, .5f, .05f, false, true,
-							CPBrushInfo.B_ROUND_AA, CPBrushInfo.M_PAINT, 1f, 0f)
-							.setName(c.getResources()
-									.getString(R.string.pencil)));
-			saveCustomPen2(
-					db,
-					new CPBrushInfo(CPController.T_ERASER, 16, 255, true,
-							false, .5f, .05f, false, false,
-							CPBrushInfo.B_ROUND_AA, CPBrushInfo.M_ERASE, 1f, 0f)
-							.setName(c.getResources()
-									.getString(R.string.eraser)));
-			saveCustomPen2(db,
-					new CPBrushInfo(CPController.T_PEN, 2, 128, true, false,
-							.5f, .05f, true, false, CPBrushInfo.B_ROUND_AA,
-							CPBrushInfo.M_PAINT, 1f, 0f).setName(c
-							.getResources().getString(R.string.pen)));
-			saveCustomPen2(db,
-					new CPBrushInfo(CPController.T_SOFTERASER, 16, 64, false,
-							true, .5f, .05f, false, true,
-							CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_ERASE,
-							1f, 0f).setName(c.getResources().getString(
-							R.string.softearser)));
-			saveCustomPen2(db,
-					new CPBrushInfo(CPController.T_AIRBRUSH, 50, 32, false,
-							true, .5f, .05f, false, true,
-							CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_PAINT,
-							1f, 0f).setName(c.getResources().getString(
-							R.string.airbrush)));
-			saveCustomPen2(db,
-					new CPBrushInfo(CPController.T_DODGE, 30, 32, false, true,
-							.5f, .05f, false, true,
-							CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_DODGE,
-							1f, 0f).setName(c.getResources().getString(
-							R.string.dodge)));
-			saveCustomPen2(db,
-					new CPBrushInfo(CPController.T_BURN, 30, 32, false, true,
-							.5f, .05f, false, true,
-							CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_BURN,
-							1f, 0f).setName(c.getResources().getString(
-							R.string.burn)));
-			saveCustomPen2(db,
-					new CPBrushInfo(CPController.T_WATER, 30, 70, false, true,
-							.5f, .02f, false, true, CPBrushInfo.B_ROUND_AA,
-							CPBrushInfo.M_WATER, .3f, .6f).setName(c
-							.getResources().getString(R.string.water)));
-			saveCustomPen2(db,
-					new CPBrushInfo(CPController.T_BLUR, 20, 255, false, true,
-							.5f, .05f, false, true, CPBrushInfo.B_ROUND_PIXEL,
-							CPBrushInfo.M_BLUR, 1f, 0f).setName(c
-							.getResources().getString(R.string.blur)));
-			saveCustomPen2(db,
-					new CPBrushInfo(CPController.T_SMUDGE, 20, 128, false,
-							true, .5f, .01f, false, true,
-							CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_SMUDGE,
-							0f, 1f).setName(c.getResources().getString(
-							R.string.smudge)));
-			saveCustomPen2(db,
-					new CPBrushInfo(CPController.T_SMUDGE, 20, 60, false, true,
-							.5f, .1f, false, true,
-							CPBrushInfo.B_ROUND_AIRBRUSH, CPBrushInfo.M_OIL,
-							0f, .07f).setName(c.getResources().getString(
-							R.string.blender)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_PENCIL, 16, 255, true,
+					false, .5f, .05f, false, true, CPBrushInfo.B_ROUND_AA,
+					CPBrushInfo.M_PAINT, 1f, 0f).setName(c.getResources().getString(
+					R.string.pencil)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_ERASER, 16, 255, true,
+					false, .5f, .05f, false, false, CPBrushInfo.B_ROUND_AA,
+					CPBrushInfo.M_ERASE, 1f, 0f).setName(c.getResources().getString(
+					R.string.eraser)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_PEN, 2, 128, true,
+					false, .5f, .05f, true, false, CPBrushInfo.B_ROUND_AA,
+					CPBrushInfo.M_PAINT, 1f, 0f).setName(c.getResources().getString(
+					R.string.pen)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_SOFTERASER, 16, 64,
+					false, true, .5f, .05f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
+					CPBrushInfo.M_ERASE, 1f, 0f).setName(c.getResources().getString(
+					R.string.softearser)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_AIRBRUSH, 50, 32,
+					false, true, .5f, .05f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
+					CPBrushInfo.M_PAINT, 1f, 0f).setName(c.getResources().getString(
+					R.string.airbrush)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_DODGE, 30, 32, false,
+					true, .5f, .05f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
+					CPBrushInfo.M_DODGE, 1f, 0f).setName(c.getResources().getString(
+					R.string.dodge)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_BURN, 30, 32, false,
+					true, .5f, .05f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
+					CPBrushInfo.M_BURN, 1f, 0f).setName(c.getResources().getString(
+					R.string.burn)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_WATER, 30, 70, false,
+					true, .5f, .02f, false, true, CPBrushInfo.B_ROUND_AA,
+					CPBrushInfo.M_WATER, .3f, .6f).setName(c.getResources().getString(
+					R.string.water)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_BLUR, 20, 255, false,
+					true, .5f, .05f, false, true, CPBrushInfo.B_ROUND_PIXEL,
+					CPBrushInfo.M_BLUR, 1f, 0f).setName(c.getResources().getString(
+					R.string.blur)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_SMUDGE, 20, 128, false,
+					true, .5f, .01f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
+					CPBrushInfo.M_SMUDGE, 0f, 1f).setName(c.getResources().getString(
+					R.string.smudge)));
+			saveCustomPen2(db, new CPBrushInfo(CPController.T_SMUDGE, 20, 60, false,
+					true, .5f, .1f, false, true, CPBrushInfo.B_ROUND_AIRBRUSH,
+					CPBrushInfo.M_OIL, 0f, .07f).setName(c.getResources().getString(
+					R.string.blender)));
 		}
 		db.close();
 	}
@@ -143,8 +122,7 @@ public class savedSettings {
 			return ret;
 		} catch (Exception ex) {
 			ex.printStackTrace(); // For debugging
-			Toast.makeText(this.context, ex.getMessage(), Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
 			return null;
 		}
 	}
@@ -153,26 +131,24 @@ public class savedSettings {
 		try {
 			SQLiteDatabase db = helper.getWritableDatabase();
 			for (int i = 0; i < colors.length; i++)
-				db.execSQL("INSERT OR REPLACE INTO " + colorDBName
-						+ " VALUES (" + i + ", " + colors[i] + ")");
+				db.execSQL("INSERT OR REPLACE INTO " + colorDBName + " VALUES (" + i
+						+ ", " + colors[i] + ")");
 			db.close();
 		} catch (Exception ex) {
 			ex.printStackTrace(); // For debugging
-			Toast.makeText(this.context, ex.getMessage(), Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
 	public void saveColor(int index, int color) {
 		try {
 			SQLiteDatabase db = helper.getWritableDatabase();
-			db.execSQL("INSERT OR REPLACE INTO " + colorDBName + " VALUES ("
-					+ index + ", " + color + ")");
+			db.execSQL("INSERT OR REPLACE INTO " + colorDBName + " VALUES (" + index
+					+ ", " + color + ")");
 			db.close();
 		} catch (Exception ex) {
 			ex.printStackTrace(); // For debugging
-			Toast.makeText(this.context, ex.getMessage(), Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -185,27 +161,24 @@ public class savedSettings {
 	public void getCustomPens(ArrayList<CPBrushInfo> pensList) {
 		try {
 			SQLiteDatabase db = helper.getReadableDatabase();
-			Cursor c = db.rawQuery("SELECT * FROM " + pensDBName,
-					new String[] {});
+			Cursor c = db.rawQuery("SELECT * FROM " + pensDBName, new String[] {});
 			while (c.moveToNext()) {
 				int flags = c.getInt(c.getColumnIndex("flag"));
-				pensList.add(new CPBrushInfo(c.getInt(c.getColumnIndex("id")),
-						c.getInt(c.getColumnIndex("size")), c.getInt(c
-								.getColumnIndex("alpha")), c.getFloat(c
-								.getColumnIndex("minspecing")), c.getFloat(c
-								.getColumnIndex("specing")),
-						(flags & (1 << 0)) != 0, (flags & (1 << 1)) != 0, c
-								.getInt(c.getColumnIndex("btype")), c.getInt(c
-								.getColumnIndex("pmode")), c.getFloat(c
-								.getColumnIndex("resat")), c.getFloat(c
-								.getColumnIndex("bleed"))).setName(c
-						.getString(c.getColumnIndex("name"))));
+				pensList.add(new CPBrushInfo(c.getInt(c.getColumnIndex("id")), c
+						.getInt(c.getColumnIndex("size")), c.getInt(c
+						.getColumnIndex("alpha")), c.getFloat(c
+						.getColumnIndex("minspecing")), c.getFloat(c
+						.getColumnIndex("specing")), (flags & 1 << 0) != 0,
+						(flags & 1 << 1) != 0, c.getInt(c.getColumnIndex("btype")), c
+								.getInt(c.getColumnIndex("pmode")), c.getFloat(c
+								.getColumnIndex("resat")),
+						c.getFloat(c.getColumnIndex("bleed"))).setName(c.getString(c
+						.getColumnIndex("name"))));
 			}
 			db.close();
 		} catch (Exception ex) {
 			ex.printStackTrace(); // For debugging
-			Toast.makeText(this.context, ex.getMessage(), Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -214,39 +187,32 @@ public class savedSettings {
 			SQLiteDatabase db = helper.getWritableDatabase();
 			int flags = (pen.pressureSize ? 1 << 0 : 0)
 					| (pen.pressureAlpha ? 1 << 1 : 0);
-			db.execSQL("INSERT OR REPLACE INTO "
-					+ pensDBName
+			db.execSQL("INSERT OR REPLACE INTO " + pensDBName
 					+ "(id, name, size, alpha, flag, minspecing, specing, btype, "
 					+ "pmode, resat, bleed) VALUES (" + pen.toolNb + ", \""
-					+ pen.getName() + "\", " + pen.size + ", " + pen.alpha
-					+ "," + flags + ", " + pen.minSpacing + ", " + pen.spacing
-					+ ", " + pen.type + ", " + pen.paintMode + ", " + pen.resat
-					+ ", " + pen.bleed + ")");
+					+ pen.getName() + "\", " + pen.size + ", " + pen.alpha + "," + flags
+					+ ", " + pen.minSpacing + ", " + pen.spacing + ", " + pen.type + ", "
+					+ pen.paintMode + ", " + pen.resat + ", " + pen.bleed + ")");
 			db.close();
 		} catch (Exception ex) {
 			ex.printStackTrace(); // For debugging
-			Toast.makeText(this.context, ex.getMessage(), Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 
 	private void saveCustomPen2(SQLiteDatabase db, CPBrushInfo pen) {
 		try {
 			int flags = (pen.isAA ? 1 << 0 : 0) | (pen.isAirbrush ? 1 << 1 : 0)
-					| (pen.pressureSize ? 1 << 2 : 0)
-					| (pen.pressureAlpha ? 1 << 3 : 0);
-			db.execSQL("INSERT OR REPLACE INTO "
-					+ pensDBName
+					| (pen.pressureSize ? 1 << 2 : 0) | (pen.pressureAlpha ? 1 << 3 : 0);
+			db.execSQL("INSERT OR REPLACE INTO " + pensDBName
 					+ "(id, name, size, alpha, flag, minspecing, specing, btype, "
 					+ "pmode, resat, bleed) VALUES (" + pen.toolNb + ", \""
-					+ pen.getName() + "\", " + pen.size + ", " + pen.alpha
-					+ "," + flags + ", " + pen.minSpacing + ", " + pen.spacing
-					+ ", " + pen.type + ", " + pen.paintMode + ", " + pen.resat
-					+ ", " + pen.bleed + ")");
+					+ pen.getName() + "\", " + pen.size + ", " + pen.alpha + "," + flags
+					+ ", " + pen.minSpacing + ", " + pen.spacing + ", " + pen.type + ", "
+					+ pen.paintMode + ", " + pen.resat + ", " + pen.bleed + ")");
 		} catch (Exception ex) {
 			ex.printStackTrace(); // For debugging
-			Toast.makeText(this.context, ex.getMessage(), Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(context, ex.getMessage(), Toast.LENGTH_LONG).show();
 		}
 	}
 

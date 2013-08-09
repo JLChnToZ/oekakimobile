@@ -162,12 +162,11 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 	public void setArtWork(CPArtwork artwork) {
 		controller.setArtwork(artwork);
 		this.artwork = artwork;
-		this.BM = Bitmap.createBitmap(artwork.width, artwork.height,
+		BM = Bitmap.createBitmap(artwork.width, artwork.height,
 				Bitmap.Config.ARGB_8888);
-		this.width = artwork.width;
-		this.height = artwork.height;
-		BM.setPixels(artwork.getDisplayBM().data, 0, this.width, 0, 0,
-				this.width, this.height);
+		width = artwork.width;
+		height = artwork.height;
+		BM.setPixels(artwork.getDisplayBM().data, 0, width, 0, 0, width, height);
 		if (screenWidth > 0 && screenHeight > 0)
 			setOffset((screenWidth - artwork.width) / 2F,
 					(screenHeight - artwork.height) / 2F);
@@ -187,9 +186,9 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 		if (ME == null)
 			ME = new ArrayList<MotionEvent>();
 		ME.add(MotionEvent.obtain(ev)); // Push current state to array pending
-										// for process
+		// for process
 		if (TE == null || !TE.isAlive()) { // If the thread is died or not yet
-											// created, make the new one.
+			// created, make the new one.
 			TE = new Thread() {
 				@Override
 				public void run() {
@@ -238,11 +237,9 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 		if (_height - _top > height)
 			_height = height + _top;
 		if (totalUpdateRegion == null)
-			totalUpdateRegion = new Rect(_left, _top, _left + _width, _top
-					+ _height);
+			totalUpdateRegion = new Rect(_left, _top, _left + _width, _top + _height);
 		else
-			totalUpdateRegion
-					.union(_left, _top, _left + _width, _top + _height);
+			totalUpdateRegion.union(_left, _top, _left + _width, _top + _height);
 		repaint();
 	}
 
@@ -326,8 +323,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 	}
 
 	public RectF coordToDisplay(CPRect r) {
-		return transformBy(transform, new RectF(r.left, r.top, r.right,
-				r.bottom));
+		return transformBy(transform, new RectF(r.left, r.top, r.right, r.bottom));
 	}
 
 	public PointF getOffset() {
@@ -346,9 +342,9 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 	public void repaint() {
 		if (updateBM && totalUpdateRegion != null) {
 			BM.setPixels(artwork.getDisplayBM().data, totalUpdateRegion.left
-					+ totalUpdateRegion.top * width, width,
-					totalUpdateRegion.left, totalUpdateRegion.top,
-					totalUpdateRegion.width(), totalUpdateRegion.height());
+					+ totalUpdateRegion.top * width, width, totalUpdateRegion.left,
+					totalUpdateRegion.top, totalUpdateRegion.width(),
+					totalUpdateRegion.height());
 			totalUpdateRegion = null;
 			updateBM = false;
 		}
@@ -453,6 +449,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 		boolean dragLeft = false;
 		PointF smoothMouse = new PointF(0, 0);
 
+		@Override
 		public void mousePressed(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			PointF pf = coordToDocument(p);
@@ -463,6 +460,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			smoothMouse = pf;
 		}
 
+		@Override
 		public void mouseDragged(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			PointF pf = coordToDocument(p);
@@ -473,12 +471,11 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			smoothMouse.x = (1f - smoothing) * pf.x + smoothing * smoothMouse.x;
 			smoothMouse.y = (1f - smoothing) * pf.y + smoothing * smoothMouse.y;
 
-			if (dragLeft) {
-				artwork.continueStroke(smoothMouse.x, smoothMouse.y,
-						e.getPressure());
-			}
+			if (dragLeft)
+				artwork.continueStroke(smoothMouse.x, smoothMouse.y, e.getPressure());
 		}
 
+		@Override
 		public void mouseReleased(MotionEvent e) {
 			dragLeft = false;
 			artwork.endStroke();
@@ -495,6 +492,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 		boolean dragLine = false;
 		PointF dragLineFrom, dragLineTo;
 
+		@Override
 		public void mousePressed(MotionEvent e) {
 			if (!dragLine) {
 				PointF p = new PointF(e.getX(), e.getY());
@@ -504,20 +502,22 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			}
 		}
 
+		@Override
 		public void mouseDragged(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 
-			RectF r = new RectF(Math.min(dragLineFrom.x, dragLineTo.x),
-					Math.min(dragLineFrom.y, dragLineTo.y),
-					Math.abs(dragLineFrom.x - dragLineTo.x) + 1,
-					Math.abs(dragLineFrom.y - dragLineTo.y) + 1);
-			r.union(new RectF(Math.min(dragLineFrom.x, p.x), Math.min(
-					dragLineFrom.y, p.y), Math.abs(dragLineFrom.x - p.x) + 1,
-					Math.abs(dragLineFrom.y - p.y) + 1));
+			RectF r = new RectF(Math.min(dragLineFrom.x, dragLineTo.x), Math.min(
+					dragLineFrom.y, dragLineTo.y),
+					Math.abs(dragLineFrom.x - dragLineTo.x) + 1, Math.abs(dragLineFrom.y
+							- dragLineTo.y) + 1);
+			r.union(new RectF(Math.min(dragLineFrom.x, p.x), Math.min(dragLineFrom.y,
+					p.y), Math.abs(dragLineFrom.x - p.x) + 1, Math.abs(dragLineFrom.y
+					- p.y) + 1));
 			dragLineTo = p;
 			repaint(r.left, r.top, r.width(), r.height());
 		}
 
+		@Override
 		public void mouseReleased(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			PointF pf = coordToDocument(p);
@@ -529,18 +529,18 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			artwork.continueStroke(pf.x, pf.y, 1);
 			artwork.endStroke();
 
-			RectF r = new RectF(Math.min(dragLineFrom.x, dragLineTo.x),
-					Math.min(dragLineFrom.y, dragLineTo.y),
-					Math.abs(dragLineFrom.x - dragLineTo.x) + 1,
-					Math.abs(dragLineFrom.y - dragLineTo.y) + 1);
+			RectF r = new RectF(Math.min(dragLineFrom.x, dragLineTo.x), Math.min(
+					dragLineFrom.y, dragLineTo.y),
+					Math.abs(dragLineFrom.x - dragLineTo.x) + 1, Math.abs(dragLineFrom.y
+							- dragLineTo.y) + 1);
 			repaint(r.left, r.top, r.width(), r.height());
 		}
 
+		@Override
 		public void paint(Canvas g2d) {
-			if (dragLine) {
+			if (dragLine)
 				g2d.drawLine(dragLineFrom.x, dragLineFrom.y, dragLineTo.x,
 						dragLineTo.y, paintHint);
-			}
 		}
 	}
 
@@ -556,9 +556,10 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 
 		boolean dragBezier = false;
 		int dragBezierMode; // 0 Initial drag, 1 first control point, 2 second
-							// point
+		// point
 		PointF dragBezierP0, dragBezierP1, dragBezierP2, dragBezierP3;
 
+		@Override
 		public void mousePressed(MotionEvent e) {
 			PointF p = coordToDocument(new PointF(e.getX(), e.getY()));
 			if (!dragBezier) {
@@ -578,6 +579,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			}
 		}
 
+		@Override
 		public void mouseDragged(MotionEvent e) {
 			PointF p = coordToDocument(new PointF(e.getX(), e.getY()));
 
@@ -587,13 +589,14 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			}
 		}
 
+		@Override
 		public void mouseReleased(MotionEvent e) {
-			if (dragBezier) {
-				if (dragBezierMode == 0) {
+			if (dragBezier)
+				if (dragBezierMode == 0)
 					dragBezierMode = 1;
-				} else if (dragBezierMode == 1) {
+				else if (dragBezierMode == 1)
 					dragBezierMode = 2;
-				} else if (dragBezierMode == 2) {
+				else if (dragBezierMode == 2) {
 					dragBezier = false;
 
 					PointF p0 = dragBezierP0;
@@ -617,15 +620,14 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 					bezier.compute(x, y, BEZIER_POINTS);
 
 					artwork.beginStroke(x[0], y[0], 1);
-					for (int i = 1; i < BEZIER_POINTS; i++) {
+					for (int i = 1; i < BEZIER_POINTS; i++)
 						artwork.continueStroke(x[i], y[i], 1);
-					}
 					artwork.endStroke();
 					repaint();
 				}
-			}
 		}
 
+		@Override
 		public void paint(Canvas g2d) {
 			if (dragBezier) {
 				CPBezier bezier = new CPBezier();
@@ -649,9 +651,8 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 				bezier.compute(x, y, BEZIER_POINTS_PREVIEW);
 				Path pt = new Path();
 				pt.moveTo(x[0], y[0]);
-				for (int i = 0; i < BEZIER_POINTS_PREVIEW; i++) {
+				for (int i = 0; i < BEZIER_POINTS_PREVIEW; i++)
 					pt.lineTo(x[i], y[i]);
-				}
 
 				g2d.drawPath(pt, paintHint);
 				g2d.drawLine(p0.x, p0.y, p1.x, p1.y, paintHint);
@@ -666,24 +667,25 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 
 	class CPColorPickerMode extends CPMode {
 
+		@Override
 		public void mousePressed(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			PointF pf = coordToDocument(p);
 
-			if (artwork.isPointWithin(pf.x, pf.y)) {
+			if (artwork.isPointWithin(pf.x, pf.y))
 				controller.setCurColorRgb(artwork.colorPicker(pf.x, pf.y));
-			}
 		}
 
+		@Override
 		public void mouseDragged(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			PointF pf = coordToDocument(p);
 
-			if (artwork.isPointWithin(pf.x, pf.y)) {
+			if (artwork.isPointWithin(pf.x, pf.y))
 				controller.setCurColorRgb(artwork.colorPicker(pf.x, pf.y));
-			}
 		}
 
+		@Override
 		public void mouseReleased(MotionEvent e) {
 		}
 	}
@@ -699,6 +701,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 		Matrix postTransform;
 		PointF dragMoveOffset, midpoint;
 
+		@Override
 		public void mousePressed(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			midpoint = new PointF(p.x, p.y);
@@ -711,16 +714,17 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			prescale = getZoom();
 		}
 
+		@Override
 		public void mouseDragged(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			if (dragZoom) {
 				scale = spacing(e) / oldDistance;
 				midPoint(midpoint, e);
 				postTransform.reset();
-				postTransform.postTranslate((p.x - dragMoveX) / prescale
-						/ scale, (p.y - dragMoveY) / prescale / scale);
-				postTransform.postScale(scale, scale, midpoint.x / prescale,
-						midpoint.y / prescale);
+				postTransform.postTranslate((p.x - dragMoveX) / prescale / scale,
+						(p.y - dragMoveY) / prescale / scale);
+				postTransform.postScale(scale, scale, midpoint.x / prescale, midpoint.y
+						/ prescale);
 				PointF pd = transformBy(postTransform, dragMoveOffset);
 				setOffset(pd.x, pd.y);
 				setZoom(prescale * scale);
@@ -735,17 +739,19 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			}
 		}
 
+		@Override
 		public void mouseReleased(MotionEvent e) {
-			if (dragMiddle) {
+			if (dragMiddle)
 				dragMiddle = false;
-			}
 		}
 
+		@Override
 		public void secondMousePressed(MotionEvent e) {
 			dragZoom = true;
 			oldDistance = spacing(e);
 		}
 
+		@Override
 		public void secondMouseReleased(MotionEvent e) {
 			dragZoom = false;
 			dragMiddle = false;
@@ -771,6 +777,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 
 	class CPFloodFillMode extends CPMode {
 
+		@Override
 		public void mousePressed(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			PointF pf = coordToDocument(p);
@@ -781,9 +788,11 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			}
 		}
 
+		@Override
 		public void mouseDragged(MotionEvent e) {
 		}
 
+		@Override
 		public void mouseReleased(MotionEvent e) {
 		}
 	}
@@ -797,6 +806,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 		PointF firstClick;
 		CPRect curRect = new CPRect();
 
+		@Override
 		public void mousePressed(MotionEvent e) {
 			PointF p = coordToDocument(new PointF(e.getX(), e.getY()));
 
@@ -806,6 +816,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			repaint();
 		}
 
+		@Override
 		public void mouseDragged(MotionEvent e) {
 			PointF p = coordToDocument(new PointF(e.getX(), e.getY()));
 			boolean square = false;
@@ -822,8 +833,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 
 			if (p.y >= firstClick.y) {
 				curRect.top = (int) firstClick.y;
-				curRect.bottom = (int) (square ? firstClick.y + squareDist
-						: p.y);
+				curRect.bottom = (int) (square ? firstClick.y + squareDist : p.y);
 			} else {
 				curRect.top = (int) (square ? firstClick.y - squareDist : p.y);
 				curRect.bottom = (int) firstClick.y;
@@ -832,15 +842,16 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			repaint();
 		}
 
+		@Override
 		public void mouseReleased(MotionEvent e) {
 			artwork.rectangleSelection(curRect);
 			repaint();
 		}
 
+		@Override
 		public void paint(Canvas g2d) {
-			if (!curRect.isEmpty()) {
+			if (!curRect.isEmpty())
 				g2d.drawRect(coordToDisplay(curRect), paintHint);
-			}
 		}
 	}
 
@@ -852,6 +863,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 
 		PointF firstClick;
 
+		@Override
 		public void mousePressed(MotionEvent e) {
 			PointF p = coordToDocument(new PointF(e.getX(), e.getY()));
 			firstClick = p;
@@ -864,12 +876,14 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			artwork.move(0, 0);
 		}
 
+		@Override
 		public void mouseDragged(MotionEvent e) {
 			PointF p = coordToDocument(new PointF(e.getX(), e.getY()));
 			artwork.move((int) (p.x - firstClick.x), (int) (p.y - firstClick.y));
 			repaint();
 		}
 
+		@Override
 		public void mouseReleased(MotionEvent e) {
 			artwork.endPreviewMode();
 			repaint();
@@ -887,6 +901,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 		Matrix initTransform;
 		boolean dragged;
 
+		@Override
 		public void mousePressed(MotionEvent e) {
 			firstClick = new PointF(e.getX(), e.getY());
 
@@ -896,6 +911,7 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			dragged = false;
 		}
 
+		@Override
 		public void mouseDragged(MotionEvent e) {
 			dragged = true;
 
@@ -903,10 +919,9 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			PointF d = getSize();
 			PointF center = new PointF(d.x / 2.f, d.y / 2.f);
 
-			float deltaAngle = (float) Math.atan2(p.y - center.y, p.x
-					- center.x)
-					- (float) Math.atan2(firstClick.y - center.y, firstClick.x
-							- center.x);
+			float deltaAngle = (float) Math.atan2(p.y - center.y, p.x - center.x)
+					- (float) Math
+							.atan2(firstClick.y - center.y, firstClick.x - center.x);
 
 			Matrix rotTrans = new Matrix();
 			rotTrans.setRotate(deltaAngle, center.x, center.y);
@@ -923,10 +938,10 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 			repaint();
 		}
 
+		@Override
 		public void mouseReleased(MotionEvent e) {
-			if (!dragged) {
+			if (!dragged)
 				resetRotation();
-			}
 		}
 	}
 }

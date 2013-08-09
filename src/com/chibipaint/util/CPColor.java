@@ -53,7 +53,7 @@ public class CPColor implements Cloneable {
 
 	void rgbToHsv() {
 		int r = rgb >> 16;
-		int g = (rgb >> 8) & 0xff;
+		int g = rgb >> 8 & 0xff;
 		int b = rgb & 0xff;
 
 		// Value
@@ -61,47 +61,41 @@ public class CPColor implements Cloneable {
 
 		// Saturation
 		int mini = Math.min(r, Math.min(g, b));
-		if (value == 0) {
+		if (value == 0)
 			saturation = 0;
-		} else {
+		else
 			saturation = (int) ((float) (value - mini) / (float) value * 255.f);
-		}
 
 		// Hue
-		if (saturation == 0) {
+		if (saturation == 0)
 			hue = 0;
-		} else {
+		else {
 			float cr = (float) (value - r) / (float) (value - mini);
 			float cg = (float) (value - g) / (float) (value - mini);
 			float cb = (float) (value - b) / (float) (value - mini);
 
 			float _hue = 0;
-			if (value == r) {
+			if (value == r)
 				_hue = cb - cg;
-			}
-			if (value == g) {
+			if (value == g)
 				_hue = 2 + cr - cb;
-			}
-			if (value == b) {
+			if (value == b)
 				_hue = 4 + cg - cr;
-			}
 
 			_hue *= 60;
-			if (_hue < 0) {
+			if (_hue < 0)
 				_hue += 360;
-			}
 
-			hue = (int) (_hue);
+			hue = (int) _hue;
 		}
 	}
 
 	void hsvToRgb() {
 		// no saturation means it's just a shade of grey
-		if (saturation == 0) {
-			rgb = (value << 16) | (value << 8) | value;
-		}
+		if (saturation == 0)
+			rgb = value << 16 | value << 8 | value;
 
-		float f = (hue) / 60.f;
+		float f = hue / 60.f;
 		f = f - (float) Math.floor(f);
 
 		float s = saturation / 255.f;
@@ -111,22 +105,22 @@ public class CPColor implements Cloneable {
 
 		switch (hue / 60) {
 		case 0:
-			rgb = (value << 16) | (k << 8) | m;
+			rgb = value << 16 | k << 8 | m;
 			break;
 		case 1:
-			rgb = (n << 16) | (value << 8) | m;
+			rgb = n << 16 | value << 8 | m;
 			break;
 		case 2:
-			rgb = (m << 16) | (value << 8) | k;
+			rgb = m << 16 | value << 8 | k;
 			break;
 		case 3:
-			rgb = (m << 16) | (n << 8) | value;
+			rgb = m << 16 | n << 8 | value;
 			break;
 		case 4:
-			rgb = (k << 16) | (m << 8) | value;
+			rgb = k << 16 | m << 8 | value;
 			break;
 		case 5:
-			rgb = (value << 16) | (m << 8) | n;
+			rgb = value << 16 | m << 8 | n;
 			break;
 		default:
 			rgb = 0; // invalid hue
@@ -165,6 +159,7 @@ public class CPColor implements Cloneable {
 		return value;
 	}
 
+	@Override
 	public Object clone() {
 		try {
 			return super.clone();
@@ -181,7 +176,8 @@ public class CPColor implements Cloneable {
 	}
 
 	public boolean isEqual(CPColor color) {
-		return rgb == color.rgb && hue == color.hue && saturation == color.saturation && value == color.value;
+		return rgb == color.rgb && hue == color.hue
+				&& saturation == color.saturation && value == color.value;
 	}
 
 }

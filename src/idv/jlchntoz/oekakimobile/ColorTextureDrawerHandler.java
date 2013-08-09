@@ -67,11 +67,9 @@ public class ColorTextureDrawerHandler implements OnSeekBarChangeListener,
 		imvpreview = (ImageView) this.drawerView.findViewById(R.id.imvpreview);
 		cbinvert = (CheckBox) this.drawerView.findViewById(R.id.cbinvert);
 		cbmirror = (CheckBox) this.drawerView.findViewById(R.id.cbmirror);
-		sbbrightness = (SeekBar) this.drawerView
-				.findViewById(R.id.sbbrightness);
+		sbbrightness = (SeekBar) this.drawerView.findViewById(R.id.sbbrightness);
 		sbcontrast = (SeekBar) this.drawerView.findViewById(R.id.sbcontrast);
-		tvbrightness = (TextView) this.drawerView
-				.findViewById(R.id.tvbrightness);
+		tvbrightness = (TextView) this.drawerView.findViewById(R.id.tvbrightness);
 		tvcontrast = (TextView) this.drawerView.findViewById(R.id.tvcontrast);
 		btnreset = (Button) this.drawerView.findViewById(R.id.btnreset);
 		btncolor = (Button) this.drawerView.findViewById(R.id.btnsetcolor);
@@ -81,8 +79,7 @@ public class ColorTextureDrawerHandler implements OnSeekBarChangeListener,
 				.getColors();
 		if (paletteColors != null)
 			for (int i = 0; i < paletteColors.length; i++)
-				if (paletteColors[i] != null
-						&& paletteColors[i] != Color.TRANSPARENT)
+				if (paletteColors[i] != null && paletteColors[i] != Color.TRANSPARENT)
 					CPS.setColor(i, paletteColors[i]);
 
 		textures = new ArrayList<CPGreyBmp>();
@@ -98,9 +95,8 @@ public class ColorTextureDrawerHandler implements OnSeekBarChangeListener,
 			sptexturContent.add(itm);
 		}
 		HMTIA = new HashMapTextIconAdapter(this.context, sptexturContent,
-				R.layout.imagespinneritemlayout,
-				new String[] { "name", "icon" }, new int[] { R.id.spinnertext,
-						R.id.spinnerimage });
+				R.layout.imagespinneritemlayout, new String[] { "name", "icon" },
+				new int[] { R.id.spinnertext, R.id.spinnerimage });
 		sptextures.setAdapter(HMTIA);
 
 		sbbrightness.setMax(200);
@@ -161,8 +157,7 @@ public class ColorTextureDrawerHandler implements OnSeekBarChangeListener,
 
 	public void update() {
 		if (sptextures.getSelectedItemPosition() != 0)
-			selectedTexture = textures
-					.get(sptextures.getSelectedItemPosition());
+			selectedTexture = textures.get(sptextures.getSelectedItemPosition());
 		else
 			selectedTexture = null;
 
@@ -183,13 +178,13 @@ public class ColorTextureDrawerHandler implements OnSeekBarChangeListener,
 		} else
 			processedTexture = null;
 
-		this.controller.artwork.brushManager.setTexture(processedTexture);
+		controller.artwork.brushManager.setTexture(processedTexture);
 
 		previewBMP = TextureFactory.createTextureImage(processedTexture,
 				previewBMP, 64, 64, targetRGB);
 		imvpreview.setImageBitmap(previewBMP);
 
-		this.controller.setCurColor(this.controller.getCurColor());
+		controller.setCurColor(controller.getCurColor());
 	}
 
 	public Bitmap getBitmap() {
@@ -206,11 +201,10 @@ public class ColorTextureDrawerHandler implements OnSeekBarChangeListener,
 			sbcontrast.setProgress(100);
 			update();
 		} else if (view == btncolor) {
-			ColorPickerDialog dlg = new ColorPickerDialog(this.context,
-					targetRGB, new ColorPickerDialog.ColorPickerCallback() {
+			ColorPickerDialog dlg = new ColorPickerDialog(context, targetRGB,
+					new ColorPickerDialog.ColorPickerCallback() {
 						@Override
-						public void onCallback(ColorPickerDialog which,
-								int color) {
+						public void onCallback(ColorPickerDialog which, int color) {
 							controller.setCurColorRgb(color);
 							update();
 						}
@@ -287,7 +281,7 @@ public class ColorTextureDrawerHandler implements OnSeekBarChangeListener,
 			CPGreyBmp texture = new CPGreyBmp(textureSize, textureSize);
 			for (int i = 0; i < textureSize; i++)
 				for (int j = 0; j < textureSize; j++)
-					texture.data[i + j * textureSize] = (((i / size) + (j / size)) % 2 == 0) ? (byte) 0
+					texture.data[i + j * textureSize] = (i / size + j / size) % 2 == 0 ? (byte) 0
 							: (byte) 0xFF;
 			return texture;
 		}
@@ -310,14 +304,13 @@ public class ColorTextureDrawerHandler implements OnSeekBarChangeListener,
 
 		public static Bitmap createTextureImage(CPGreyBmp texture, int width,
 				int height, int color) {
-			Bitmap bmp = Bitmap.createBitmap(width, height,
-					Bitmap.Config.ARGB_8888);
+			Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 			alterTextureImage(texture, bmp, color);
 			return bmp;
 		}
 
-		public static Bitmap createTextureImage(CPGreyBmp texture,
-				Bitmap bitmap, int width, int height, int color) {
+		public static Bitmap createTextureImage(CPGreyBmp texture, Bitmap bitmap,
+				int width, int height, int color) {
 			if (bitmap == null)
 				return createTextureImage(texture, width, height, color);
 			alterTextureImage(texture, bitmap, color);
@@ -338,10 +331,9 @@ public class ColorTextureDrawerHandler implements OnSeekBarChangeListener,
 			int[] buffer = new int[width * height];
 			for (int i = 0; i < width * height; i++) {
 				buffer[i] = ~texture.data[texture.getWidth()
-						* (i / width % texture.getHeight())
-						+ (i % width % texture.getWidth())];
-				buffer[i] = (buffer[i] & 0xff) << 24 | red << 16 | green << 8
-						| blue;
+						* (i / width % texture.getHeight()) + i % width
+						% texture.getWidth()];
+				buffer[i] = (buffer[i] & 0xff) << 24 | red << 16 | green << 8 | blue;
 			}
 			bitmap.setPixels(buffer, 0, width, 0, 0, width, height);
 		}
