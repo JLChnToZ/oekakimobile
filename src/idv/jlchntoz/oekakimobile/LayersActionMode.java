@@ -31,7 +31,7 @@ public class LayersActionMode implements Callback {
 	public final CPController controller;
 	public final Context context;
 	public final CPArtwork artwork;
-	
+
 	public LayersActionMode(Context context, CPController controller) {
 		this.context = context;
 		this.controller = controller;
@@ -40,7 +40,8 @@ public class LayersActionMode implements Callback {
 
 	@Override
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-		((SherlockActivity)context).getSupportMenuInflater().inflate(R.menu.editlayers, menu);
+		((SherlockActivity) context).getSupportMenuInflater().inflate(
+				R.menu.editlayers, menu);
 		mode.setTitle(R.string.layers);
 		return true;
 	}
@@ -52,7 +53,7 @@ public class LayersActionMode implements Callback {
 
 	@Override
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-		switch(item.getItemId()) {
+		switch (item.getItemId()) {
 		case R.id.menu_layer_add:
 			this.artwork.addLayer();
 			break;
@@ -72,7 +73,8 @@ public class LayersActionMode implements Callback {
 					new PromptDialog.PromptDialogCallBack() {
 						@Override
 						public void onCallBack(PromptDialog which, String result) {
-					        artwork.setLayerName(artwork.getActiveLayerNb(), result);
+							artwork.setLayerName(artwork.getActiveLayerNb(),
+									result);
 						}
 					});
 			dialog.showDialog();
@@ -83,7 +85,7 @@ public class LayersActionMode implements Callback {
 
 	@Override
 	public void onDestroyActionMode(ActionMode mode) {
-		((MainActivity)context).drawer.showContent();
+		((MainActivity) context).drawer.showContent();
 	}
 
 }

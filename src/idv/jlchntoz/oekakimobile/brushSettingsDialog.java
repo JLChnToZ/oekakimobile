@@ -28,61 +28,77 @@ import android.view.*;
 import android.widget.*;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class brushSettingsDialog implements OnSeekBarChangeListener, CPController.ICPToolListener {
-	
+public class brushSettingsDialog implements OnSeekBarChangeListener,
+		CPController.ICPToolListener {
+
 	CPBrushInfo cinfo;
 	final CPController ctrl;
 	final AlertDialog dlg;
 	final View AlertDialogView;
 	final Spinner sptoolinfo, sptooltype;
-	final SeekBar sbstrokeSize, sbalpha, sbcolor, sbmix, sbspecing, sbscattering, sbsmoothing;
-	final TextView lbstrokeSize, lbalpha, lbcolor, lbmix, lbspecing, lbscattering, lbsmoothing;
+	final SeekBar sbstrokeSize, sbalpha, sbcolor, sbmix, sbspecing,
+			sbscattering, sbsmoothing;
+	final TextView lbstrokeSize, lbalpha, lbcolor, lbmix, lbspecing,
+			lbscattering, lbsmoothing;
 	final EditText TBName;
 	final CheckBox cbstrokeSize, cbalpha, cbscattering;
 	final Context context;
 	boolean updateLock;
-	
-	
+
 	public brushSettingsDialog(Context context, CPController ctrl) {
 		this.context = context;
 		this.ctrl = ctrl;
 		this.cinfo = ctrl.getBrushInfo();
 		this.updateLock = false;
-		
-		AlertDialogView = LayoutInflater.from(context).inflate(R.layout.brushsettings, null);
-		
-		TBName = (EditText)AlertDialogView.findViewById(R.id.TBToolName);
-		
-		sptoolinfo = (Spinner)AlertDialogView.findViewById(R.id.SPToolInfo);
-		sptooltype = (Spinner)AlertDialogView.findViewById(R.id.SPToolType);
-		
-		sbstrokeSize = (SeekBar)AlertDialogView.findViewById(R.id.SBStrokeWidth);
-		sbalpha = (SeekBar)AlertDialogView.findViewById(R.id.SBAlpha);
-		sbcolor = (SeekBar)AlertDialogView.findViewById(R.id.SBColor);
-		sbmix = (SeekBar)AlertDialogView.findViewById(R.id.SBMix);
-		sbspecing = (SeekBar)AlertDialogView.findViewById(R.id.SBSpecing);
-		sbscattering = (SeekBar)AlertDialogView.findViewById(R.id.SBScattering);
-		sbsmoothing = (SeekBar)AlertDialogView.findViewById(R.id.SBSmoothing);
-		
-		lbstrokeSize = (TextView)AlertDialogView.findViewById(R.id.LblStrokeWidth);
-		lbalpha = (TextView)AlertDialogView.findViewById(R.id.LblAlpha);
-		lbcolor = (TextView)AlertDialogView.findViewById(R.id.LblColor);
-		lbmix = (TextView)AlertDialogView.findViewById(R.id.LblMix);
-		lbspecing = (TextView)AlertDialogView.findViewById(R.id.LblSpecing);
-		lbscattering = (TextView)AlertDialogView.findViewById(R.id.LblScattering);
-		lbsmoothing = (TextView)AlertDialogView.findViewById(R.id.LblSmoothing);
 
-		cbstrokeSize = (CheckBox)AlertDialogView.findViewById(R.id.CBPressureStroke);
-		cbalpha = (CheckBox)AlertDialogView.findViewById(R.id.CBPressureAlpha);
-		cbscattering = (CheckBox)AlertDialogView.findViewById(R.id.CBPressureScattering);
-		
-		ArrayAdapter<CharSequence> aatoolinfo = ArrayAdapter.createFromResource(context, R.array.tipNames, android.R.layout.simple_spinner_item);
-		aatoolinfo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		AlertDialogView = LayoutInflater.from(context).inflate(
+				R.layout.brushsettings, null);
+
+		TBName = (EditText) AlertDialogView.findViewById(R.id.TBToolName);
+
+		sptoolinfo = (Spinner) AlertDialogView.findViewById(R.id.SPToolInfo);
+		sptooltype = (Spinner) AlertDialogView.findViewById(R.id.SPToolType);
+
+		sbstrokeSize = (SeekBar) AlertDialogView
+				.findViewById(R.id.SBStrokeWidth);
+		sbalpha = (SeekBar) AlertDialogView.findViewById(R.id.SBAlpha);
+		sbcolor = (SeekBar) AlertDialogView.findViewById(R.id.SBColor);
+		sbmix = (SeekBar) AlertDialogView.findViewById(R.id.SBMix);
+		sbspecing = (SeekBar) AlertDialogView.findViewById(R.id.SBSpecing);
+		sbscattering = (SeekBar) AlertDialogView
+				.findViewById(R.id.SBScattering);
+		sbsmoothing = (SeekBar) AlertDialogView.findViewById(R.id.SBSmoothing);
+
+		lbstrokeSize = (TextView) AlertDialogView
+				.findViewById(R.id.LblStrokeWidth);
+		lbalpha = (TextView) AlertDialogView.findViewById(R.id.LblAlpha);
+		lbcolor = (TextView) AlertDialogView.findViewById(R.id.LblColor);
+		lbmix = (TextView) AlertDialogView.findViewById(R.id.LblMix);
+		lbspecing = (TextView) AlertDialogView.findViewById(R.id.LblSpecing);
+		lbscattering = (TextView) AlertDialogView
+				.findViewById(R.id.LblScattering);
+		lbsmoothing = (TextView) AlertDialogView
+				.findViewById(R.id.LblSmoothing);
+
+		cbstrokeSize = (CheckBox) AlertDialogView
+				.findViewById(R.id.CBPressureStroke);
+		cbalpha = (CheckBox) AlertDialogView.findViewById(R.id.CBPressureAlpha);
+		cbscattering = (CheckBox) AlertDialogView
+				.findViewById(R.id.CBPressureScattering);
+
+		ArrayAdapter<CharSequence> aatoolinfo = ArrayAdapter
+				.createFromResource(context, R.array.tipNames,
+						android.R.layout.simple_spinner_item);
+		aatoolinfo
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sptoolinfo.setAdapter(aatoolinfo);
 		sptoolinfo.setSelection(cinfo.type);
 
-		ArrayAdapter<CharSequence> aatooltype = ArrayAdapter.createFromResource(context, R.array.toolTypes, android.R.layout.simple_spinner_item);
-		aatooltype.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<CharSequence> aatooltype = ArrayAdapter
+				.createFromResource(context, R.array.toolTypes,
+						android.R.layout.simple_spinner_item);
+		aatooltype
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sptooltype.setAdapter(aatooltype);
 		sptooltype.setSelection(cinfo.paintMode);
 
@@ -113,80 +129,75 @@ public class brushSettingsDialog implements OnSeekBarChangeListener, CPControlle
 		sbsmoothing.setOnSeekBarChangeListener(this);
 		sbsmoothing.setMax(100);
 		sbsmoothing.setProgress(Math.round(cinfo.smoothing * 100));
-		
+
 		cbstrokeSize.setChecked(cinfo.pressureSize);
 		cbalpha.setChecked(cinfo.pressureAlpha);
 		cbscattering.setChecked(cinfo.pressureScattering);
-		
-		dlg = new AlertDialog.Builder(context)
-		.setTitle(R.string.brushsettings)
-		.setPositiveButton(android.R.string.ok, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				updateValue(false);
-			}
-		})
-		.setNeutralButton(R.string.saveas, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				updateValue(true);
-			}
-		})
-		.setNegativeButton(android.R.string.cancel, null)
-		.create();
-		
+
+		dlg = new AlertDialog.Builder(context).setTitle(R.string.brushsettings)
+				.setPositiveButton(android.R.string.ok, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						updateValue(false);
+					}
+				}).setNeutralButton(R.string.saveas, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						updateValue(true);
+					}
+				}).setNegativeButton(android.R.string.cancel, null).create();
+
 		dlg.setView(AlertDialogView);
-		
+
 		this.ctrl.addToolListener(this);
 	}
-	
+
 	public void showDialog() {
 		dlg.show();
 	}
 
 	@Override
 	public void onProgressChanged(SeekBar sb, int p, boolean u) {
-		if(sb == sbstrokeSize) {
+		if (sb == sbstrokeSize) {
 			lbstrokeSize.setText(R.string.strokesize);
 			lbstrokeSize.append(": " + p);
-		} else if(sb == sbalpha) {
+		} else if (sb == sbalpha) {
 			lbalpha.setText(R.string.alpha);
 			lbalpha.append(": " + p);
-		} else if(sb == sbcolor) {
+		} else if (sb == sbcolor) {
 			lbcolor.setText(R.string.color);
 			lbcolor.append(": " + p + "%");
-		} else if(sb == sbmix) {
+		} else if (sb == sbmix) {
 			lbmix.setText(R.string.mix);
 			lbmix.append(": " + p + "%");
-		} else if(sb == sbspecing) {
+		} else if (sb == sbspecing) {
 			lbspecing.setText(R.string.specing);
 			lbspecing.append(": " + p + "%");
-		} else if(sb == sbscattering) {
+		} else if (sb == sbscattering) {
 			lbscattering.setText(R.string.scattering);
 			lbscattering.append(": " + p + "%");
-		} else if(sb == sbsmoothing) {
+		} else if (sb == sbsmoothing) {
 			lbsmoothing.setText(R.string.smoothing);
 			lbsmoothing.append(": " + p + "%");
 		}
 	}
-
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
 		// Nothing to do here.
 	}
 
-
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// Nothing to do here.
 	}
 
-
 	@Override
 	public void newTool(int tool, CPBrushInfo toolInfo) {
-		if(updateLock) return;
-		if(cinfo != toolInfo) cinfo = toolInfo;
+		if (updateLock)
+			return;
+		if (cinfo != toolInfo)
+			cinfo = toolInfo;
 		TBName.setText(cinfo.getName());
 		sptoolinfo.setSelection(toolInfo.type);
 		sptooltype.setSelection(toolInfo.paintMode);
@@ -201,10 +212,10 @@ public class brushSettingsDialog implements OnSeekBarChangeListener, CPControlle
 		cbstrokeSize.setChecked(toolInfo.pressureSize);
 		cbscattering.setChecked(toolInfo.pressureScattering);
 	}
-	
+
 	private void updateValue(boolean clone) {
 		updateLock = true;
-		if(clone) {
+		if (clone) {
 			cinfo = ctrl.getBrushInfo().clone(-1);
 			ctrl.setTool(cinfo);
 		} else
@@ -222,7 +233,7 @@ public class brushSettingsDialog implements OnSeekBarChangeListener, CPControlle
 		cinfo.pressureAlpha = cbalpha.isChecked();
 		cinfo.pressureScattering = cbscattering.isChecked();
 		updateLock = false;
-		((MainActivity)context).getSettings().saveCustomPen(cinfo);
+		((MainActivity) context).getSettings().saveCustomPen(cinfo);
 		ctrl.callToolListeners();
 	}
 }

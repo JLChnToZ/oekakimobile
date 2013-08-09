@@ -2,9 +2,9 @@
 <com.mobeta.android.CheckableLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-    
+
     <ImageView
-    	android:id="@+id/drag_handle"
+        android:id="@+id/drag_handle"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"
@@ -22,7 +22,7 @@
         android:id="@+id/tvlsicontent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="left|center_vertical"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:gravity="left|center_vertical" />
 
 </com.mobeta.android.CheckableLinearLayout>

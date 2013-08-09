@@ -1,296 +1,289 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-            
+
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dialpgpadding" >
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <EditText
-	            android:id="@+id/TBToolName"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_span="2"
-	            android:layout_weight="1"
-	            android:hint="@string/tools" />
 
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <Spinner
-	            android:id="@+id/SPToolType"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_span="2"
-	            android:layout_weight="1" />
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <Spinner
-	            android:id="@+id/SPToolInfo"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_span="2"
-	            android:layout_weight="1" />
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="" />
-	
-	        <TextView
-	            android:id="@+id/LblStrokeWidth"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:text="@string/strokesize" />
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <CheckBox
-	            android:id="@+id/CBPressureStroke"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0"
-	            android:text=""
-	            android:textSize="0sp" />
-	
-	        <SeekBar
-	            android:id="@+id/SBStrokeWidth"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1" />
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content" />
-	
-	        <TextView
-	            android:id="@+id/LblAlpha"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:text="@string/alpha" />
-	
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <CheckBox
-	            android:id="@+id/CBPressureAlpha"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0"
-	            android:text=""
-	            android:textSize="0sp" />
-	
-	        <SeekBar
-	            android:id="@+id/SBAlpha"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1" />
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="" />
-	
-	        <TextView
-	            android:id="@+id/LblColor"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:text="@string/color" />
-	
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content" />
-	
-	        <SeekBar
-	            android:id="@+id/SBColor"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1" />
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="" />
-	
-	        <TextView
-	            android:id="@+id/LblMix"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:text="@string/mix" />
-	
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="" />
-	
-	        <SeekBar
-	            android:id="@+id/SBMix"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1" />
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="" />
-	
-	        <TextView
-	            android:id="@+id/LblSpecing"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_span="2"
-	            android:layout_weight="1"
-	            android:text="@string/specing" />
-	
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="" />
-	
-	        <SeekBar
-	            android:id="@+id/SBSpecing"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1" />
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="" />
-	
-	        <TextView
-	            android:id="@+id/LblScattering"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_span="2"
-	            android:layout_weight="1"
-	            android:text="@string/scattering" />
-	
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <CheckBox
-	            android:id="@+id/CBPressureScattering"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="0"
-	            android:text=""
-	            android:textSize="0sp" />
-	
-	        <SeekBar
-	            android:id="@+id/SBScattering"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1" />
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="" />
-	
-	        <TextView
-	            android:id="@+id/LblSmoothing"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_span="2"
-	            android:layout_weight="1"
-	            android:text="@string/smoothing" />
-	
-	    </TableRow>
-	
-	    <TableRow
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="" />
-	
-	        <SeekBar
-	            android:id="@+id/SBSmoothing"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1" />
-	    </TableRow>
-	
-	</TableLayout>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/TBToolName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:layout_weight="1"
+                android:hint="@string/tools" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Spinner
+                android:id="@+id/SPToolType"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Spinner
+                android:id="@+id/SPToolInfo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/LblStrokeWidth"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/strokesize" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <CheckBox
+                android:id="@+id/CBPressureStroke"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text=""
+                android:textSize="0sp" />
+
+            <SeekBar
+                android:id="@+id/SBStrokeWidth"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/LblAlpha"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/alpha" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <CheckBox
+                android:id="@+id/CBPressureAlpha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text=""
+                android:textSize="0sp" />
+
+            <SeekBar
+                android:id="@+id/SBAlpha"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/LblColor"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/color" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <SeekBar
+                android:id="@+id/SBColor"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/LblMix"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/mix" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <SeekBar
+                android:id="@+id/SBMix"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/LblSpecing"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:layout_weight="1"
+                android:text="@string/specing" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <SeekBar
+                android:id="@+id/SBSpecing"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/LblScattering"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:layout_weight="1"
+                android:text="@string/scattering" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <CheckBox
+                android:id="@+id/CBPressureScattering"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text=""
+                android:textSize="0sp" />
+
+            <SeekBar
+                android:id="@+id/SBScattering"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/LblSmoothing"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:layout_weight="1"
+                android:text="@string/smoothing" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <SeekBar
+                android:id="@+id/SBSmoothing"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </TableRow>
+    </TableLayout>
+
 </ScrollView>

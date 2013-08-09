@@ -33,7 +33,7 @@ public class FileDialog implements OnItemClickListener {
 	public interface FileDialogCallBack {
 		public void onCallBack(FileDialog which, File file);
 	}
-	
+
 	private final Context context;
 	private final FileDialogCallBack callBack;
 	private final View DialogView;
@@ -48,8 +48,10 @@ public class FileDialog implements OnItemClickListener {
 	private String prompt, path, name;
 	private File path_file;
 	private int selitem;
-	
-	public FileDialog(Context context, String prompt, String basepath, String filename, String[] extensionFilter, boolean isOpenDialog, FileDialogCallBack Callback) {
+
+	public FileDialog(Context context, String prompt, String basepath,
+			String filename, String[] extensionFilter, boolean isOpenDialog,
+			FileDialogCallBack Callback) {
 		this.callBack = Callback;
 		this.context = context;
 		this.prompt = prompt;
@@ -57,52 +59,55 @@ public class FileDialog implements OnItemClickListener {
 		this.name = filename;
 		this.isOpenDialog = isOpenDialog;
 		this.extensionFilter = extensionFilter;
-		
-		this.DialogView = LayoutInflater.from(context).inflate(R.layout.filedlg, null);
-		this.tvfiles = (EditText)this.DialogView.findViewById(R.id.etfilename);
-		this.lvwfiles = (ListView)this.DialogView.findViewById(R.id.lvwfiles);
-		
-		if(this.isOpenDialog)
+
+		this.DialogView = LayoutInflater.from(context).inflate(
+				R.layout.filedlg, null);
+		this.tvfiles = (EditText) this.DialogView.findViewById(R.id.etfilename);
+		this.lvwfiles = (ListView) this.DialogView.findViewById(R.id.lvwfiles);
+
+		if (this.isOpenDialog)
 			this.tvfiles.setVisibility(View.GONE);
 		else
 			this.tvfiles.setText(filename);
-		
+
 		buildAdapter();
 		buildDialog();
 	}
-	
+
 	private void buildDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(prompt);
 		builder.setView(DialogView);
-		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() { 
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		    	doCallback();
-		    }
-		});
-		
-		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		        dialog.cancel();
-		    }
-		});
+		builder.setPositiveButton(android.R.string.ok,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						doCallback();
+					}
+				});
+
+		builder.setNegativeButton(android.R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
 		dialog = builder.create();
 	}
-	
+
 	private void buildAdapter() {
 		path_file = new File(path);
 		path_file.mkdirs();
 		File[] files = path_file.listFiles();
 		fileNameList = new ArrayList<String>();
 		fileList = new ArrayList<File>();
-		if(files != null)
-			for(File file : files) {
-				if(file.isFile()) {
-					if(extensionFilter != null && extensionFilter.length > 0) {
-						for(String ext : extensionFilter)
-							if(file.getName().endsWith("." + ext)) {
+		if (files != null)
+			for (File file : files) {
+				if (file.isFile()) {
+					if (extensionFilter != null && extensionFilter.length > 0) {
+						for (String ext : extensionFilter)
+							if (file.getName().endsWith("." + ext)) {
 								fileList.add(file);
 								fileNameList.add(file.getName());
 							}
@@ -112,12 +117,13 @@ public class FileDialog implements OnItemClickListener {
 					}
 				}
 			}
-		aafileList = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, fileNameList);
+		aafileList = new ArrayAdapter<String>(context,
+				android.R.layout.simple_list_item_1, fileNameList);
 		lvwfiles.setAdapter(aafileList);
 		lvwfiles.setOnItemClickListener(this);
 		selitem = 0;
 	}
-	
+
 	public void showDialog() {
 		dialog.show();
 	}
@@ -128,13 +134,16 @@ public class FileDialog implements OnItemClickListener {
 		tvfiles.setText(fileList.get(selitem).getName());
 		doCallback();
 	}
-	
+
 	private void doCallback() {
-    	name = tvfiles.getText().toString();
-    	File ret = new File(path, name);
-    	if(isOpenDialog && !ret.exists())
-    		Toast.makeText(context, String.format(context.getString(R.string.filenotexists), ret.getName()), Toast.LENGTH_LONG).show();
-    	callBack.onCallBack(FileDialog.this, ret);
+		name = tvfiles.getText().toString();
+		File ret = new File(path, name);
+		if (isOpenDialog && !ret.exists())
+			Toast.makeText(
+					context,
+					String.format(context.getString(R.string.filenotexists),
+							ret.getName()), Toast.LENGTH_LONG).show();
+		callBack.onCallBack(FileDialog.this, ret);
 	}
 
 }

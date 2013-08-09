@@ -36,9 +36,9 @@ import com.chibipaint.util.CPBezier;
 import com.chibipaint.util.CPRect;
 
 public class PaintCanvas extends View implements CPController.ICPToolListener,
-CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
+		CPController.ICPModeListener, CPArtwork.ICPArtworkListener {
 	private static final int MSG_REDRAW = 1;
-	
+
 	private int width, height;
 	private CPArtwork artwork;
 	private Paint paintShader, paintHint;
@@ -47,7 +47,8 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	private Bitmap BM, CheckerBoard;
 	private BitmapShader CheckerBoardShader;
 	private PointF offset;
-	private int backgroundColor, checkerBoardColor1, checkerBoardColor2, selectionColor;
+	private int backgroundColor, checkerBoardColor1, checkerBoardColor2,
+			selectionColor;
 	private float rotation, zoom;
 	private int screenWidth, screenHeight;
 	public CPController controller;
@@ -55,7 +56,7 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	private Thread TE;
 	private Rect totalUpdateRegion;
 	private boolean updateBM;
-	
+
 	//
 	// Modes system: modes control the way the GUI is reacting to the user input
 	// All the tools are implemented through modes
@@ -68,8 +69,9 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	private CPMode moveToolMode = new CPMoveToolMode();
 
 	// this must correspond to the stroke modes defined in CPToolInfo
-	private CPMode drawingModes[] = { new CPFreehandMode(), new CPLineMode(), new CPBezierMode(), };
-	
+	private CPMode drawingModes[] = { new CPFreehandMode(), new CPLineMode(),
+			new CPBezierMode(), };
+
 	public PaintCanvas(Context c) {
 		super(c);
 		width = 800;
@@ -83,14 +85,14 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		this.height = height;
 		initialize();
 	}
-	
+
 	public PaintCanvas(Context c, AttributeSet a) {
 		super(c, a);
 		width = 800;
 		height = 600;
 		initialize();
 	}
-	
+
 	private void initialize() {
 		curDrawMode = drawingModes[0];
 		ActiveMode = curDrawMode;
@@ -104,69 +106,74 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		controller = new CPControllerDroid();
 		controller.addToolListener(this);
 		controller.addModeListener(this);
-		
+
 		setArtWork(new CPArtwork(getContext(), width, height));
-		
+
 		Resources res = getResources();
-		
+
 		backgroundColor = res.getColor(R.color.BackgroundColor);
 		checkerBoardColor1 = res.getColor(R.color.CheckerBoardColor1);
 		checkerBoardColor2 = res.getColor(R.color.CheckerBoardColor2);
 		selectionColor = res.getColor(R.color.SelectionColor);
-		
+
 		paintHint.setStyle(Paint.Style.STROKE);
 		paintHint.setColor(selectionColor);
 		paintHint.setStrokeWidth(1);
-		
+
 		doTransform();
-		
-		//Generate CheckerBoard Background
-		if(CheckerBoard == null) {
+
+		// Generate CheckerBoard Background
+		if (CheckerBoard == null) {
 			CheckerBoard = Bitmap.createBitmap(20, 20, Bitmap.Config.ARGB_8888);
-			for(int i = 0; i < 20; i++)
-				for(int j = 0; j < 20; j++)
-					if(Math.floor(i / 10) == 0 ^ Math.floor(j / 10) == 1)
+			for (int i = 0; i < 20; i++)
+				for (int j = 0; j < 20; j++)
+					if (Math.floor(i / 10) == 0 ^ Math.floor(j / 10) == 1)
 						CheckerBoard.setPixel(i, j, checkerBoardColor1);
 					else
 						CheckerBoard.setPixel(i, j, checkerBoardColor2);
 		}
-		if(CheckerBoardShader == null)
-			CheckerBoardShader = new BitmapShader(CheckerBoard, BitmapShader.TileMode.REPEAT, BitmapShader.TileMode.REPEAT);
+		if (CheckerBoardShader == null)
+			CheckerBoardShader = new BitmapShader(CheckerBoard,
+					BitmapShader.TileMode.REPEAT, BitmapShader.TileMode.REPEAT);
 		paintShader.setShader(CheckerBoardShader);
 	}
-	
+
 	@SuppressLint("HandlerLeak")
 	private final Handler _h = new Handler() {
 		@Override
 		public void handleMessage(Message m) {
-			switch(m.what) {
-				case MSG_REDRAW:
-					invalidate();
-					break;
+			switch (m.what) {
+			case MSG_REDRAW:
+				invalidate();
+				break;
 			}
 		}
 	};
-	
+
 	@Override
 	protected void onSizeChanged(int w, int h, int ow, int oh) {
 		screenWidth = w;
 		screenHeight = h;
-		if(artwork != null)
-			setOffset((screenWidth - artwork.width) / 2F, (screenHeight - artwork.height) / 2F);
+		if (artwork != null)
+			setOffset((screenWidth - artwork.width) / 2F,
+					(screenHeight - artwork.height) / 2F);
 	}
-	
+
 	public void setArtWork(CPArtwork artwork) {
 		controller.setArtwork(artwork);
 		this.artwork = artwork;
-		this.BM = Bitmap.createBitmap(artwork.width, artwork.height, Bitmap.Config.ARGB_8888);
+		this.BM = Bitmap.createBitmap(artwork.width, artwork.height,
+				Bitmap.Config.ARGB_8888);
 		this.width = artwork.width;
 		this.height = artwork.height;
-		BM.setPixels(artwork.getDisplayBM().data, 0, this.width, 0, 0, this.width, this.height);
-		if(screenWidth > 0 && screenHeight > 0)
-			setOffset((screenWidth - artwork.width) / 2F, (screenHeight - artwork.height) / 2F);
+		BM.setPixels(artwork.getDisplayBM().data, 0, this.width, 0, 0,
+				this.width, this.height);
+		if (screenWidth > 0 && screenHeight > 0)
+			setOffset((screenWidth - artwork.width) / 2F,
+					(screenHeight - artwork.height) / 2F);
 		artwork.addListener(this);
 	}
-	
+
 	@Override
 	public void onDraw(Canvas c) {
 		c.drawColor(backgroundColor);
@@ -174,36 +181,38 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		c.drawBitmap(BM, transform, null);
 		ActiveMode.paint(c);
 	}
-	
+
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		if(ME == null)
+		if (ME == null)
 			ME = new ArrayList<MotionEvent>();
-		ME.add(MotionEvent.obtain(ev)); // Push current state to array pending for process
-		if(TE == null || !TE.isAlive()) { // If the thread is died or not yet created, make the new one.
+		ME.add(MotionEvent.obtain(ev)); // Push current state to array pending
+										// for process
+		if (TE == null || !TE.isAlive()) { // If the thread is died or not yet
+											// created, make the new one.
 			TE = new Thread() {
 				@Override
 				public void run() {
 					updateBM = false;
-					for(int i = 0; i < ME.size(); i++) {
+					for (int i = 0; i < ME.size(); i++) {
 						MotionEvent e = ME.get(i);
-						switch(e.getAction() & MotionEvent.ACTION_MASK) {
-							case MotionEvent.ACTION_DOWN:
-								ActiveMode.mousePressed(e);
-								break;
-							case MotionEvent.ACTION_MOVE:
-									ActiveMode.mouseDragged(e);
-								break;
-							case MotionEvent.ACTION_UP:
-								ActiveMode.mouseDragged(e);
-								ActiveMode.mouseReleased(e);
-								break;
-							case MotionEvent.ACTION_POINTER_DOWN:
-								ActiveMode.secondMousePressed(e);
-								break;
-							case MotionEvent.ACTION_POINTER_UP:
-								ActiveMode.secondMouseReleased(e);
-								break;
+						switch (e.getAction() & MotionEvent.ACTION_MASK) {
+						case MotionEvent.ACTION_DOWN:
+							ActiveMode.mousePressed(e);
+							break;
+						case MotionEvent.ACTION_MOVE:
+							ActiveMode.mouseDragged(e);
+							break;
+						case MotionEvent.ACTION_UP:
+							ActiveMode.mouseDragged(e);
+							ActiveMode.mouseReleased(e);
+							break;
+						case MotionEvent.ACTION_POINTER_DOWN:
+							ActiveMode.secondMousePressed(e);
+							break;
+						case MotionEvent.ACTION_POINTER_UP:
+							ActiveMode.secondMouseReleased(e);
+							break;
 						}
 						e.recycle();
 					}
@@ -216,7 +225,7 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void updateRegion(CPArtwork artwork, CPRect region) {
 		// Only updating the region changed, or the app will be super-laggy.
@@ -224,17 +233,22 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		// it should be checked to make sure the values are inside the bitmap.
 		int _left = Math.max(0, region.left), _top = Math.max(0, region.top);
 		int _width = region.getWidth(), _height = region.getHeight();
-		if(_width - _left > width) _width = width + _left;
-		if(_height - _top > height) _height = height + _top;
-		if(totalUpdateRegion == null)
-			totalUpdateRegion = new Rect(_left, _top, _left+_width, _top+_height);
+		if (_width - _left > width)
+			_width = width + _left;
+		if (_height - _top > height)
+			_height = height + _top;
+		if (totalUpdateRegion == null)
+			totalUpdateRegion = new Rect(_left, _top, _left + _width, _top
+					+ _height);
 		else
-			totalUpdateRegion.union(_left, _top, _left+_width, _top+_height);
+			totalUpdateRegion
+					.union(_left, _top, _left + _width, _top + _height);
 		repaint();
 	}
 
 	@Override
-	public void layerChange(CPArtwork artwork) { }
+	public void layerChange(CPArtwork artwork) {
+	}
 
 	@Override
 	public void modeChange(int mode) {
@@ -257,21 +271,21 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		case CPController.M_ROTATE_CANVAS:
 			ActiveMode = rotateCanvasMode;
 			break;
-			
+
 		case CPController.M_COLOR_PICKER:
 			ActiveMode = colorPickerMode;
 			break;
-			
+
 		case CPController.M_MOVE_CANVAS:
 			ActiveMode = moveCanvasMode;
 			break;
 		}
 	}
-	
+
 	private void doTransform() {
-		if(transform == null)
+		if (transform == null)
 			transform = new Matrix();
-		if(transform_invert == null)
+		if (transform_invert == null)
 			transform_invert = new Matrix();
 		transform.reset();
 		transform.postTranslate(offset.x, offset.y);
@@ -279,7 +293,7 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		transform.postRotate(rotation);
 		transform.invert(transform_invert);
 	}
-	
+
 	private PointF transformBy(Matrix m, PointF p) {
 		float[] _p = new float[2];
 		_p[0] = p.x;
@@ -287,7 +301,7 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		m.mapPoints(_p);
 		return new PointF(_p[0], _p[1]);
 	}
-	
+
 	private RectF transformBy(Matrix m, RectF r) {
 		float[] _p = new float[4];
 		_p[0] = r.left;
@@ -302,7 +316,7 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	public void newTool(int tool, CPBrushInfo toolInfo) {
 		curDrawMode = drawingModes[toolInfo.strokeMode];
 	}
-	
+
 	public PointF coordToDocument(PointF p) {
 		return transformBy(transform_invert, p);
 	}
@@ -310,45 +324,47 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	public PointF coordToDisplay(PointF p) {
 		return transformBy(transform, p);
 	}
-	
+
 	public RectF coordToDisplay(CPRect r) {
-		return transformBy(transform, new RectF(r.left, r.top, r.right, r.bottom));
+		return transformBy(transform, new RectF(r.left, r.top, r.right,
+				r.bottom));
 	}
 
 	public PointF getOffset() {
 		return offset;
 	}
-	
+
 	public void setOffset(PointF p) {
 		offset = p;
 		doTransform();
 	}
-	
+
 	public void setOffset(float x, float y) {
 		setOffset(new PointF(x, y));
 	}
-	
+
 	public void repaint() {
-		if(updateBM && totalUpdateRegion != null) {
-			BM.setPixels(artwork.getDisplayBM().data,
-					totalUpdateRegion.left + totalUpdateRegion.top * width, width,
-					totalUpdateRegion.left, totalUpdateRegion.top, totalUpdateRegion.width(), totalUpdateRegion.height());
+		if (updateBM && totalUpdateRegion != null) {
+			BM.setPixels(artwork.getDisplayBM().data, totalUpdateRegion.left
+					+ totalUpdateRegion.top * width, width,
+					totalUpdateRegion.left, totalUpdateRegion.top,
+					totalUpdateRegion.width(), totalUpdateRegion.height());
 			totalUpdateRegion = null;
 			updateBM = false;
 		}
 		repaint(0, 0, width, height);
 	}
-	
+
 	public void repaint(float x, float y, float w, float h) {
 		Message m = new Message();
 		m.what = MSG_REDRAW;
 		_h.sendMessage(m);
 	}
-	
+
 	public float getRotation2() {
 		return rotation;
 	}
-	
+
 	public void setRotation2(float r) {
 		rotation = r;
 		doTransform();
@@ -357,25 +373,25 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	public void resetRotation() {
 		setRotation2(0);
 	}
-	
+
 	public float getZoom() {
 		return zoom;
 	}
-	
+
 	public void zoomIn() {
 		zoom *= 2;
 		doTransform();
 	}
-	
+
 	public void zoomOut() {
 		zoom /= 2;
 		doTransform();
 	}
-	
+
 	public void resetZoom() {
 		setZoom(1);
 	}
-	
+
 	public void setZoom(float value) {
 		zoom = value;
 		doTransform();
@@ -392,30 +408,39 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 	abstract class CPMode {
 
 		// Mouse (Finger) Input
-		public void mousePressed(MotionEvent e) { }
+		public void mousePressed(MotionEvent e) {
+		}
 
-		public void mouseDragged(MotionEvent e) { }
+		public void mouseDragged(MotionEvent e) {
+		}
 
-		public void mouseReleased(MotionEvent e) { }
+		public void mouseReleased(MotionEvent e) {
+		}
 
-		public void mouseMoved(MotionEvent e) { }
+		public void mouseMoved(MotionEvent e) {
+		}
 
-		public void mouseClicked(MotionEvent e) { }
+		public void mouseClicked(MotionEvent e) {
+		}
 
-		public void mouseEntered(MotionEvent e) { }
+		public void mouseEntered(MotionEvent e) {
+		}
 
-		public void mouseExited(MotionEvent e) { }
-		
+		public void mouseExited(MotionEvent e) {
+		}
+
 		// Multi-touch here
-		public void secondMousePressed(MotionEvent e) { }
-		
-		public void secondMouseReleased(MotionEvent e) { }
+		public void secondMousePressed(MotionEvent e) {
+		}
+
+		public void secondMouseReleased(MotionEvent e) {
+		}
 
 		// GUI drawing
-		public void paint(Canvas g2d) { }
+		public void paint(Canvas g2d) {
+		}
 
 	}
-
 
 	//
 	// Freehand mode
@@ -429,32 +454,34 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		PointF smoothMouse = new PointF(0, 0);
 
 		public void mousePressed(MotionEvent e) {
-				PointF p = new PointF(e.getX(), e.getY());
-				PointF pf = coordToDocument(p);
+			PointF p = new PointF(e.getX(), e.getY());
+			PointF pf = coordToDocument(p);
 
-				dragLeft = true;
-				artwork.beginStroke(pf.x, pf.y, e.getPressure());
+			dragLeft = true;
+			artwork.beginStroke(pf.x, pf.y, e.getPressure());
 
-				smoothMouse = pf;
+			smoothMouse = pf;
 		}
 
 		public void mouseDragged(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			PointF pf = coordToDocument(p);
 
-			float smoothing = Math.min(.999f, (float) Math.pow(controller.getBrushInfo().smoothing, .3));
+			float smoothing = Math.min(.999f,
+					(float) Math.pow(controller.getBrushInfo().smoothing, .3));
 
 			smoothMouse.x = (1f - smoothing) * pf.x + smoothing * smoothMouse.x;
 			smoothMouse.y = (1f - smoothing) * pf.y + smoothing * smoothMouse.y;
 
 			if (dragLeft) {
-				artwork.continueStroke(smoothMouse.x, smoothMouse.y, e.getPressure());
+				artwork.continueStroke(smoothMouse.x, smoothMouse.y,
+						e.getPressure());
 			}
 		}
 
 		public void mouseReleased(MotionEvent e) {
-				dragLeft = false;
-				artwork.endStroke();
+			dragLeft = false;
+			artwork.endStroke();
 
 		}
 	}
@@ -480,34 +507,39 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		public void mouseDragged(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 
-			RectF r = new RectF(Math.min(dragLineFrom.x, dragLineTo.x), Math.min(dragLineFrom.y, dragLineTo.y),
-					Math.abs(dragLineFrom.x - dragLineTo.x) + 1, Math.abs(dragLineFrom.y - dragLineTo.y) + 1);
-			r.union(new RectF(Math.min(dragLineFrom.x, p.x), Math.min(dragLineFrom.y, p.y), Math
-					.abs(dragLineFrom.x - p.x) + 1, Math.abs(dragLineFrom.y - p.y) + 1));
+			RectF r = new RectF(Math.min(dragLineFrom.x, dragLineTo.x),
+					Math.min(dragLineFrom.y, dragLineTo.y),
+					Math.abs(dragLineFrom.x - dragLineTo.x) + 1,
+					Math.abs(dragLineFrom.y - dragLineTo.y) + 1);
+			r.union(new RectF(Math.min(dragLineFrom.x, p.x), Math.min(
+					dragLineFrom.y, p.y), Math.abs(dragLineFrom.x - p.x) + 1,
+					Math.abs(dragLineFrom.y - p.y) + 1));
 			dragLineTo = p;
 			repaint(r.left, r.top, r.width(), r.height());
 		}
 
 		public void mouseReleased(MotionEvent e) {
-				PointF p = new PointF(e.getX(), e.getY());
-				PointF pf = coordToDocument(p);
+			PointF p = new PointF(e.getX(), e.getY());
+			PointF pf = coordToDocument(p);
 
-				dragLine = false;
+			dragLine = false;
 
-				PointF from = coordToDocument(dragLineFrom);
-				artwork.beginStroke(from.x, from.y, 1);
-				artwork.continueStroke(pf.x, pf.y, 1);
-				artwork.endStroke();
+			PointF from = coordToDocument(dragLineFrom);
+			artwork.beginStroke(from.x, from.y, 1);
+			artwork.continueStroke(pf.x, pf.y, 1);
+			artwork.endStroke();
 
-				RectF r = new RectF(Math.min(dragLineFrom.x, dragLineTo.x), Math.min(dragLineFrom.y,
-						dragLineTo.y), Math.abs(dragLineFrom.x - dragLineTo.x) + 1, Math.abs(dragLineFrom.y
-						- dragLineTo.y) + 1);
-				repaint(r.left, r.top, r.width(), r.height());
+			RectF r = new RectF(Math.min(dragLineFrom.x, dragLineTo.x),
+					Math.min(dragLineFrom.y, dragLineTo.y),
+					Math.abs(dragLineFrom.x - dragLineTo.x) + 1,
+					Math.abs(dragLineFrom.y - dragLineTo.y) + 1);
+			repaint(r.left, r.top, r.width(), r.height());
 		}
 
 		public void paint(Canvas g2d) {
 			if (dragLine) {
-				g2d.drawLine(dragLineFrom.x, dragLineFrom.y, dragLineTo.x, dragLineTo.y, paintHint);
+				g2d.drawLine(dragLineFrom.x, dragLineFrom.y, dragLineTo.x,
+						dragLineTo.y, paintHint);
 			}
 		}
 	}
@@ -523,7 +555,8 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		static final int BEZIER_POINTS_PREVIEW = 100;
 
 		boolean dragBezier = false;
-		int dragBezierMode; // 0 Initial drag, 1 first control point, 2 second point
+		int dragBezierMode; // 0 Initial drag, 1 first control point, 2 second
+							// point
 		PointF dragBezierP0, dragBezierP1, dragBezierP2, dragBezierP3;
 
 		public void mousePressed(MotionEvent e) {
@@ -616,10 +649,10 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 				bezier.compute(x, y, BEZIER_POINTS_PREVIEW);
 				Path pt = new Path();
 				pt.moveTo(x[0], y[0]);
-				for(int i = 0; i < BEZIER_POINTS_PREVIEW; i++) {
+				for (int i = 0; i < BEZIER_POINTS_PREVIEW; i++) {
 					pt.lineTo(x[i], y[i]);
 				}
-				
+
 				g2d.drawPath(pt, paintHint);
 				g2d.drawLine(p0.x, p0.y, p1.x, p1.y, paintHint);
 				g2d.drawLine(p2.x, p2.y, p3.x, p3.y, paintHint);
@@ -636,7 +669,6 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		public void mousePressed(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
 			PointF pf = coordToDocument(p);
-
 
 			if (artwork.isPointWithin(pf.x, pf.y)) {
 				controller.setCurColorRgb(artwork.colorPicker(pf.x, pf.y));
@@ -681,19 +713,22 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 
 		public void mouseDragged(MotionEvent e) {
 			PointF p = new PointF(e.getX(), e.getY());
-			if(dragZoom) {
+			if (dragZoom) {
 				scale = spacing(e) / oldDistance;
 				midPoint(midpoint, e);
 				postTransform.reset();
-				postTransform.postTranslate((p.x - dragMoveX) / prescale / scale, (p.y - dragMoveY) / prescale / scale);
-				postTransform.postScale(scale, scale, midpoint.x / prescale, midpoint.y / prescale);
+				postTransform.postTranslate((p.x - dragMoveX) / prescale
+						/ scale, (p.y - dragMoveY) / prescale / scale);
+				postTransform.postScale(scale, scale, midpoint.x / prescale,
+						midpoint.y / prescale);
 				PointF pd = transformBy(postTransform, dragMoveOffset);
 				setOffset(pd.x, pd.y);
 				setZoom(prescale * scale);
 				repaint();
-			} else if(dragMiddle) {
+			} else if (dragMiddle) {
 				postTransform.reset();
-				postTransform.postTranslate((p.x - dragMoveX) / prescale, (p.y - dragMoveY) / prescale);
+				postTransform.postTranslate((p.x - dragMoveX) / prescale,
+						(p.y - dragMoveY) / prescale);
 				PointF pd = transformBy(postTransform, dragMoveOffset);
 				setOffset(pd.x, pd.y);
 				repaint();
@@ -701,32 +736,31 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		}
 
 		public void mouseReleased(MotionEvent e) {
-			if(dragMiddle) {
+			if (dragMiddle) {
 				dragMiddle = false;
 			}
 		}
-		
+
 		public void secondMousePressed(MotionEvent e) {
 			dragZoom = true;
 			oldDistance = spacing(e);
 		}
-		
+
 		public void secondMouseReleased(MotionEvent e) {
 			dragZoom = false;
 			dragMiddle = false;
 		}
-		
 
 		private float spacing(MotionEvent event) {
-		   float x = event.getX(0) - event.getX(1);
-		   float y = event.getY(0) - event.getY(1);
-		   return (float)Math.sqrt(x * x + y * y);
+			float x = event.getX(0) - event.getX(1);
+			float y = event.getY(0) - event.getY(1);
+			return (float) Math.sqrt(x * x + y * y);
 		}
-		
+
 		private void midPoint(PointF point, MotionEvent event) {
-		   float x = event.getX(0) + event.getX(1);
-		   float y = event.getY(0) + event.getY(1);
-		   point.set(x / 2, y / 2);
+			float x = event.getX(0) + event.getX(1);
+			float y = event.getY(0) + event.getY(1);
+			point.set(x / 2, y / 2);
 		}
 
 	}
@@ -775,7 +809,8 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		public void mouseDragged(MotionEvent e) {
 			PointF p = coordToDocument(new PointF(e.getX(), e.getY()));
 			boolean square = false;
-			float squareDist = Math.max(Math.abs(p.x - firstClick.x), Math.abs(p.y - firstClick.y));
+			float squareDist = Math.max(Math.abs(p.x - firstClick.x),
+					Math.abs(p.y - firstClick.y));
 
 			if (p.x >= firstClick.x) {
 				curRect.left = (int) firstClick.x;
@@ -787,7 +822,8 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 
 			if (p.y >= firstClick.y) {
 				curRect.top = (int) firstClick.y;
-				curRect.bottom = (int) (square ? firstClick.y + squareDist : p.y);
+				curRect.bottom = (int) (square ? firstClick.y + squareDist
+						: p.y);
 			} else {
 				curRect.top = (int) (square ? firstClick.y - squareDist : p.y);
 				curRect.bottom = (int) firstClick.y;
@@ -823,13 +859,14 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 			artwork.beginPreviewMode(false);
 
 			// FIXME: The following hack avoids a slight display glitch
-			// if the whole move tool mess is fixed it probably won't be necessary anymore
+			// if the whole move tool mess is fixed it probably won't be
+			// necessary anymore
 			artwork.move(0, 0);
 		}
 
 		public void mouseDragged(MotionEvent e) {
 			PointF p = coordToDocument(new PointF(e.getX(), e.getY()));
-			artwork.move((int)(p.x - firstClick.x), (int) (p.y - firstClick.y));
+			artwork.move((int) (p.x - firstClick.x), (int) (p.y - firstClick.y));
 			repaint();
 		}
 
@@ -866,8 +903,10 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 			PointF d = getSize();
 			PointF center = new PointF(d.x / 2.f, d.y / 2.f);
 
-			float deltaAngle = (float) Math.atan2(p.y - center.y, p.x - center.x)
-					- (float) Math.atan2(firstClick.y - center.y, firstClick.x - center.x);
+			float deltaAngle = (float) Math.atan2(p.y - center.y, p.x
+					- center.x)
+					- (float) Math.atan2(firstClick.y - center.y, firstClick.x
+							- center.x);
 
 			Matrix rotTrans = new Matrix();
 			rotTrans.setRotate(deltaAngle, center.x, center.y);
@@ -879,7 +918,7 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 			pts[0] = firstClick.x;
 			pts[1] = firstClick.y;
 			rotTrans.mapPoints(pts);
-			
+
 			setOffset(pts[0], pts[1]);
 			repaint();
 		}
@@ -891,4 +930,3 @@ CPController.ICPModeListener, CPArtwork.ICPArtworkListener  {
 		}
 	}
 }
-

@@ -33,8 +33,7 @@ public class EditActionMode implements Callback {
 	public final CPController controller;
 	public final Context context;
 	public final CPArtwork artwork;
-	
-	
+
 	public EditActionMode(Context context, CPController controller) {
 		this.context = context;
 		this.controller = controller;
@@ -43,7 +42,8 @@ public class EditActionMode implements Callback {
 
 	@Override
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-		((SherlockActivity)context).getSupportMenuInflater().inflate(R.menu.edit, menu);
+		((SherlockActivity) context).getSupportMenuInflater().inflate(
+				R.menu.edit, menu);
 		mode.setTitle(R.string.edit);
 		return true;
 	}
@@ -55,31 +55,31 @@ public class EditActionMode implements Callback {
 
 	@Override
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-		switch(item.getItemId()) {
-			case R.id.menu_undo:
-				artwork.undo();
-				break;
-			case R.id.menu_redo:
-				artwork.redo();
-				break;
-			case R.id.menu_cut:
-				artwork.cutSelection(true);
-				break;
-			case R.id.menu_copy:
-				artwork.copySelection();
-				break;
-			case R.id.menu_copymerged:
-				artwork.copySelectionMerged();
-				break;
-			case R.id.menu_paste:
-				artwork.pasteClipboard(true);
-				break;
-			case R.id.menu_selall:
-				artwork.rectangleSelection(artwork.getSize());
-				break;
-			case R.id.menu_deselall:
-				artwork.rectangleSelection(new CPRect());
-				break;
+		switch (item.getItemId()) {
+		case R.id.menu_undo:
+			artwork.undo();
+			break;
+		case R.id.menu_redo:
+			artwork.redo();
+			break;
+		case R.id.menu_cut:
+			artwork.cutSelection(true);
+			break;
+		case R.id.menu_copy:
+			artwork.copySelection();
+			break;
+		case R.id.menu_copymerged:
+			artwork.copySelectionMerged();
+			break;
+		case R.id.menu_paste:
+			artwork.pasteClipboard(true);
+			break;
+		case R.id.menu_selall:
+			artwork.rectangleSelection(artwork.getSize());
+			break;
+		case R.id.menu_deselall:
+			artwork.rectangleSelection(new CPRect());
+			break;
 		}
 		return false;
 	}
