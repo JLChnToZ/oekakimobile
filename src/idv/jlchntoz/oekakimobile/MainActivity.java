@@ -109,10 +109,10 @@ public class MainActivity extends SherlockActivity implements
 		PC.setOnTouchListener(this);
 		controller = PC.controller;
 		Intent currentIntent = getIntent();
-		if (currentIntent.getData() != null)
-			fileName = currentIntent.getData().getEncodedPath();
 		if (currentIntent.hasExtra("file"))
 			fileName = currentIntent.getStringExtra("file");
+		else if (currentIntent.getData() != null && !currentIntent.hasExtra("notfirstrun"))
+			fileName = currentIntent.getData().getEncodedPath();
 		if (fileName != null)
 			try {
 				File file = new File(fileName);
@@ -539,6 +539,7 @@ public class MainActivity extends SherlockActivity implements
 			i.removeExtra("file");
 		i.putExtra("width", width);
 		i.putExtra("height", height);
+		i.putExtra("notfirstrun", true);
 		finish();
 		startActivity(i);
 	}
@@ -550,6 +551,7 @@ public class MainActivity extends SherlockActivity implements
 		if (i.hasExtra("height"))
 			i.removeExtra("height");
 		i.putExtra("file", file.getPath());
+		i.putExtra("notfirstrun", true);
 		finish();
 		startActivity(i);
 	}
