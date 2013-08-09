@@ -24,8 +24,11 @@ import com.chibipaint.CPController;
 import com.chibipaint.engine.*;
 import com.chibipaint.util.CPColor;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.*;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -110,6 +113,20 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 		
 		targetRGB = controller.getCurColorRgb();
 	}
+	
+	@SuppressLint("HandlerLeak")
+	private final Handler _h = new Handler() {
+		@Override
+		public void handleMessage(Message m) {
+			switch(m.what) {
+				case MainActivity.MSG_UPDATECOLOR:
+					int r = Color.red(targetRGB), g = Color.green(targetRGB), b = Color.blue(targetRGB);
+					btncolor.setBackgroundColor(0xFF << 24 | targetRGB);
+					btncolor.setTextColor((r + g * 2 + b) / 3 > 128 ? Color.BLACK : Color.WHITE);
+					break;
+			}
+		}
+	};
 	
 	private void createTextures() {
 		CPGreyBmp texture = new CPGreyBmp(1, 1);
@@ -219,9 +236,9 @@ android.view.View.OnClickListener, OnItemSelectedListener, CPController.ICPColor
 	@Override
 	public void newColor(CPColor color) {
 		targetRGB = color.rgb;
-		int r = Color.red(targetRGB), g = Color.green(targetRGB), b = Color.blue(targetRGB);
-		btncolor.setBackgroundColor(0xFF << 24 | targetRGB);
-		btncolor.setTextColor((r + g * 2 + b) / 3 > 128 ? Color.BLACK : Color.WHITE);
+		Message m = new Message();
+		m.what =MainActivity. MSG_UPDATECOLOR;
+		_h.sendMessage(m);
 	}
 
 	@Override

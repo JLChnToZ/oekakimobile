@@ -22,6 +22,7 @@ package idv.jlchntoz.oekakimobile;
 import java.io.*;
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.*;
@@ -48,6 +49,8 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 public class MainActivity extends SherlockActivity implements OnMenuItemClickListener, 
 ICPToolListener, ICPModeListener, ICPColorListener, ICPEventListener, ICPViewListener, SlidingMenu.OnCloseListener,
 SlidingMenu.OnOpenListener,  OnTouchListener {
+	
+	public static final int MSG_UPDATECOLOR = 2;
 	
 	final String extFilePath = Environment.getExternalStorageDirectory().getPath();
 	String fileName;
@@ -165,6 +168,20 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
         
         settings.getCustomPens(customPens);
     }
+    
+    @SuppressLint("HandlerLeak")
+	private final Handler _h = new Handler() {
+		@Override
+		public void handleMessage(Message m) {
+			switch(m.what) {
+				case MSG_UPDATECOLOR:
+			        colorIconBase = drawerHandler2.getBitmap();
+			        colorIcon = new BitmapDrawable(getResources(), colorIconBase);
+			        colorMainMenuItem.setIcon(colorIcon);
+				break;
+			}
+		}
+    };
 
 
     @Override
@@ -431,9 +448,9 @@ SlidingMenu.OnOpenListener,  OnTouchListener {
 	@Override
 	public void newColor(CPColor color) {
 		colorPicked = color.rgb | 0xFF << 24;
-        colorIconBase = drawerHandler2.getBitmap();
-        colorIcon = new BitmapDrawable(getResources(), colorIconBase);
-        colorMainMenuItem.setIcon(colorIcon);
+		Message m = new Message();
+		m.what = MSG_UPDATECOLOR;
+		_h.sendMessage(m);
 	}
 	
 	private void setArtwork(CPArtwork newArtWork) {
