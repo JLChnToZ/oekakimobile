@@ -111,7 +111,8 @@ public class MainActivity extends SherlockActivity implements
 		Intent currentIntent = getIntent();
 		if (currentIntent.hasExtra("file"))
 			fileName = currentIntent.getStringExtra("file");
-		else if (currentIntent.getData() != null && !currentIntent.hasExtra("notfirstrun"))
+		else if (currentIntent.getData() != null
+				&& !currentIntent.hasExtra("notfirstrun"))
 			fileName = currentIntent.getData().getEncodedPath();
 		if (fileName != null)
 			try {
