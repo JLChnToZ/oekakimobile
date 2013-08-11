@@ -380,6 +380,10 @@ public class MainActivity extends SherlockActivity implements
 				toggleStatusBar(getWindow(), false);
 				getSupportActionBar().hide();
 				break;
+			case R.id.menu_about:
+				AboutBox _ab = new AboutBox(this);
+				_ab.showDialog();
+				break;
 			default:
 				for (int i = 0; i < customPenMenuItems.size(); i++)
 					if (item == customPenMenuItems.get(i)) {
