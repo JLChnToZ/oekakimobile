@@ -105,6 +105,10 @@ public class MainActivity extends SherlockActivity implements
 
 		settings = new savedSettings(this);
 
+		settings.getCustomPens(customPens);
+		
+		penChecked = 0;
+
 		PC = (PaintCanvas) findViewById(R.id.cbpaintcanvas);
 		PC.setOnTouchListener(this);
 		controller = PC.controller;
@@ -171,8 +175,6 @@ public class MainActivity extends SherlockActivity implements
 		controller.addCPEventListener(this);
 		controller.addModeListener(this);
 		controller.addViewListener(this);
-
-		settings.getCustomPens(customPens);
 	}
 
 	@SuppressLint("HandlerLeak")
@@ -386,12 +388,12 @@ public class MainActivity extends SherlockActivity implements
 				_ab.showDialog();
 				break;
 			default:
-				for (int i = 0; i < customPenMenuItems.size(); i++)
-					if (item == customPenMenuItems.get(i)) {
-						controller.setTool(customPens.get(i));
-						return true;
-					}
-				for (int i = 0; i < modeMenuItems.length; i++)
+				int i = customPenMenuItems.indexOf(item);
+				if (i != -1) {
+					controller.setTool(customPens.get(i));
+					return true;
+				}
+				for (i = 0; i < modeMenuItems.length; i++)
 					if (modeMenuItems[i] == item) {
 						controller.setMode(i);
 						return true;
@@ -488,7 +490,7 @@ public class MainActivity extends SherlockActivity implements
 		PC.setArtWork(newArtWork);
 		artwork = controller.artwork;
 		PC.invalidate();
-		controller.setTool(CPController.T_PEN);
+		controller.setTool(customPens.get(penChecked));
 		artwork.callListenersLayerChange();
 	}
 

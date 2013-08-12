@@ -86,46 +86,33 @@ public class brushSettingsDialog implements OnSeekBarChangeListener,
 		aatoolinfo
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sptoolinfo.setAdapter(aatoolinfo);
-		sptoolinfo.setSelection(cinfo.type);
 
 		ArrayAdapter<CharSequence> aatooltype = ArrayAdapter.createFromResource(
 				context, R.array.toolTypes, android.R.layout.simple_spinner_item);
 		aatooltype
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sptooltype.setAdapter(aatooltype);
-		sptooltype.setSelection(cinfo.paintMode);
 
 		sbstrokeSize.setOnSeekBarChangeListener(this);
 		sbstrokeSize.setMax(200);
-		sbstrokeSize.setProgress(ctrl.getBrushSize());
 
 		sbalpha.setOnSeekBarChangeListener(this);
 		sbalpha.setMax(255);
-		sbalpha.setProgress(ctrl.getAlpha());
 
 		sbcolor.setOnSeekBarChangeListener(this);
 		sbcolor.setMax(100);
-		sbstrokeSize.setProgress(Math.round(cinfo.resat));
 
 		sbmix.setOnSeekBarChangeListener(this);
 		sbmix.setMax(100);
-		sbmix.setProgress(Math.round(cinfo.bleed));
 
 		sbspecing.setOnSeekBarChangeListener(this);
 		sbspecing.setMax(100);
-		sbspecing.setProgress(Math.round(cinfo.spacing * 100));
 
 		sbscattering.setOnSeekBarChangeListener(this);
 		sbscattering.setMax(1000);
-		sbscattering.setProgress(Math.round(cinfo.scattering * 100));
 
 		sbsmoothing.setOnSeekBarChangeListener(this);
 		sbsmoothing.setMax(100);
-		sbsmoothing.setProgress(Math.round(cinfo.smoothing * 100));
-
-		cbstrokeSize.setChecked(cinfo.pressureSize);
-		cbalpha.setChecked(cinfo.pressureAlpha);
-		cbscattering.setChecked(cinfo.pressureScattering);
 
 		dlg = new AlertDialog.Builder(context).setTitle(R.string.brushsettings)
 				.setPositiveButton(android.R.string.ok, new OnClickListener() {
@@ -143,9 +130,11 @@ public class brushSettingsDialog implements OnSeekBarChangeListener,
 		dlg.setView(AlertDialogView);
 
 		this.ctrl.addToolListener(this);
+		ctrl.callToolListeners();
 	}
 
 	public void showDialog() {
+		ctrl.callToolListeners();
 		dlg.show();
 	}
 
