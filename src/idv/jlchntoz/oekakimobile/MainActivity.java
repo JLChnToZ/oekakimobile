@@ -121,6 +121,7 @@ public class MainActivity extends SherlockActivity implements
 					FileInputStream FIS = new FileInputStream(file);
 					setArtwork(CPChibiFile.read(MainActivity.this, FIS));
 					FIS.close();
+					setTitle(file.getName());
 				}
 			} catch (Exception e) {
 				Toast.makeText(MainActivity.this, getString(R.string.fileioerror),
