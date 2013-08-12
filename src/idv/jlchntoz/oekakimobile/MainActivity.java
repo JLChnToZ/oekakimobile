@@ -106,7 +106,7 @@ public class MainActivity extends SherlockActivity implements
 		settings = new savedSettings(this);
 
 		settings.getCustomPens(customPens);
-		
+
 		penChecked = 0;
 
 		PC = (PaintCanvas) findViewById(R.id.cbpaintcanvas);
