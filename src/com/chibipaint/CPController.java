@@ -173,13 +173,6 @@ public abstract class CPController {
 		return curBrush.alpha;
 	}
 
-	/*public void setTool(int tool) {
-		setMode(M_DRAW);
-		curBrush = tools[tool];
-		artwork.setBrush(curBrush);
-		callToolListeners();
-	}*/
-
 	public void setTool(CPBrushInfo tool) {
 		setMode(M_DRAW);
 		curBrush = tool;
