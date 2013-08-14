@@ -120,10 +120,11 @@
     <string name="open">Open</string>
     <string name="save">Save</string>
     <string name="saveas">Save As</string>
-    <string name="share">Share</string>
+    <string name="share">Share</string> 
     
     <string name="filenotexists">%S is not exists!</string>
     <string name="fileioerror">Error while reading/writing file. Please try again later.</string>
     <string name="backagaintoexit">Please click BACK again to exit.</string>
+    <string name="loading">Now loading, please wait &#8230;</string>
 
 </resources>

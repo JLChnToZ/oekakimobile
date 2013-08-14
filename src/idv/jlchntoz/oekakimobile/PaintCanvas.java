@@ -162,11 +162,17 @@ public class PaintCanvas extends View implements CPController.ICPToolListener,
 	public void setArtWork(CPArtwork artwork) {
 		controller.setArtwork(artwork);
 		this.artwork = artwork;
-		BM = Bitmap.createBitmap(artwork.width, artwork.height,
-				Bitmap.Config.ARGB_8888);
-		width = artwork.width;
-		height = artwork.height;
-		BM.setPixels(artwork.getDisplayBM().data, 0, width, 0, 0, width, height);
+		new Thread() {
+			@Override
+			public void run() {
+				width = PaintCanvas.this.artwork.width;
+				height = PaintCanvas.this.artwork.height;
+				BM = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+				BM.setPixels(PaintCanvas.this.artwork.getDisplayBM().data, 0, width, 0,
+						0, width, height);
+				repaint();
+			}
+		}.start();
 		if (screenWidth > 0 && screenHeight > 0)
 			setOffset((screenWidth - artwork.width) / 2F,
 					(screenHeight - artwork.height) / 2F);

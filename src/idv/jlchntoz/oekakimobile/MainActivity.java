@@ -22,6 +22,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.*;
@@ -51,6 +52,8 @@ public class MainActivity extends SherlockActivity implements
 		SlidingMenu.OnCloseListener, SlidingMenu.OnOpenListener, OnTouchListener {
 
 	public static final int MSG_UPDATECOLOR = 2;
+	public static final int MSG_SETARTWORK = 3;
+	public static final int MSG_SHOWFILEERROR = 4;
 
 	final String extFilePath = Environment.getExternalStorageDirectory()
 			.getPath();
@@ -60,6 +63,8 @@ public class MainActivity extends SherlockActivity implements
 	public SlidingMenu drawer;
 
 	brushSettingsDialog BSD;
+	ProgressDialog LoadingDialog;
+	Exception _error;
 
 	int penChecked;
 	SubMenu pensMenu;
@@ -109,41 +114,7 @@ public class MainActivity extends SherlockActivity implements
 
 		penChecked = 0;
 
-		PC = (PaintCanvas) findViewById(R.id.cbpaintcanvas);
-		PC.setOnTouchListener(this);
-		controller = PC.controller;
-		Intent currentIntent = getIntent();
-		if (currentIntent.hasExtra("file"))
-			fileName = currentIntent.getStringExtra("file");
-		else if (currentIntent.getData() != null
-				&& !currentIntent.hasExtra("notfirstrun"))
-			fileName = currentIntent.getData().getEncodedPath();
-		if (fileName != null)
-			try {
-				File file = new File(fileName);
-				if (file.exists()) {
-					FileInputStream FIS = new FileInputStream(file);
-					setArtwork(CPChibiFile.read(MainActivity.this, FIS));
-					FIS.close();
-					setTitle(file.getName());
-				}
-			} catch (Exception e) {
-				Toast.makeText(MainActivity.this, getString(R.string.fileioerror),
-						Toast.LENGTH_LONG).show();
-			}
-		else {
-			int width = 800, height = 600;
-			if (currentIntent.hasExtra("width"))
-				width = currentIntent.getIntExtra("width", 800);
-			if (currentIntent.hasExtra("height"))
-				height = currentIntent.getIntExtra("height", 600);
-			setArtwork(new CPArtwork(this, width, height));
-			fileName = "";
-		}
-
 		modeMenuItems = new MenuItem[controller.M_MAX];
-
-		BSD = new brushSettingsDialog(this, controller);
 
 		drawer = new SlidingMenu(this);
 		drawer.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
@@ -163,18 +134,51 @@ public class MainActivity extends SherlockActivity implements
 
 		drawer.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 
-		drawerHandler1 = new LayerDrawerHandler(this, controller, drawer.getMenu());
-		drawerHandler2 = new ColorTextureDrawerHandler(this, controller,
-				drawer.getSecondaryMenu());
-
-		controller.setCurColor(new CPColor(getResources().getColor(
-				R.color.DefaultColor)));
-
-		controller.addToolListener(this);
-		controller.addColorListener(this);
-		controller.addCPEventListener(this);
-		controller.addModeListener(this);
-		controller.addViewListener(this);
+		PC = (PaintCanvas) findViewById(R.id.cbpaintcanvas);
+		PC.setOnTouchListener(this);
+		controller = PC.controller;
+		Intent currentIntent = getIntent();
+		if (currentIntent.hasExtra("file"))
+			fileName = currentIntent.getStringExtra("file");
+		else if (currentIntent.getData() != null
+				&& !currentIntent.hasExtra("notfirstrun"))
+			fileName = currentIntent.getData().getEncodedPath();
+		if (fileName != null) {
+			LoadingDialog = ProgressDialog.show(this, "",
+					getResources().getString(R.string.loading), false, false);
+			final File file = new File(fileName);
+			setTitle(file.getName());
+			new Thread() {
+				@Override
+				public void run() {
+					try {
+						if (file.exists()) {
+							FileInputStream FIS = new FileInputStream(file);
+							artwork = CPChibiFile.read(MainActivity.this, FIS);
+							FIS.close();
+							Message m = new Message();
+							m.what = MSG_SETARTWORK;
+							_h.sendMessage(m);
+						}
+					} catch (Exception e) {
+						_error = e;
+						Message m = new Message();
+						m.what = MSG_SHOWFILEERROR;
+						_h.sendMessage(m);
+					}
+				}
+			}.start();
+		} else {
+			int width = 800, height = 600;
+			if (currentIntent.hasExtra("width"))
+				width = currentIntent.getIntExtra("width", 800);
+			if (currentIntent.hasExtra("height"))
+				height = currentIntent.getIntExtra("height", 600);
+			artwork = new CPArtwork(this, width, height);
+			setArtwork(artwork);
+			initController();
+			fileName = "";
+		}
 	}
 
 	@SuppressLint("HandlerLeak")
@@ -183,9 +187,23 @@ public class MainActivity extends SherlockActivity implements
 		public void handleMessage(Message m) {
 			switch (m.what) {
 			case MSG_UPDATECOLOR:
+				if (drawerHandler2 == null)
+					break;
 				colorIconBase = drawerHandler2.getBitmap();
 				colorIcon = new BitmapDrawable(getResources(), colorIconBase);
 				colorMainMenuItem.setIcon(colorIcon);
+				break;
+			case MSG_SETARTWORK:
+				setArtwork(artwork);
+				initController();
+				if (LoadingDialog != null && LoadingDialog.isShowing())
+					LoadingDialog.dismiss();
+				break;
+			case MSG_SHOWFILEERROR:
+				Toast.makeText(MainActivity.this, getString(R.string.fileioerror),
+						Toast.LENGTH_LONG).show();
+				if (LoadingDialog != null && LoadingDialog.isShowing())
+					LoadingDialog.dismiss();
 				break;
 			}
 		}
@@ -345,13 +363,7 @@ public class MainActivity extends SherlockActivity implements
 				saveDlg.showDialog();
 				break;
 			case R.id.menu_share:
-				String _fileName = outputImage(fileName);
-				if (_fileName == "")
-					break;
-				Intent share = new Intent(Intent.ACTION_SEND);
-				share.setType("image/png");
-				share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + _fileName));
-				startActivity(Intent.createChooser(share, getString(R.string.share)));
+				shareImage(fileName);
 				break;
 			case R.id.menu_hfilp:
 				artwork.hFlip();
@@ -488,29 +500,38 @@ public class MainActivity extends SherlockActivity implements
 
 	private void setArtwork(CPArtwork newArtWork) {
 		PC.setArtWork(newArtWork);
-		artwork = controller.artwork;
 		PC.invalidate();
 		controller.setTool(customPens.get(penChecked));
 		artwork.callListenersLayerChange();
 	}
 
-	private void saveFile(File file) {
-		try {
-			if (!file.getName().endsWith(".chi"))
-				file = new File(file.getPath() + ".chi");
-			file.getParentFile().mkdirs();
-			if (!file.exists())
-				file.createNewFile();
-			FileOutputStream FOS = new FileOutputStream(file);
-			CPChibiFile.write(FOS, artwork);
-			FOS.close();
-			fileName = file.getPath();
-			outputImage(fileName);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			Toast.makeText(MainActivity.this, getString(R.string.fileioerror),
-					Toast.LENGTH_LONG).show();
-		}
+	private void saveFile(final File sfile) {
+		LoadingDialog = ProgressDialog.show(this, "",
+				getResources().getString(R.string.loading), false, false);
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					File file = sfile;
+					if (!file.getName().endsWith(".chi"))
+						file = new File(file.getPath() + ".chi");
+					file.getParentFile().mkdirs();
+					if (!file.exists())
+						file.createNewFile();
+					FileOutputStream FOS = new FileOutputStream(file);
+					CPChibiFile.write(FOS, artwork);
+					FOS.close();
+					fileName = file.getPath();
+					outputImage(fileName);
+					LoadingDialog.dismiss();
+				} catch (Exception ex) {
+					_error = ex;
+					Message m = new Message();
+					m.what = MSG_SHOWFILEERROR;
+					_h.sendMessage(m);
+				}
+			}
+		}.start();
 	}
 
 	private String outputImage(String fileName) {
@@ -534,11 +555,48 @@ public class MainActivity extends SherlockActivity implements
 			FOS.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			Toast.makeText(MainActivity.this, getString(R.string.fileioerror),
-					Toast.LENGTH_LONG).show();
+			_error = ex;
+			Message m = new Message();
+			m.what = MSG_SHOWFILEERROR;
+			_h.sendMessage(m);
 			return "";
 		}
 		return fileName;
+	}
+
+	private void shareImage(final String fileName) {
+		LoadingDialog = ProgressDialog.show(this, "",
+				getResources().getString(R.string.loading), false, false);
+		new Thread() {
+			@Override
+			public void run() {
+				String _fileName = outputImage(fileName);
+				if (_fileName == "")
+					return;
+				Intent share = new Intent(Intent.ACTION_SEND);
+				share.setType("image/png");
+				share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + _fileName));
+				startActivity(Intent.createChooser(share, getString(R.string.share)));
+				LoadingDialog.dismiss();
+			}
+		}.start();
+	}
+
+	private void initController() {
+		BSD = new brushSettingsDialog(this, controller);
+
+		drawerHandler1 = new LayerDrawerHandler(this, controller, drawer.getMenu());
+		drawerHandler2 = new ColorTextureDrawerHandler(this, controller,
+				drawer.getSecondaryMenu());
+
+		controller.setCurColor(new CPColor(getResources().getColor(
+				R.color.DefaultColor)));
+
+		controller.addToolListener(this);
+		controller.addColorListener(this);
+		controller.addCPEventListener(this);
+		controller.addModeListener(this);
+		controller.addViewListener(this);
 	}
 
 	private void restartAndOpenWith(int width, int height) {
