@@ -12,18 +12,20 @@
         android:scaleType="fitCenter"
         android:src="@drawable/logo_large" />
 
-    <TextView
-        android:id="@+id/lblAboutNotice"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:autoLink="web"
-        android:fadingEdge="horizontal|vertical"
-        android:fadingEdgeLength="20dp"
-        android:focusable="true"
-        android:linksClickable="true"
-        android:scrollbarStyle="insideOverlay"
-        android:scrollbars="vertical"
-        android:text="@string/license" />
+        android:overScrollMode="ifContentScrolls"
+        android:requiresFadingEdge="vertical" >
+
+        <TextView
+            android:id="@+id/lblAboutNotice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:linksClickable="true"
+            android:text="@string/license" />
+    </ScrollView>
 
 </LinearLayout>
