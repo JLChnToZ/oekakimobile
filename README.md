@@ -16,3 +16,4 @@ To-do list:
 
 *  More user-friendly UI.
 *  Design all icons.
+*  Multiuser collaborative feature is pending.
