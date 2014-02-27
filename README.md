@@ -23,5 +23,4 @@ To-do list
 * Text input.
 *  More user-friendly UI.
 *  Design all icons.
-
-
+*  Multiuser collaborative feature is pending.
