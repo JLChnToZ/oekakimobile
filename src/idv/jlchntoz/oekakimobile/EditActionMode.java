@@ -58,12 +58,15 @@ public class EditActionMode implements Callback {
 		switch (item.getItemId()) {
 		case R.id.menu_undo:
 			artwork.undo();
+			((MainActivity)context).rePaint();
 			break;
 		case R.id.menu_redo:
 			artwork.redo();
+			((MainActivity)context).rePaint();
 			break;
 		case R.id.menu_cut:
 			artwork.cutSelection(true);
+			((MainActivity)context).rePaint();
 			break;
 		case R.id.menu_copy:
 			artwork.copySelection();
@@ -73,6 +76,7 @@ public class EditActionMode implements Callback {
 			break;
 		case R.id.menu_paste:
 			artwork.pasteClipboard(true);
+			((MainActivity)context).rePaint();
 			break;
 		case R.id.menu_selall:
 			artwork.rectangleSelection(artwork.getSize());

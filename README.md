@@ -19,7 +19,6 @@ To-do list
 * (Purchased Version Feature) Import images as base
 * "Clear Canvas" Function
 * Predrawn shapes
-* Ask to save image when exiting.
 * Text input.
 *  More user-friendly UI.
 *  Design all icons.

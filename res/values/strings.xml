@@ -126,5 +126,6 @@
     <string name="fileioerror">Error while reading/writing file. Please try again later.</string>
     <string name="backagaintoexit">Please click BACK again to exit.</string>
     <string name="loading">Now loading, please wait &#8230;</string>
+    <string name="savereq">The drawing is not yet saved,\ndo you want to save it?</string>
 
 </resources>

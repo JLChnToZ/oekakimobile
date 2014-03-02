@@ -185,6 +185,7 @@ public class LayerDrawerHandler implements CPArtwork.ICPArtworkListener,
 					((CPLayer) layers[i]).visible);
 		lstLayerCtrl.setRemoveEnabled(count > 1);
 		controller.artwork.callListenersUpdateRegion(controller.artwork.getSize());
+		((MainActivity)context).rePaint();
 	}
 
 	private void loadLayerSettings() {

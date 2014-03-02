@@ -22,7 +22,9 @@ import java.io.*;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.*;
@@ -346,21 +348,10 @@ public class MainActivity extends SherlockActivity implements
 				openDlg.showDialog();
 				break;
 			case R.id.menu_save:
-				if (fileName != null && fileName != "") {
-					saveFile(new File(fileName));
-					break;
-				}
+				onSaveClick(false);
+				break;
 			case R.id.menu_saveas:
-				FileDialog saveDlg = new FileDialog(this, getString(R.string.save),
-						extFilePath + File.separator + "mypaint",
-						new File(fileName).getName(), new String[] { "chi" }, false,
-						new FileDialog.FileDialogCallBack() {
-							@Override
-							public void onCallBack(FileDialog which, File file) {
-								saveFile(file);
-							}
-						});
-				saveDlg.showDialog();
+				onSaveAsClick(false);
 				break;
 			case R.id.menu_share:
 				shareImage(fileName);
@@ -414,6 +405,26 @@ public class MainActivity extends SherlockActivity implements
 			}
 		return true;
 	}
+	
+	public void onSaveClick(Boolean exitOnDone) {
+		if (fileName != null && fileName != "")
+			saveFile(new File(fileName), exitOnDone);
+		else
+			onSaveAsClick(exitOnDone);
+	}
+	
+	public void onSaveAsClick(final Boolean exitOnDone) {
+		FileDialog saveDlg = new FileDialog(this, getString(R.string.save),
+				extFilePath + File.separator + "mypaint",
+				new File(fileName).getName(), new String[] { "chi" }, false,
+				new FileDialog.FileDialogCallBack() {
+					@Override
+					public void onCallBack(FileDialog which, File file) {
+						saveFile(file, exitOnDone);
+					}
+				});
+		saveDlg.showDialog();
+	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -429,15 +440,12 @@ public class MainActivity extends SherlockActivity implements
 	}
 
 	private void toggleStatusBar(android.view.Window w, boolean show) {
-		if (show) {
-			WindowManager.LayoutParams attrs = w.getAttributes();
+		WindowManager.LayoutParams attrs = w.getAttributes();
+		if (show) 
 			attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
-			w.setAttributes(attrs);
-		} else {
-			WindowManager.LayoutParams attrs = w.getAttributes();
+		else
 			attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-			w.setAttributes(attrs);
-		}
+		w.setAttributes(attrs);
 	}
 
 	@Override
@@ -497,6 +505,10 @@ public class MainActivity extends SherlockActivity implements
 		m.what = MSG_UPDATECOLOR;
 		_h.sendMessage(m);
 	}
+	
+	public void rePaint() {
+		PC.repaint();
+	}
 
 	private void setArtwork(CPArtwork newArtWork) {
 		PC.setArtWork(newArtWork);
@@ -505,7 +517,7 @@ public class MainActivity extends SherlockActivity implements
 		artwork.callListenersLayerChange();
 	}
 
-	private void saveFile(final File sfile) {
+	private void saveFile(final File sfile, final Boolean exitOnDone) {
 		LoadingDialog = ProgressDialog.show(this, "",
 				getResources().getString(R.string.loading), false, false);
 		new Thread() {
@@ -523,7 +535,10 @@ public class MainActivity extends SherlockActivity implements
 					FOS.close();
 					fileName = file.getPath();
 					outputImage(fileName);
+					artwork.clearHistory();
 					LoadingDialog.dismiss();
+					if(exitOnDone)
+						finish();
 				} catch (Exception ex) {
 					_error = ex;
 					Message m = new Message();
@@ -627,6 +642,32 @@ public class MainActivity extends SherlockActivity implements
 		exitFullScreen();
 		if (drawer.isSecondaryMenuShowing() || drawer.isMenuShowing()) {
 			drawer.showContent();
+			return;
+		}
+		if(artwork.canUndo()) {
+			new AlertDialog.Builder(this)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setTitle(android.R.string.dialog_alert_title)
+				.setMessage(R.string.savereq)
+				.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface d, int w) {
+						onSaveClick(true);
+					}
+				})
+				.setNeutralButton(R.string.saveas,new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface d, int w) {
+						onSaveAsClick(true);
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface d, int w) {
+						finish();
+					}
+				})
+				.show();
 			return;
 		}
 		if (doubleBackToExitPressedOnce) {

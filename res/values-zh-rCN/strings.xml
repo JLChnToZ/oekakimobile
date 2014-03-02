@@ -127,5 +127,6 @@
     <string name="fileioerror">读写档案时发生错误！请稍候再试。</string>
     <string name="backagaintoexit">请再单击返回以离开。</string>
     <string name="loading">加载中，请稍候….</string>
+    <string name="savereq">这个绘画尚未被储存，\n请问需要储存吗？</string>
     
 </resources>

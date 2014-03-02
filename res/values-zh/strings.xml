@@ -123,4 +123,6 @@
     <string name="fileioerror">讀寫檔案時發生錯誤！請稍候再試。</string>
     <string name="backagaintoexit">請再按一下返回以離開。</string>
     <string name="loading">載入中，請稍候…</string>
+    <string name="savereq">這個繪畫尚未被儲存，\n請問需要儲存嗎？</string>
+    
 </resources>
