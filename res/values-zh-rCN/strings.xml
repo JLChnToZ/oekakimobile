@@ -118,6 +118,7 @@
     
     <string name="file">档案</string>
     <string name="newfile">新增</string>
+    <string name="clear">全部清理</string>
     <string name="open">开启</string>
     <string name="save">储存</string>
     <string name="saveas">另存为</string>

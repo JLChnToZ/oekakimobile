@@ -117,6 +117,7 @@
     
     <string name="file">File</string>
     <string name="newfile">New</string>
+    <string name="clear">Clear All</string>
     <string name="open">Open</string>
     <string name="save">Save</string>
     <string name="saveas">Save As</string>

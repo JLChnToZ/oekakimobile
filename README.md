@@ -17,7 +17,6 @@ To-do list
 ===========
 
 * (Purchased Version Feature) Import images as base
-* "Clear Canvas" Function
 * Predrawn shapes
 * Text input.
 *  More user-friendly UI.

@@ -106,7 +106,7 @@ public class MainActivity extends SherlockActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_ACTION_BAR);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		setContentView(R.layout.activity_main);
 		getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -335,6 +335,9 @@ public class MainActivity extends SherlockActivity implements
 							}
 						});
 				nfdlg.showDialog();
+				break;
+			case R.id.menu_clear:
+				restartAndOpenWith(artwork.width, artwork.height);
 				break;
 			case R.id.menu_open:
 				FileDialog openDlg = new FileDialog(this, getString(R.string.open),

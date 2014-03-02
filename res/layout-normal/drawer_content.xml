@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+	<LinearLayout
+	    android:id="@+id/drawercontent"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:padding="@dimen/dialpgpadding" >
+	
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/layers"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	    <Spinner
+	        android:id="@+id/spmixtype"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" />
+	
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/alpha" />
+	
+	    <SeekBar
+	        android:id="@+id/sblayeralpha"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" />
+	
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="bottom" >
+	
+	        <CheckBox
+	            android:id="@+id/cbsampleall"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:text="@string/sampleall" />
+	
+	        <CheckBox
+	            android:id="@+id/cblockalpha"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:text="@string/lockalpha" />
+	    </LinearLayout>
+	
+	    <com.mobeta.android.dslv.DragSortListView
+	        android:id="@+id/lstlayers"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dip"
+	        android:layout_weight="1" />
+	
+	</LinearLayout>
+</ScrollView>

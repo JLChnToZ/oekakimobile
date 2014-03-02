@@ -114,6 +114,7 @@
     
     <string name="file">檔案</string>
     <string name="newfile">新增</string>
+    <string name="clear">全部清理</string>
     <string name="open">開啟</string>
     <string name="save">儲存</string>
     <string name="saveas">另存為</string>
