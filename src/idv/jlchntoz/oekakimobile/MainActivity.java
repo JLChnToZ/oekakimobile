@@ -37,6 +37,8 @@ import android.view.WindowManager;
 import android.view.View.*;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.*;
+
 import com.actionbarsherlock.app.*;
 import com.actionbarsherlock.view.*;
 import com.actionbarsherlock.view.MenuItem.*;
@@ -477,6 +479,17 @@ public class MainActivity extends SherlockActivity implements
 			onClose();
 		return false;
 	}
+  @Override
+  public void onStart() {
+    super.onStart();
+    EasyTracker.getInstance(this).activityStart(this);
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    EasyTracker.getInstance(this).activityStop(this);
+  }
 
 	@Override
 	public void newTool(int tool, CPBrushInfo toolInfo) {
@@ -664,7 +677,7 @@ public class MainActivity extends SherlockActivity implements
 						onSaveAsClick(true);
 					}
 				})
-				.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface d, int w) {
 						finish();
