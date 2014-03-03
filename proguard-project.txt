@@ -33,6 +33,8 @@
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
 }
+-keep class com.google.android.gms.analytics.**
+-keep class com.google.analytics.tracking.**
 
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface

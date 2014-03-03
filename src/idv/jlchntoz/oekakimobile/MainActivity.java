@@ -37,7 +37,7 @@ import android.view.WindowManager;
 import android.view.View.*;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.*;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import com.actionbarsherlock.app.*;
 import com.actionbarsherlock.view.*;
