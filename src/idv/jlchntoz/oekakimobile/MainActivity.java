@@ -329,14 +329,7 @@ public class MainActivity extends SherlockActivity implements
 				drawerActionMode = startActionMode(new EditActionMode(this, controller));
 				break;
 			case R.id.menu_new:
-				SizeDialog nfdlg = new SizeDialog(this, getString(R.string.newfile),
-						artwork.width, artwork.height, new SizeDialog.SizeDialogCallBack() {
-							@Override
-							public void onCallBack(SizeDialog which, int width, int height) {
-								restartAndOpenWith(width, height);
-							}
-						});
-				nfdlg.showDialog();
+				onNewClick();
 				break;
 			case R.id.menu_clear:
 				restartAndOpenWith(artwork.width, artwork.height);
@@ -411,6 +404,17 @@ public class MainActivity extends SherlockActivity implements
 		return true;
 	}
 	
+	public void onNewClick() {
+		SizeDialog nfdlg = new SizeDialog(this, getString(R.string.newfile),
+				artwork.width, artwork.height, new SizeDialog.SizeDialogCallBack() {
+					@Override
+					public void onCallBack(SizeDialog which, int width, int height) {
+						restartAndOpenWith(width, height);
+					}
+				});
+		nfdlg.showDialog();
+	}
+	
 	public void onSaveClick(Boolean exitOnDone) {
 		if (fileName != null && fileName != "")
 			saveFile(new File(fileName), exitOnDone);
@@ -483,6 +487,8 @@ public class MainActivity extends SherlockActivity implements
   public void onStart() {
     super.onStart();
     EasyTracker.getInstance(this).activityStart(this);
+    if(!getIntent().hasExtra("notfirstrun") && fileName == "")
+			onNewClick();
   }
 
   @Override
