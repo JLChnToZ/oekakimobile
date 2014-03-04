@@ -65,15 +65,18 @@ public class BlurDialog {
 
 		tvwidth.setText("" + w);
 		tvheight.setText("" + h);
+		tviterations.setText("" + i);
 
 		builder.setPositiveButton(android.R.string.ok,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						w = Integer.parseInt(tvwidth.getText().toString());
-						h = Integer.parseInt(tvheight.getText().toString());
-						i = Integer.parseInt(tviterations.getText().toString());
-						callBack.onCallBack(BlurDialog.this, w, h, i);
+						try {
+							w = Integer.parseInt(tvwidth.getText().toString());
+							h = Integer.parseInt(tvheight.getText().toString());
+							i = Integer.parseInt(tviterations.getText().toString());
+							callBack.onCallBack(BlurDialog.this, w, h, i);
+						} catch(NumberFormatException ex) {}
 					}
 				});
 
